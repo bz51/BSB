@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width" />
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css">
+<script src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
+<script src="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js"></script>
+</head>
+<body>
+
+<!-- 获取帮助第一步 -->
+<div data-role="page" id="page1" data-fullscreen="true">
+	
+	<div data-role="header">
+    <a href="#" data-role="button" data-rel="back" data-icon="arrow-l">返回</a>
+		<h1>获取帮助-Step1</h1> 
+  	</div>
+	
+  	<div data-role="content">
+      <label for="fname">毕设方向:</label>
+
+      <select>
+        <option value="mon">计算机类</option>
+      </select>
+
+      <label>选择涉及的技术:</label>
+
+      <table width="100%">
+          <tr>
+            <td><label><input name="Fruit" type="checkbox" value=""/>Java</label></td>
+            <td><label><input name="Fruit" type="checkbox" value="" />C/C++</label></td>
+            
+          </tr>
+          <tr>
+            <td><label><input name="Fruit" type="checkbox" value="" />Python</label></td>
+            <td><label><input name="Fruit" type="checkbox" value=""/>C#</label></td>
+            
+          </tr>
+          <tr>
+            <td><label><input name="Fruit" type="checkbox" value="" />IOS</label></td>
+            <td><label><input name="Fruit" type="checkbox" value="" />PHP</label></td>
+            
+          </tr>
+          <tr>
+            <td><label><input name="Fruit" type="checkbox" value=""/>Android</label></td>
+            <td><label><input name="Fruit" type="checkbox" value="" />大数据</label></td>
+            
+          </tr>
+          <tr>
+            <td><label><input name="Fruit" type="checkbox" value="" />算法</label></td>
+            <td><label><input name="Fruit" type="checkbox" value=""/>软件测试</label></td>
+            
+          </tr>
+          <tr>
+            <td><label><input name="Fruit" type="checkbox" value="" />游戏</label></td>
+            <td><label><input name="Fruit" type="checkbox" value="" />其他</label></td>
+          </tr>
+      </table>
+      
+      <a href="#page2" data-role="button" data-theme="b">下一步</a>
+
+  	</div>
+
+  	
+</div>
+
+
+
+
+<!-- 获取帮助第二步 -->
+<div data-role="page" id="page2" data-fullscreen="true"
+>
+  
+  <div data-role="header">
+    <a href="#" data-role="button" data-rel="back" data-icon="arrow-l">返回</a>
+    <h1>获取帮助-Step2</h1> 
+  </div>
+  
+    <div data-role="content">
+      <label for="fname">需求详细描述:</label>
+      <textarea style="min-height:150px;" placeholder="告诉大神们，你的毕设具体的内容是什么……"></textarea>
+      
+      <a href="#page3" data-role="button" data-theme="b">下一步</a>
+    </div>
+    
+</div>
+
+
+
+
+<!-- 获取帮助第三步 -->
+<div data-role="page" id="page3" data-fullscreen="true">
+  
+  <div data-role="header">
+    <a href="#" data-role="button" data-rel="back" data-icon="arrow-l">返回</a>
+    <h1>获取帮助-Step3</h1>
+  </div>
+  
+    <div data-role="content">
+      <label for="money">打赏金额:</label>
+      <input type="text" name="money" id="money" placeholder="RMB">
+      
+      <a href="#page4" data-role="button" data-theme="b">提交</a>
+    </div>
+    
+</div>
+
+
+
+
+<!-- 获取帮助第4步 -->
+<div data-role="page" id="page4" data-fullscreen="true">
+  
+  <div data-role="header">
+    <a href="#" data-role="button" data-rel="back" data-icon="arrow-l">返回</a>
+    <h1>获取帮助-Step4</h1>
+  </div>
+  
+    <div data-role="content">
+      <h2 style="text-align:center;">共匹配到<span style="color:red;">365</span>位大神</h2>
+      <h3 style="text-align:center;">等待大神抢单……</h3>
+
+      <br>
+      <br>
+      
+      <a href="adminNeeder.html" data-role="button" data-theme="b" rel="external">个人中心</a>
+      <span style="font-size:13px;">*抢单成功后您将会收到短信提醒</span>
+    </div>
+    
+</div>
+
+</body>
+</html>
