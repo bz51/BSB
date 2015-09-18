@@ -18,13 +18,13 @@
   	</div>
 	
   	<div data-role="content">
-      <label for="fname">你毕设的方向:</label>
+      <label for="fname" style="font-size:17px;font-weight:bold;">你毕设的方向:</label>
 
       <select>
         <option value="mon">计算机类</option>
       </select>
 
-      <label>你毕设中涉及的技术:</label>
+      <label style="font-size:17px;font-weight:bold;">你毕设中涉及的技术:</label>
 
       <table width="100%">
           <tr>
@@ -78,7 +78,10 @@
   </div>
   
     <div data-role="content">
-      <label for="fname">需求详细描述:</label>
+      <label for="title" style="font-size:17px;font-weight:bold;">毕设标题:</label>
+      <input type="text" name="title" id="title">
+      <br>
+      <label for="fname" style="font-size:17px;font-weight:bold;">需求详细描述:</label>
       <textarea style="min-height:150px;" placeholder="告诉大神们，你毕设的具体内容是什么?你想获得什么样的帮助？"></textarea>
       
       <a href="#page3" data-role="button" data-theme="b">下一步</a>
@@ -98,12 +101,60 @@
   </div>
   
     <div data-role="content">
-      <label for="money">打赏金额:</label>
+      <label for="money" style="font-size:17px;font-weight:bold;">打赏金额:</label>
       <input type="text" name="money" id="money" placeholder="RMB">
       
-      <a href="#page4" data-role="button" data-theme="b">提交</a>
+      <a href="#page4" data-role="button" data-theme="b">完成</a>
+
+      <br>
+
+      <label style="font-size:15px;color:#666666;">平均打赏金额(仅供参考):</label>
+      <table class="table" width="100%" style="color:#666666;font-size:14px;text-align:center;margin-top:10px;">
+        <tr>
+          <th class="th" width="50%">类别</th>
+          <th class="th">易</th>
+          <th class="th">中</th>
+          <th class="th">难</th>
+        </tr>
+        <tr>
+          <td class="td">B/S架构系统</td>
+          <td class="td"></td>
+          <td class="td"></td>
+          <td class="td"></td>
+        </tr>
+        <tr>
+          <td class="td">Android/IOS</td>
+          <td class="td"></td>
+          <td class="td"></td>
+          <td class="td"></td>
+        </tr>
+        <tr>
+          <td class="td">桌面应用程序</td>
+          <td class="td"></td>
+          <td class="td"></td>
+          <td class="td"></td>
+        </tr>
+        <tr>
+          <td class="td">算法设计</td>
+          <td class="td"></td>
+          <td class="td"></td>
+          <td class="td"></td>
+        </tr>
+        <tr>
+          <td class="td">前沿技术(大数据、云计算、机器学习等)</td>
+          <td class="td"></td>
+          <td class="td"></td>
+          <td class="td"></td>
+        </tr>
+      </table>
     </div>
     
+    <style type="text/css">
+      .table{border-collapse:collapse;border-spacing:0;border-left:1px solid #CCCCCC;border-top:1px solid #CCCCCC;background:#efefef;border-color: #CCCCCC;}
+.th,.td{border-right:1px solid #CCCCCC;border-bottom:1px solid #CCCCCC;padding:5px 15px;}
+  .th{font-weight:bold;background:#ccc;}
+    </style>
+
 </div>
 
 
@@ -113,19 +164,19 @@
 <div data-role="page" id="page4" data-fullscreen="true">
   
   <div data-role="header">
-    <a href="#" data-role="button" data-rel="back" data-icon="arrow-l">返回</a>
     <h1>获取帮助-Step4</h1>
   </div>
   
     <div data-role="content">
+      <h2 style="text-align:center;color:red;">发布成功</h2>
       <h2 style="text-align:center;">共匹配到<span style="color:red;">365</span>位大神</h2>
       <h3 style="text-align:center;">等待大神抢单……</h3>
 
       <br>
       <br>
       
-      <a href="adminNeeder.html" data-role="button" data-theme="b" rel="external">个人中心</a>
-      <span style="font-size:13px;color:red;">*大神抢单后您将会收到短信提醒</span>
+      <a href="adminNeeder.html" data-role="button" data-theme="b" rel="external">查看订单</a>
+      <span style="font-size:14px;color:red;font-weight:bold;">*大神抢单后您将会收到短信提醒</span>
     </div>
     
 </div>
