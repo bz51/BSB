@@ -13,12 +13,12 @@ public class CoreDao {
 	 * 保存一个实体对象
 	 * @return 插入记录的id(id=-1表示插入失败)
 	 */
-	public static <T> long save(T obj){
-		long id;
+	public static <T> int save(T obj){
+		int id;
 		try {
 			Session session = HibernateSessionFactory.getSession();
 			session.beginTransaction();
-			id = (long) session.save(obj);
+			id = (int) session.save(obj);
 			session.getTransaction().commit();
 		} catch (HibernateException e) {
 			id = -1;

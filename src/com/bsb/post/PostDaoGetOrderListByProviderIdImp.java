@@ -32,6 +32,7 @@ public class PostDaoGetOrderListByProviderIdImp extends HibernateTemplate {
 		// 将所有未抢单订单放入list中
 		for(NeedHelpEntity e : needHelpList){
 			NeedEntity entity = new NeedEntity();
+			entity.setId(e.getRequire_id());
 			entity.setNeeder_id(e.getNeeder_id());
 			entity.setNeeder_name(e.getNeeder_name());
 			entity.setNeeder_phone(e.getNeeder_phone());

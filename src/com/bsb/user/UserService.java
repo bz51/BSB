@@ -1,6 +1,8 @@
 package com.bsb.user;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.bsb.core.CoreDao;
@@ -34,7 +36,15 @@ public class UserService {
 		
 		//将AuthCodeEntity存入DB
 		UserDaoSaveCode_PhoneImp imp = new UserDaoSaveCode_PhoneImp(entity);
-		return imp.hibernateOperation();
+		boolean db_result = imp.hibernateOperation();
+		
+		//对执行结果进行判断
+		if(!db_result || !imp.getResult()){
+			this.result = false;
+			this.reason = imp.getReason();
+			return false;
+		}else
+			return true;
 	}
 	
 	
@@ -46,6 +56,9 @@ public class UserService {
 		//进行查询
 		UserDaoQueryMsgListImp imp = new UserDaoQueryMsgListImp();
 		this.result = imp.hibernateOperation();
+		
+		if(!result)
+			this.reason = imp.getReason();
 		
 		//获取结果
 		List<AuthCodeEntity> authCodeList = imp.getList();
@@ -66,31 +79,30 @@ public class UserService {
 	 * @param userEntity
 	 * @return
 	 */
-	public UserEntity saveUserEntity(UserEntity userEntity){
+	public int saveUserEntity(UserEntity userEntity){
 		//健壮性判断
 		if(userEntity==null || userEntity.getName()==null || userEntity.getName().equals("")
 				|| userEntity.getPassword()==null || userEntity.getPassword().equals("")
-				|| userEntity.getPhone()==null || userEntity.getPhone().equals("")
-				|| userEntity.getRole()==0 || userEntity.getSkill()==null || userEntity.getSkill().equals("")
-				|| userEntity.getTime()==null){
+				|| userEntity.getPhone()==null || userEntity.getPhone().equals("")){
 			this.result = false;
 			this.reason = "name、password、phone、role、skil、time不能为空";
-			return null;
+			return 0;
 		}
 		
 		//执行操作
-		long id = CoreDao.save(userEntity);
+		userEntity.setState(1);
+		userEntity.setTime(new Timestamp(new Date().getTime()));
+		int id = CoreDao.save(userEntity);
 		
 		//若插入失败
 		if(id<=0){
 			this.result = false;
 			this.reason = "保存用户信息失败";
-			return null;
+			return 0;
 		}
 		
 		else{
-			userEntity.setId((int) id);
-			return userEntity;
+			return id;
 		}
 	}
 	

@@ -11,7 +11,133 @@
     <constant name="struts.i18n.encoding" value="utf-8"/>
     <constant name="struts.multipart.maxSize" value="55000000"/>
     
+	<!-- 父包，用于什么都不写跳转到首页 -->
+    <package name="default" namespace="/" extends="json-default">
+    	<default-action-ref name="index" />
+    	<action name="index">
+    		<interceptor-ref name="defaultStack">  
+    			<param name="exception.logEnabled">true</param>  
+  			</interceptor-ref>  
+        	<!-- result四种：dispatcher、redirect、chain、redirectAction -->
+            <result type="redirectAction">index.html</result>
+        </action>
+    </package>
 
-
-
+	<!-- 用户模块 -->
+    <package name="user" namespace="/user" extends="default">
+		<action name="userAction" class="com.bsb.user.UserAction">
+		
+			<!-- 用户获取验证码 -->
+			<result name="getAuthCode" type="json">
+    			<param name="includeProperties">reason,result</param>
+    			<param name="contentType">text/html</param> 
+    		</result>
+		
+			<!-- 注册 -->
+			<result name="login" type="json">
+    			<param name="includeProperties">id,name,role,skill,phone,reason,result</param>
+    			<param name="contentType">text/html</param> 
+    		</result>
+		
+			<!-- 登录 -->
+			<result name="signin" type="json">
+    			<param name="includeProperties">id,name,role,skill,phone,reason,result</param>
+    			<param name="contentType">text/html</param> 
+    		</result>
+		
+			<!-- (Android)获取未发送的短信验证码 -->
+			<result name="getUnSendCodeList" type="json">
+    			<param name="includeProperties">msgList.*,reason,result</param>
+    			<param name="contentType">text/html</param> 
+    		</result>
+    		
+		</action>
+    </package>
+    
+    
+    
+	<!-- Post模块 -->
+    <package name="post" namespace="/post" extends="default">
+		<action name="postAction" class="com.bsb.post.PostAction">
+		
+			<!-- 开启“获取所有入驻的provider”线程(线程内部每隔1小时获取一次) -->
+			<result name="startGetProviders" type="json">
+    			<param name="includeProperties">reason,result</param>
+    			<param name="contentType">text/html</param> 
+    		</result>
+		
+			<!-- 发布一个需求 -->
+			<result name="postNeed" type="json">
+    			<param name="includeProperties">count,reason,result</param>
+    			<param name="contentType">text/html</param> 
+    		</result>
+		
+			<!-- (Android)获取抢单短信 -->
+			<result name="getUnGrabMsgList" type="json">
+    			<param name="includeProperties">msgList.*,reason,result</param>
+    			<param name="contentType">text/html</param> 
+    		</result>
+		
+			<!-- 根据require_id获取需求详情 -->
+			<result name="getNeedDetail" type="json">
+    			<param name="includeProperties">needEntity.*,reason,result</param>
+    			<param name="contentType">text/html</param> 
+    		</result>
+		
+			<!-- provider抢单 -->
+			<result name="grabSingle" type="json">
+    			<param name="includeProperties">reason,result</param>
+    			<param name="contentType">text/html</param> 
+    		</result>
+		
+			<!-- (Android)查询need表中30分钟未抢单的需求 -->
+			<result name="query30MUnGrabMsgList" type="json">
+    			<param name="includeProperties">msgList.*,reason,result</param>
+    			<param name="contentType">text/html</param> 
+    		</result>
+		
+			<!-- 提高赏金 -->
+			<result name="increaseMoney" type="json">
+    			<param name="includeProperties">count,reason,result</param>
+    			<param name="contentType">text/html</param> 
+    		</result>
+		
+			<!-- needer放弃订单 -->
+			<result name="neederGiveUp" type="json">
+    			<param name="includeProperties">reason,result</param>
+    			<param name="contentType">text/html</param> 
+    		</result>
+		
+			<!-- 获取指定needer的所有订单情况 -->
+			<result name="getOrderListByNeederId" type="json">
+    			<param name="includeProperties">needList.*,reason,result</param>
+    			<param name="contentType">text/html</param> 
+    		</result>
+		
+			<!-- 获取指定provider的所有订单情况 -->
+			<result name="getOrderListByProviderId" type="json">
+    			<param name="includeProperties">needList.*,reason,result</param>
+    			<param name="contentType">text/html</param> 
+    		</result>
+		
+			<!-- 获取指定provider的个人信息 -->
+			<result name="getUserEntityByProviderId" type="json">
+    			<param name="includeProperties">userEntity.*,reason,result</param>
+    			<param name="contentType">text/html</param> 
+    		</result>
+		
+			<!-- 修改指定provider的擅长的技术 -->
+			<result name="updateSkillByProviderId" type="json">
+    			<param name="includeProperties">reason,result</param>
+    			<param name="contentType">text/html</param> 
+    		</result>
+		
+			<!-- (Android)查询need表未发送的信息，并设为已发送 -->
+			<result name="queryUnPushNeederMsgList" type="json">
+    			<param name="includeProperties">msgList.*,reason,result</param>
+    			<param name="contentType">text/html</param> 
+    		</result>
+    		
+		</action>
+    </package>
 </struts>

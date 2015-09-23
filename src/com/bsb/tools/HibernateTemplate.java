@@ -10,7 +10,7 @@ import com.bsb.core.Parameter;
  * @author chibozhou
  */
 public abstract class HibernateTemplate {
-	protected boolean result;
+	protected boolean result = true;
 	protected String reason;
 	
 	/**
@@ -32,6 +32,7 @@ public abstract class HibernateTemplate {
 		}finally{
 			HibernateSessionFactory.closeSession();
 		}
+		System.out.println("HIbernateTemplate:"+result);
 		return result;
 	}
 	
@@ -40,7 +41,7 @@ public abstract class HibernateTemplate {
 	 */
 	protected abstract Session handle(Session session);
 
-	public boolean gteResult() {
+	public boolean getResult() {
 		return result;
 	}
 

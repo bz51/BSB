@@ -11,6 +11,7 @@ public class Parameter {
 	public static final String AuthCodeContent2 = "(10分钟内有效)，毕业设计在线求助平台";
 	public static final String SigninFailure = "用户名或密码错误";
 	public static final String NoMatchProvider = "没有匹配到符合条件的大神";
+	public static final String ProviderList = "providerList";
 	
 	
 }

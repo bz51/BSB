@@ -17,9 +17,11 @@ public class UserDaoSaveCode_PhoneImp extends HibernateTemplate {
 	@Override
 	protected Session handle(Session session) {
 		//判断手机号是否存在
-		int count = (int) session.createQuery("select count(id) from "+Parameter.UserEntity+" where phone=:phoneString")
+		long count = (long) session.createQuery("select count(id) from "+Parameter.UserEntity+" where phone=:phoneString")
 				.setString("phoneString", entity.getPhone())
 				.uniqueResult();
+		
+		System.out.println("count:"+count);
 		
 		//若不存在则保存验证信息
 		if(count==0){

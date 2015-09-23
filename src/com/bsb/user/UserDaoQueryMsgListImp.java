@@ -25,8 +25,8 @@ public class UserDaoQueryMsgListImp extends HibernateTemplate{
 		
 		//将这些信息设为已发送(删掉这些记录)
 		for(AuthCodeEntity e : list){
-			String hql2 = "from "+Parameter.AuthCodeEntity+" where id="+e.getId();
-			session.delete(hql2);
+			String hql2 = "delete "+Parameter.AuthCodeEntity+" where id="+e.getId();
+			session.createQuery(hql2).executeUpdate();
 		}
 		
 		super.result = true;

@@ -63,6 +63,7 @@ public class PostService {
 		//获取短信
 		PostDaoQueryNowUnGrabMsgListImp imp = new PostDaoQueryNowUnGrabMsgListImp();
 		this.result = imp.hibernateOperation();
+		this.reason = imp.getReason();
 		
 		//将短信装入MsgEntity
 		List<MsgEntity> msgList = new ArrayList<MsgEntity>();
@@ -112,7 +113,10 @@ public class PostService {
 		
 		//进行抢单
 		PostDaoGrabSingleImp imp = new PostDaoGrabSingleImp(require_id, providerEntity);
-		return imp.hibernateOperation();
+		boolean result = imp.hibernateOperation();
+		if(!result)
+			this.reason = imp.getReason();
+		return result;
 	}
 	
 	
@@ -123,18 +127,22 @@ public class PostService {
 	 */
 	public List<MsgEntity> query30MUnGrabMsgList(){
 		// 获取短信
-		String hql = "from "+Parameter.NeedEntity+" where state=0 and post=1 and time………………";
+		String hql = "from "+Parameter.NeedEntity+" where state=0 and post=1 and TIMESTAMPDIFF(MINUTE,time,current_timestamp())>30 ";
 		List<NeedEntity> needList = CoreDao.queryListByHql(hql);
 
-		// 将短信装入MsgEntity
-		List<MsgEntity> msgList = new ArrayList<MsgEntity>();
-		for (NeedEntity e : needList) {
-			MsgEntity msgEntity = new MsgEntity();
-			msgEntity.setPhone(e.getProvider_phone());
-			msgEntity.setContent("[毕设帮]您的订单30分钟未被抢单，是否提升赏金？点击下面链接："+"http://xxxxx?require_id="+e.getId());
-			msgList.add(msgEntity);
+		if (needList != null) {
+			// 将短信装入MsgEntity
+			List<MsgEntity> msgList = new ArrayList<MsgEntity>();
+			for (NeedEntity e : needList) {
+				MsgEntity msgEntity = new MsgEntity();
+				msgEntity.setPhone(e.getProvider_phone());
+				msgEntity.setContent("[毕设帮]您的订单30分钟未被抢单，是否提升赏金？点击下面链接：" + "http://xxxxx?require_id=" + e.getId());
+				msgList.add(msgEntity);
+			}
+			return msgList;
+		}else{
+			return null;
 		}
-		return msgList;
 	}
 	
 	

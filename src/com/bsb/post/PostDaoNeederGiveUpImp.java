@@ -26,8 +26,8 @@ public class PostDaoNeederGiveUpImp extends HibernateTemplate {
 		session.createQuery(hql1).executeUpdate();
 		
 		// 删除need_help表中所有的require_id
-		String hql2 = "from "+Parameter.NeedHelpEntity+" where require_id="+this.require_id;
-		session.delete(hql2);
+		String hql2 = "delete "+Parameter.NeedHelpEntity+" where require_id="+this.require_id;
+		session.createQuery(hql2).executeUpdate();
 		
 		return session;
 	}
