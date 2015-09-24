@@ -101,7 +101,7 @@ $(document).ready(function(){
 		$("#title1").text(val.title);
 		$("#time1").text(timeStamp2String(val.time));
 		$("#needer_skill1").text(skill2String(val.needer_skill));
-		$("#money1").text(val.money);
+		$("#money1").text(val.money+"元");
 		$("#content1").text(val.content);
 		localStorage.setItem("require_id",val.id);
 		

@@ -1,3 +1,5 @@
+document.write("<script language=javascript src='js/common.js'></script>");
+
 $(document).ready(function(){
 	/**
 	 * 点击下一步按钮
@@ -113,6 +115,6 @@ $(document).ready(function(){
 	 */
 	$("#name").text(localStorage.getItem("name"));
 	$("#phone").text(localStorage.getItem("phone"));
-	$("#skill").text(localStorage.getItem("skill"));
+	$("#skill").text(skill2String(localStorage.getItem("skill")));
 	
 });

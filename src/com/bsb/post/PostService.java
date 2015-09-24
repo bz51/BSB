@@ -145,6 +145,20 @@ public class PostService {
 		}
 	}
 	
+
+
+	/**
+	 * 提高赏金（现用）
+	 * @param id
+	 * @param money
+	 * @return
+	 */
+	public int increaseMoney_new(int id, int money) {
+		//提高赏金
+		PostDaoIncreaseMoneyImp_New imp = new PostDaoIncreaseMoneyImp_New(id, money);
+		boolean result = imp.hibernateOperation();
+		return imp.getCount(); 
+	}
 	
 	/**
 	 * 提高赏金

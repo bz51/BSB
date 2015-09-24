@@ -1,7 +1,6 @@
 document.write("<script language=javascript src='js/common.js'></script>");
 
 $(document).ready(function(){
-	alert(skill2String("101010101010"));
 	//显示loading
     $.mobile.loading('show', {  
         text: '数据加载中...', //加载器中显示的文字  
@@ -94,8 +93,10 @@ $(document).ready(function(){
 	function clickDetail1Btn(val){
 		$("#title1").text(val.title);
 		$("#time1").text(timeStamp2String(val.time));
+		//在详情页加载之前，就把needer_skill的代码值存下来；这样当点击“提高赏金”时，从页面获取的needer_skill不是中文
+		localStorage.setItem("needer_skill",val.needer_skill);
 		$("#needer_skill1").text(skill2String(val.needer_skill));
-		$("#money1").text(val.money);
+		$("#money1").text(val.money+"元");
 		$("#content1").text(val.content);
 		localStorage.setItem("require_id",val.id);
 		window.location.href="#pageDetail1";
@@ -145,8 +146,10 @@ $(document).ready(function(){
 		//将本条需求的详细信息记录到本地
 		localStorage.setItem("title",$("#title1").text());
 		localStorage.setItem("time",$("#time1").text());
-		localStorage.setItem("needer_skill",$("#needer_skill1").text());
-		localStorage.setItem("money",$("#money1").text());
+		//详情页加载之前needer_skill的代码形式就已经存入本地了，这里就不用再存了
+//		localStorage.setItem("needer_skill",$("#needer_skill1").text());
+		//若要提高赏金，那旧赏金就不需要了
+//		localStorage.setItem("money",$("#money1").text());
 		localStorage.setItem("content",$("#content1").text());
 		//记录fromWhere
 		localStorage.setItem("fromWhere","increaseMoney");

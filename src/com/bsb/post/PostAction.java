@@ -78,6 +78,9 @@ public class PostAction extends ActionSupport implements ApplicationAware{
 		if(list==null){
 			list = service.getAllProviderList();
 			application.put(Parameter.ProviderList, list);
+			
+			for(UserEntity e : list)
+				System.out.println("查出来的大神:"+e.getName());
 		}
 		
 		//进行匹配
@@ -92,14 +95,18 @@ public class PostAction extends ActionSupport implements ApplicationAware{
 			List<Integer> provider_skill_int = String2IntList(e.getSkill());
 			for(int i=0;i<provider_skill_int.size();i++){
 				int c = provider_skill_int.get(i)-needer_skill_int.get(i);
-				if(c<0)
+				if(c<0){
+					System.out.println("大神"+e.getName()+"匹配失败！");
 					break;
-				if((i+1)==provider_skill_int.size())
+				}
+				if((i+1)==provider_skill_int.size()){
+					System.out.println("大神"+e.getName()+"匹配成功！");
 					success_providers.add(e);
+				}
 			}
 		}
 		
-		System.out.println("匹配结果："+success_providers.size());
+		System.out.println("成功匹配到的大神数："+success_providers.size());
 
 		//将List<UserEntity>——>List<NeedHelpEntity>
 		List<NeedHelpEntity> needHelpList = new ArrayList<NeedHelpEntity>();
@@ -212,6 +219,13 @@ public class PostAction extends ActionSupport implements ApplicationAware{
 			return "increaseMoney";
 		}
 		
+		//修改need表中对应require_id的money(修改前首先要判断state是否为0，若为1或2都返回false，提示用户"别提高价格了，已经被抢单了")
+		//再修改need_help表中对应require_id的money和post
+		
+		this.count = service.increaseMoney_new(needEntity.getId(),needEntity.getMoney());
+		
+		return "increaseMoney";
+		/*
 		//获取application中的所有providers
 		List<UserEntity> list = (List<UserEntity>) application.get(Parameter.ProviderList);
 		//若application中providers为空，则主动去DB中查一下，再放到application中
@@ -261,7 +275,9 @@ public class PostAction extends ActionSupport implements ApplicationAware{
 		}
 		
 		this.count = success_providers.size();
+		
 		return "increaseMoney";
+		*/
 	}
 	
 	
@@ -459,6 +475,11 @@ public class PostAction extends ActionSupport implements ApplicationAware{
 	
 	public static void main(String[] args){
 		
+	}
+
+
+	public int getCount() {
+		return count;
 	}
 	
 	
