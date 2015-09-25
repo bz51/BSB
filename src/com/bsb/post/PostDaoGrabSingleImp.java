@@ -38,7 +38,7 @@ public class PostDaoGrabSingleImp extends HibernateTemplate {
 		// 若已抢单则返回错误提示；
 		if(entity.getState()!=0){
 			super.result = false;
-			super.reason = "已被抢单";
+			super.reason = "手慢了！已被别人抢单";
 			return session;
 		}
 		

@@ -1,6 +1,7 @@
 package com.bsb.post;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.bsb.core.CoreDao;
@@ -70,7 +71,7 @@ public class PostService {
 		for(NeedHelpEntity e : imp.getList()){
 			MsgEntity msgEntity = new MsgEntity();
 			msgEntity.setPhone(e.getProvider_phone());
-			msgEntity.setContent("[毕设帮]您有新订单！"+e.getNeeder_name()+"向您求助，点击链接立即抢单:"+"http://xxxx?reuqire_id="+e.getRequire_id());
+			msgEntity.setContent("[毕设帮]您有新订单！"+e.getNeeder_name()+"向您求助，点击链接立即抢单:"+Parameter.IndexPage);
 			msgList.add(msgEntity);
 		}
 		return msgList;
@@ -121,28 +122,39 @@ public class PostService {
 	
 	
 	/**
-	 * （没搞完!!!）(Android)查询need表中30分钟未抢单的需求
+	 * (Android)查询need表中30分钟未抢单的需求
 	 * 时间超过30分钟的记录
+	 * 步骤：查询所有已发送＋未被抢单的记录，再筛选出时间超过30分钟的记录
 	 * @return
 	 */
 	public List<MsgEntity> query30MUnGrabMsgList(){
 		// 获取短信
-		String hql = "from "+Parameter.NeedEntity+" where state=0 and post=1 and TIMESTAMPDIFF(MINUTE,time,current_timestamp())>30 ";
+		String hql = "from "+Parameter.NeedEntity+" where state=0 and post=1";
 		List<NeedEntity> needList = CoreDao.queryListByHql(hql);
-
+		
+		//用于存放筛选后的NeedEntity
+		List<NeedEntity> needList_timeThan30 = new ArrayList<NeedEntity>();
+		
+		// 筛选超过30分钟的记录
 		if (needList != null) {
+			for(int i=0;i<needList.size();i++){
+				//获取当前记录的时间
+				Date time = new Date(needList.get(i).getTime().getTime());
+				//若大于30分钟，则加入needList_timeThan30
+				if( (new Date().getTime()-time.getTime())>1800000 )
+					needList_timeThan30.add(needList.get(i));
+			}
+		}
+		
 			// 将短信装入MsgEntity
 			List<MsgEntity> msgList = new ArrayList<MsgEntity>();
-			for (NeedEntity e : needList) {
+			for (NeedEntity e : needList_timeThan30) {
 				MsgEntity msgEntity = new MsgEntity();
 				msgEntity.setPhone(e.getProvider_phone());
-				msgEntity.setContent("[毕设帮]您的订单30分钟未被抢单，是否提升赏金？点击下面链接：" + "http://xxxxx?require_id=" + e.getId());
+				msgEntity.setContent("[毕设帮]您的订单30分钟未被抢单，是否提升赏金？查看订单请点下面链接:" + Parameter.IndexPage);
 				msgList.add(msgEntity);
 			}
 			return msgList;
-		}else{
-			return null;
-		}
 	}
 	
 
@@ -157,7 +169,13 @@ public class PostService {
 		//提高赏金
 		PostDaoIncreaseMoneyImp_New imp = new PostDaoIncreaseMoneyImp_New(id, money);
 		boolean result = imp.hibernateOperation();
-		return imp.getCount(); 
+		if(result)
+			return imp.getCount();
+		else{
+			this.result = imp.getResult();
+			this.reason = imp.getReason();
+			return -1;
+		} 
 	}
 	
 	/**
@@ -200,7 +218,14 @@ public class PostService {
 		
 		//放弃一个订单
 		PostDaoNeederGiveUpImp imp = new PostDaoNeederGiveUpImp(require_id);
-		return imp.hibernateOperation();
+		boolean result = imp.hibernateOperation();
+		if(result)
+			return true;
+		else{
+			this.result = imp.getResult();
+			this.reason = imp.getReason();
+			return false;
+		}
 	}
 	
 	
@@ -294,7 +319,7 @@ public class PostService {
 		for (NeedEntity e : imp.getList()) {
 			MsgEntity msgEntity = new MsgEntity();
 			msgEntity.setPhone(e.getProvider_phone());
-			msgEntity.setContent("[毕设帮]您的订单已被"+e.getProvider_name()+"抢单，点击下面链接："+"http://xxxxx?require_id="+e.getId());
+			msgEntity.setContent("[毕设帮]您的订单已被"+e.getProvider_name()+"抢单，赶紧查看订单详情吧："+ Parameter.IndexPage);
 			msgList.add(msgEntity);
 		}
 		return msgList;
@@ -305,6 +330,18 @@ public class PostService {
 	}
 	public String getReason() {
 		return reason;
+	}
+
+
+	
+	/**
+	 * 获取某一条需求的状态(提高赏金前判断)
+	 * @param parseInt
+	 * @return
+	 */
+	public int getStateById(int require_id) {
+		NeedEntity entity = CoreDao.queryUniqueById(require_id, Parameter.NeedEntity);
+		return entity.getState();
 	}
 	
 	

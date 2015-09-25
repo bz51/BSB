@@ -137,6 +137,12 @@
     			<param name="includeProperties">msgList.*,reason,result</param>
     			<param name="contentType">text/html</param> 
     		</result>
+		
+			<!-- 获取某一条需求的状态 -->
+			<result name="getStateById" type="json">
+    			<param name="includeProperties">state,reason,result</param>
+    			<param name="contentType">text/html</param> 
+    		</result>
     		
 		</action>
     </package>

@@ -127,7 +127,37 @@ $(document).ready(function(){
 			    
 			   //若返回no
 			   if(json.result=="no"){
-				   alert(json.reason);
+				   //若已有大神抢单，则获取该单详情，并跳转到抢单成功页面
+				   if(json.reason=="已有大神抢单!"){
+					   //显示loading
+					   $.mobile.loading('show', {  
+						   text: '刷新中...', //加载器中显示的文字  
+						   textVisible: true, //是否显示文字  
+						   theme: 'a',        //加载器主题样式a-e  
+						   textonly: false,   //是否只显示文字  
+						   html: ""           //要显示的html内容，如图片等  
+					   });  
+
+					   //发送请求，获取本单详情
+					   $.get("post/postAction!getNeedDetail?require_id="+localStorage.getItem("require_id"),
+						  
+						 function(data,status){
+						   var json = eval('(' + data + ')');
+						   //隐藏加载器  
+						   $.mobile.loading('hide');
+						    
+						   //若返回no
+						   if(json.result=="no"){
+							   alert("刷新出错，请重试");
+						    }
+						   
+						    //若返回yes
+						    else{
+						    	alert("已被大神抢单！立即查看");
+						    	clickDetail2Btn(json.needEntity);
+						    }
+						  });
+				   }
 			    }
 			   
 			    //若返回yes，跳转到订单列表
@@ -143,18 +173,56 @@ $(document).ready(function(){
 	 * 点击“提高赏金”按钮
 	 */
 	$("#increaseBtn").click(function(){
-		//将本条需求的详细信息记录到本地
-		localStorage.setItem("title",$("#title1").text());
-		localStorage.setItem("time",$("#time1").text());
-		//详情页加载之前needer_skill的代码形式就已经存入本地了，这里就不用再存了
-//		localStorage.setItem("needer_skill",$("#needer_skill1").text());
-		//若要提高赏金，那旧赏金就不需要了
-//		localStorage.setItem("money",$("#money1").text());
-		localStorage.setItem("content",$("#content1").text());
-		//记录fromWhere
-		localStorage.setItem("fromWhere","increaseMoney");
-		//跳转至填写赏金页面
-		window.location.href="getHelp.html#page3";
+		//判断本单是否被抢
+		//显示loading
+		   $.mobile.loading('show', {  
+			   text: '刷新中...', //加载器中显示的文字  
+			   textVisible: true, //是否显示文字  
+			   theme: 'a',        //加载器主题样式a-e  
+			   textonly: false,   //是否只显示文字  
+			   html: ""           //要显示的html内容，如图片等  
+		   });  
+
+		   //发送请求，获取本单详情
+		   $.get("post/postAction!getNeedDetail?require_id="+localStorage.getItem("require_id"),
+			  
+			 function(data,status){
+			   var json = eval('(' + data + ')');
+			   //隐藏加载器  
+			   $.mobile.loading('hide');
+			    
+			   //若返回no
+			   if(json.result=="no"){
+				   alert("网络出错，请重试");
+			    }
+			   
+			    //若返回yes
+			    else{
+			    	//若已被抢单，则进入成功抢单详情页
+			    	if(json.needEntity.state==1){
+				    	alert("已被大神抢单！立即查看");
+			    		clickDetail2Btn(json.needEntity);
+			    	}
+			    	
+			    	//若未被抢单，则可以提高赏金
+			    	else{
+			    		//将本条需求的详细信息记录到本地
+			    		localStorage.setItem("title",$("#title1").text());
+			    		localStorage.setItem("time",$("#time1").text());
+			    		//详情页加载之前needer_skill的代码形式就已经存入本地了，这里就不用再存了
+//			    		localStorage.setItem("needer_skill",$("#needer_skill1").text());
+			    		//若要提高赏金，那旧赏金就不需要了
+//			    		localStorage.setItem("money",$("#money1").text());
+			    		localStorage.setItem("content",$("#content1").text());
+			    		//记录fromWhere
+			    		localStorage.setItem("fromWhere","increaseMoney");
+			    		//跳转至填写赏金页面
+			    		window.location.href="getHelp.html#page3";
+			    	}
+			    }
+			  });
+		
+		
 	});
 	
 });

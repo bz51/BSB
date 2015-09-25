@@ -27,6 +27,7 @@ public class PostAction extends ActionSupport implements ApplicationAware{
 	private String needer_id;
 	private String provider_id;
 	private int count;
+	private int state;
 	private String result = "yes";
 	private String reason;
 	
@@ -224,6 +225,10 @@ public class PostAction extends ActionSupport implements ApplicationAware{
 		
 		this.count = service.increaseMoney_new(needEntity.getId(),needEntity.getMoney());
 		
+		if(count<=0){
+			this.result = "no";
+			this.reason = service.getReason();
+		}
 		return "increaseMoney";
 		/*
 		//获取application中的所有providers
@@ -296,6 +301,7 @@ public class PostAction extends ActionSupport implements ApplicationAware{
 			this.result = "no";
 			this.reason = service.getReason();
 		}
+		
 		return "neederGiveUp";
 	}
 	
@@ -370,6 +376,24 @@ public class PostAction extends ActionSupport implements ApplicationAware{
 	public String queryUnPushNeederMsgList(){
 		this.msgList = service.queryUnPushNeederMsgList();
 		return "queryUnPushNeederMsgList";
+	}
+	
+	
+	/**
+	 * 获取某一条需求的状态(提高赏金前判断)
+	 */
+	public String getStateById(){
+		if(require_id==null || "".equals(require_id)){
+			this.result = "no";
+			this.reason = "require_id不能为空";
+			return "getStateById";
+		}
+		
+		this.state = service.getStateById(Integer.parseInt(require_id));
+		if(state<=0)
+			this.result = "no";
+		
+		return "getStateById";
 	}
 	
 	public String getResult() {
@@ -480,6 +504,16 @@ public class PostAction extends ActionSupport implements ApplicationAware{
 
 	public int getCount() {
 		return count;
+	}
+
+
+	public int getState() {
+		return state;
+	}
+
+
+	public void setState(int state) {
+		this.state = state;
 	}
 	
 	

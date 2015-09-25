@@ -48,7 +48,7 @@ $(document).ready(function(){
 		    			var html = '<li><a href="" id="getDetail1Btn'+index+'"><table width="100%">'+
 		    			'<tr><td width="70%"><span style="color:#009933;">抢单进行中</span></td><td width="30%"><span style="font-size:13px;">'+timeStamp2String(val.time)+'</span></td></tr>'+
 		    			'<tr><td><span style="font-size:13px;">'+val.title+'</span></td><td><span style="font-size:13px;color:#FF6600;">'+val.money+'元</span></td></tr>'+
-		    			'<tr><td colspan="2"><span style="font-size:13px;color:#999999;">'+skill2String(val.needer_skill)+'</span></td><td><a href="" data-role="button" data-mini="true" data-theme="b" id="grabSingle">立即抢单</a></td></tr>'+
+		    			'<tr><td><span style="font-size:13px;color:#999999;">'+skill2String(val.needer_skill)+'</span></td><td><a href="" data-role="button" data-inline="true" data-mini="true" data-theme="b" id="grabSingle">立即抢单</a></td></tr>'+
 		    			'</table></a></li>';
 		    			$("#list").append(html);
 		    			$("#getDetail1Btn"+index).click(function(){
@@ -60,6 +60,7 @@ $(document).ready(function(){
 		    	
 		    	//刷新listview
     			$("#list").listview("refresh");
+    			$("#grabSingle").button();
 		    }
 		    
 	});
