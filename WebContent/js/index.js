@@ -8,5 +8,13 @@ $(document).ready(function(){
 		else
 			window.location.href="adminHelper.html";
 	}
-	
+
+	//未登录，就进入首页
+	else{
+		//大神在线人数
+		var count = new Array(365,479,273,398,401,321,379,405,455,412);
+		var i = Math.floor(Math.random()*10);
+		$("#count").text(count[i]);
+	}
+
 });

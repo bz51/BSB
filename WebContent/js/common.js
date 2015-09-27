@@ -38,49 +38,71 @@
 			}
 			if(index==1){
 				if(val=="1")
-					result = result + "\\C/C++";
+					result = result + "、C/C++";
 			}
 			if(index==2){
 				if(val=="1")
-					result = result + "\\Python";
+					result = result + "、Python";
 			}
 			if(index==3){
 				if(val=="1")
-					result = result + "\\C#";
+					result = result + "、C#";
 			}
 			if(index==4){
 				if(val=="1")
-					result = result + "\\IOS";
+					result = result + "、IOS";
 			}
 			if(index==5){
 				if(val=="1")
-					result = result + "\\PHP";
+					result = result + "、PHP";
 			}
 			if(index==6){
 				if(val=="1")
-					result = result + "\\Andorid";
+					result = result + "、Andorid";
 			}
 			if(index==7){
 				if(val=="1")
-					result = result + "\\大数据";
+					result = result + "、大数据";
 			}
 			if(index==8){
 				if(val=="1")
-					result = result + "\\算法";
+					result = result + "、算法";
 			}
 			if(index==9){
 				if(val=="1")
-					result = result + "\\软件测试";
+					result = result + "、软件测试";
 			}
 			if(index==10){
 				if(val=="1")
-					result = result + "\\游戏";
+					result = result + "、游戏";
 			}
 			if(index==11){
 				if(val=="1")
-					result = result + "\\其他";
+					result = result + "、其他";
 			}
 		});
 		
+		//去除开头的顿号
+		if(result.charAt(0)=="、"){
+			result = result.substr(1);
+		}
 		return result;
 	}
+	
+	
+	/**
+	 * 判断是否符合金钱格式
+	 * @param s
+	 * @returns {Boolean}
+	 */
+	function isMoney( s )
+	{
+	    var regu = "[1-9][0-9]*";
+	    var re = new RegExp(regu);
+	    if (re.test(s)) {
+	        return true;
+	    }
+	    else {
+	        return false;
+	    }
+	};

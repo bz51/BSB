@@ -28,8 +28,14 @@ $(document).ready(function(){
 		if($("#phone").val()==null || $("#phone").val()=="")
 			$("#reason2").text("手机号不能为空哦～");
 		
+		//验证手机号是否合法
+		else if(!/^1\d{10}$/.test($("#phone").val())){
+			$("#reason2").text("请输入正确的手机号～");
+		}
+		
 		//若填了手机号，则获取验证码
 		else{
+
 			//显示loading
 		    $.mobile.loading('show', {  
 		        text: '获取中...', //加载器中显示的文字  
@@ -62,6 +68,7 @@ $(document).ready(function(){
 				    	$("#reason2").text("验证码发送成功啦！");
 				    }
 				  });
+			
 		}
 	});
 	
@@ -124,7 +131,7 @@ $(document).ready(function(){
 				    	
 					    //判断往哪儿跳转
 					    var fromWhere = localStorage.getItem("fromWhere");
-					    alert("fromwhere＝"+fromWhere);
+//					    alert("fromwhere＝"+fromWhere);
 					    
 				    	//跳转至provider个人中心
 					    if(fromWhere=="providerHelp"){

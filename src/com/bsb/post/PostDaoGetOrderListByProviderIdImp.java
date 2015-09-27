@@ -27,7 +27,7 @@ public class PostDaoGetOrderListByProviderIdImp extends HibernateTemplate {
 	@Override
 	protected Session handle(Session session) {
 		// 从need_help表中获取该provider所有等待抢单的订单
-		String hql1 = "from "+Parameter.NeedHelpEntity+" where provider_id="+this.provider_id;
+		String hql1 = "from "+Parameter.NeedHelpEntity+" where provider_id="+this.provider_id+" order by time desc";
 		List<NeedHelpEntity> needHelpList = session.createQuery(hql1).list();
 		// 将所有未抢单订单放入list中
 		for(NeedHelpEntity e : needHelpList){

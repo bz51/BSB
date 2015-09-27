@@ -15,7 +15,7 @@ import com.bsb.tools.HibernateTemplate;
  *
  */
 public class UserDaoQueryMsgListImp extends HibernateTemplate{
-	private List<AuthCodeEntity> list;
+	private List<AuthCodeEntity> list = new ArrayList<AuthCodeEntity>();
 	
 	@Override
 	protected Session handle(Session session) {

@@ -47,7 +47,7 @@ $(document).ready(function(){
 					    
 					  //判断往哪儿跳转
 					    var fromWhere = localStorage.getItem("fromWhere");
-					    alert("fromWhere:"+fromWhere);
+//					    alert("fromWhere:"+fromWhere);
 					    //从provider跳来,判断用户的role是否是provider
 					    if(fromWhere=="providerHelp"){
 					    	//若是，则进入个人中心
@@ -79,7 +79,7 @@ $(document).ready(function(){
 							    });  
 							    
 						    	//发送请求
-							    alert("post/postAction!postNeed?needEntity.title="+localStorage.getItem("title")+"&needEntity.content="+localStorage.getItem("content")+"&needEntity.money="+localStorage.getItem("money")+"&needEntity.needer_id="+localStorage.getItem("id")+"&needEntity.needer_name="+localStorage.getItem("name")+"&needEntity.needer_phone="+localStorage.getItem("phone")+"&needEntity.needer_skill="+localStorage.getItem("needer_skill"));
+//							    alert("post/postAction!postNeed?needEntity.title="+localStorage.getItem("title")+"&needEntity.content="+localStorage.getItem("content")+"&needEntity.money="+localStorage.getItem("money")+"&needEntity.needer_id="+localStorage.getItem("id")+"&needEntity.needer_name="+localStorage.getItem("name")+"&needEntity.needer_phone="+localStorage.getItem("phone")+"&needEntity.needer_skill="+localStorage.getItem("needer_skill"));
 						    	$.get("post/postAction!postNeed?needEntity.title="+localStorage.getItem("title")+"&needEntity.content="+localStorage.getItem("content")+"&needEntity.money="+localStorage.getItem("money")+"&needEntity.needer_id="+localStorage.getItem("id")+"&needEntity.needer_name="+localStorage.getItem("name")+"&needEntity.needer_phone="+localStorage.getItem("phone")+"&needEntity.needer_skill="+localStorage.getItem("needer_skill"),
 								  
 								  function(data,status){

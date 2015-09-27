@@ -29,12 +29,16 @@ $(document).ready(function(){
 		    	//遍历所有返回的结果
 		    	$.each(json.needList, function(index, val) {
 		    		
+		    		//将title超过14个字符的部分用……表示
+		    		var subTitle = val.title;
+	    			if(val.title.length>14)
+	    				subTitle = val.title.substr(0,14)+"……";
 		    		//显示已抢单的信息
 		    		if(val.state==1){
 		    			var html = '<li><a href="" id="getDetail2Btn'+index+'"><table width="100%">'+
 		    				'<tr><td width="70%"><span style="color:red;">抢单成功</span></td><td width="30%"><span style="font-size:13px;">'+timeStamp2String(val.time)+'</span></td></tr>'+
-		    				'<tr><td><span style="font-size:13px;">'+val.title+'</span></td><td><span style="font-size:13px;color:#FF6600;">'+val.money+'元</span></td></tr>'+
-		    				'<tr><td colspan="2"><span style="font-size:13px;color:#999999;">'+skill2String(val.needer_skill)+'</span></td><td></td></tr>'+
+		    				'<tr><td><span style="font-size:13px;">'+subTitle+'</span></td><td><span style="font-size:13px;color:#FF6600;">'+val.money+'元</span></td></tr>'+
+		    				'<tr><td colspan="2"><span style="font-size:12px;color:#999999;">'+skill2String(val.needer_skill)+'</span></td><td></td></tr>'+
 		    				'</table></a></li>';
 		    			$("#list").append(html);
 		    			$("#getDetail2Btn"+index).click(function(){
@@ -46,8 +50,8 @@ $(document).ready(function(){
 		    		if(val.state==0){
 		    			var html = '<li><a href="" id="getDetail1Btn'+index+'"><table width="100%">'+
 		    			'<tr><td width="70%"><span style="color:#009933;">等待抢单</span></td><td width="30%"><span style="font-size:13px;">'+timeStamp2String(val.time)+'</span></td></tr>'+
-		    			'<tr><td><span style="font-size:13px;">'+val.title+'</span></td><td><span style="font-size:13px;color:#FF6600;">'+val.money+'元</span></td></tr>'+
-		    			'<tr><td colspan="2"><span style="font-size:13px;color:#999999;">'+skill2String(val.needer_skill)+'</span></td><td><input type="hidden" id="require_id"/></td></tr>'+
+		    			'<tr><td><span style="font-size:13px;">'+subTitle+'</span></td><td><span style="font-size:13px;color:#FF6600;">'+val.money+'元</span></td></tr>'+
+		    			'<tr><td colspan="2"><span style="font-size:12px;color:#999999;">'+skill2String(val.needer_skill)+'</span></td><td><input type="hidden" id="require_id"/></td></tr>'+
 		    			'</table></a></li>';
 		    			$("#list").append(html);
 		    			$("#getDetail1Btn"+index).click(function(){
@@ -59,8 +63,8 @@ $(document).ready(function(){
 		    		if(val.state==2){
 		    			var html = '<li><table width="100%">'+
 		    			'<tr><td width="70%"><span style="color:#666666;">已失效</span></td><td width="30%"><span style="font-size:13px;color:#666666;">'+timeStamp2String(val.time)+'</span></td></tr>'+
-		    			'<tr><td><span style="font-size:13px;color:#666666;">'+val.title+'</span></td><td><span style="font-size:13px;color:#666666;">'+val.money+'元</span></td></tr>'+
-		    			'<tr><td colspan="2"><span style="font-size:13px;color:#666666;">'+skill2String(val.needer_skill)+'</span></td><td></td></tr>'+
+		    			'<tr><td><span style="font-size:13px;color:#666666;">'+subTitle+'</span></td><td><span style="font-size:13px;color:#666666;">'+val.money+'元</span></td></tr>'+
+		    			'<tr><td colspan="2"><span style="font-size:12px;color:#666666;">'+skill2String(val.needer_skill)+'</span></td><td></td></tr>'+
 		    			'</table></li>';
 		    			$("#list").append(html);
 		    		}

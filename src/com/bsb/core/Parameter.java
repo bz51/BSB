@@ -13,7 +13,7 @@ public class Parameter {
 	public static final String NoMatchProvider = "没有匹配到符合条件的大神";
 	public static final String ProviderList = "providerList";
 	
-	public static final String IndexPage = "http://115.28.217.42/BSB";
+	public static final String IndexPage = "http://5188.help";
 	
 	
 }

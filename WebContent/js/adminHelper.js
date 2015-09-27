@@ -26,15 +26,33 @@ $(document).ready(function(){
 		   
 		    //若返回yes，显示查询到的结果
 		    else{
+		    	//若没有信息，则显示“还木有人向你求助哦～”
+		    	if(json.needList.length<=0){
+		    		$("#tips").show();
+		    		$("#noDataList").show();
+		    		$("#list").hide();
+		    	}
+		    	
 		    	//遍历所有返回的结果
 		    	$.each(json.needList, function(index, val) {
+		    		//有数据的话，隐藏noDataList，显示list
+		    		$("#tips").hide();
+		    		$("#noDataList").hide();
+		    		$("#list").show();
 		    		
+		    		//将title超过14个字符的部分用……表示
+		    		var subTitle = val.title;
+	    			if(val.title.length>14){
+	    				subTitle = val.title.substr(0,14)+"……";
+	    			}
+	    			
+	    			
 		    		//显示已抢单的信息
 		    		if(val.state==1){
 		    			var html = '<li><a href="" id="getDetail2Btn'+index+'"><table width="100%">'+
-		    				'<tr><td width="70%"><span style="color:red;">抢单成功</span></td><td width="30%"><span style="font-size:13px;">'+timeStamp2String(val.time)+'</span></td></tr>'+
-		    				'<tr><td><span style="font-size:13px;">'+val.title+'</span></td><td><span style="font-size:13px;color:#FF6600;">'+val.money+'元</span></td></tr>'+
-		    				'<tr><td colspan="2"><span style="font-size:13px;color:#999999;">'+skill2String(val.needer_skill)+'</span></td><td></td></tr>'+
+		    				'<tr><td width="70%"><span style="color:#009933;">抢单成功</span></td><td width="30%"><span style="font-size:13px;">'+timeStamp2String(val.time)+'</span></td></tr>'+
+		    				'<tr><td><span style="font-size:13px;">'+subTitle+'</span></td><td><span style="font-size:13px;color:#FF6600;">'+val.money+'元</span></td></tr>'+
+		    				'<tr><td colspan="2"><span style="font-size:12px;color:#999999;">'+skill2String(val.needer_skill)+'</span></td><td></td></tr>'+
 		    				'</table></a></li>';
 		    			$("#list").append(html);
 		    			$("#getDetail2Btn"+index).click(function(){
@@ -46,9 +64,9 @@ $(document).ready(function(){
 		    		//显示等待抢单的信息
 		    		if(val.state==0){
 		    			var html = '<li><a href="" id="getDetail1Btn'+index+'"><table width="100%">'+
-		    			'<tr><td width="70%"><span style="color:#009933;">抢单进行中</span></td><td width="30%"><span style="font-size:13px;">'+timeStamp2String(val.time)+'</span></td></tr>'+
-		    			'<tr><td><span style="font-size:13px;">'+val.title+'</span></td><td><span style="font-size:13px;color:#FF6600;">'+val.money+'元</span></td></tr>'+
-		    			'<tr><td><span style="font-size:13px;color:#999999;">'+skill2String(val.needer_skill)+'</span></td><td><a href="" data-role="button" data-inline="true" data-mini="true" data-theme="b" id="grabSingle">立即抢单</a></td></tr>'+
+		    			'<tr><td width="70%"><span style="color:red;">抢单进行中</span></td><td width="30%"><span style="font-size:13px;">'+timeStamp2String(val.time)+'</span></td></tr>'+
+		    			'<tr><td><span style="font-size:13px;">'+subTitle+'</span></td><td><span style="font-size:13px;color:#FF6600;">'+val.money+'元</span></td></tr>'+
+		    			'<tr><td><span style="font-size:12px;color:#999999;">'+skill2String(val.needer_skill)+'</span></td><td><a href="" data-role="button" data-inline="true" data-mini="true" data-theme="b" id="grabSingle" class="grabSingle">立即抢单</a></td></tr>'+
 		    			'</table></a></li>';
 		    			$("#list").append(html);
 		    			$("#getDetail1Btn"+index).click(function(){
@@ -60,7 +78,7 @@ $(document).ready(function(){
 		    	
 		    	//刷新listview
     			$("#list").listview("refresh");
-    			$("#grabSingle").button();
+    			$(".grabSingle").button();
 		    }
 		    
 	});
@@ -137,26 +155,43 @@ $(document).ready(function(){
 			  
 			 function(data,status){
 			   var json = eval('(' + data + ')');
-			    
+			   
 			   //隐藏加载器  
 			   $.mobile.loading('hide');
 			    
 			   //若返回no
 			   if(json.result=="no"){
 				   //若已被抢单，则重新刷新订单列表
-				   if(json.reason=="已被抢单"){
+//				   if(json.reason=="已被抢单"){
+				   	   alert(json.reason);
 					   window.location.href="adminHelper.html";
-				   }
-				   alert(json.reason);
+//				   }
 			    }
 			   
 			    //若返回yes，跳转到详情页面
 			    else{
 			    	//标识从抢单页面跳转至抢单成功详情
 			    	localStorage.setItem("fromWhere","grabSingle");
-			    	clickDetail2Btn()
+			    	clickDetail2Btn();
 			    }
 			  });		
 	});
-
+	
+	
+	/**
+	 * 点击“返回”按钮
+	 */
+	$("#fanhui").click(function(){
+		//判断是从哪个页面跳转过来
+		//若是从抢单页面跳过来，那么返回的话需要返回到列表，并且刷新
+		if(localStorage.getItem("fromWhere")=="grabSingle"){
+			localStorage.setItem("fromWhere","");
+			window.location.href="adminHelper.html";
+		}
+		
+		//若是从列表页面跳过来，那么返回的话只需要简单的返回即可
+		else{
+			window.history.go(-1);
+		}
+	});
 });

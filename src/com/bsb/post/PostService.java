@@ -124,7 +124,7 @@ public class PostService {
 	/**
 	 * (Android)查询need表中30分钟未抢单的需求
 	 * 时间超过30分钟的记录
-	 * 步骤：查询所有已发送＋未被抢单的记录，再筛选出时间超过30分钟的记录
+	 * 步骤：查询所有已发送＋未被抢单的记录，再筛选出时间超过30分钟+小于60分钟的记录
 	 * @return
 	 */
 	public List<MsgEntity> query30MUnGrabMsgList(){
@@ -141,7 +141,7 @@ public class PostService {
 				//获取当前记录的时间
 				Date time = new Date(needList.get(i).getTime().getTime());
 				//若大于30分钟，则加入needList_timeThan30
-				if( (new Date().getTime()-time.getTime())>1800000 )
+				if( (new Date().getTime()-time.getTime())>=1800000 && (new Date().getTime()-time.getTime())<3600000)
 					needList_timeThan30.add(needList.get(i));
 			}
 		}
@@ -243,8 +243,30 @@ public class PostService {
 		}
 		
 		// 获取
-		String hql = "from "+Parameter.NeedEntity+" where needer_id="+needer_id;
-		return CoreDao.queryListByHql(hql);
+		String hql = "from "+Parameter.NeedEntity+" where needer_id="+needer_id +"order by time desc";
+		
+		// 对结果进行排序：被抢单排在前、未被抢单排在后、失效单排最后＋相同情况下根据时间排序
+		List<NeedEntity> list_0 = new ArrayList<NeedEntity>();//专门存放state为0的记录
+		List<NeedEntity> list_1 = new ArrayList<NeedEntity>();//专门存放state为1的记录
+		List<NeedEntity> list_2 = new ArrayList<NeedEntity>();//专门存放state为2的记录
+		// 所有的记录
+		List<NeedEntity> list_all = CoreDao.queryListByHql(hql);
+		for(NeedEntity e : list_all){
+			if(e.getState()==0)
+				list_0.add(e);
+			else if(e.getState()==1)
+				list_1.add(e);
+			else
+				list_2.add(e);
+		}
+		
+		// 将存放所有记录的list_all清空，然后把三个list按照顺序存进去
+		list_all.clear();
+		list_all.addAll(list_1);
+		list_all.addAll(list_0);
+		list_all.addAll(list_2);
+		
+		return list_all;
 	}
 	
 	
@@ -264,7 +286,27 @@ public class PostService {
 		// 获取
 		PostDaoGetOrderListByProviderIdImp imp = new PostDaoGetOrderListByProviderIdImp(provider_id);
 		this.result = imp.hibernateOperation();
-		return imp.getList();
+		
+		// 对结果进行排序：未抢单排在前、已抢单排在后＋相同情况下根据时间排序
+		List<NeedEntity> list_0 = new ArrayList<NeedEntity>();//专门存放state为0的记录
+		List<NeedEntity> list_1 = new ArrayList<NeedEntity>();//专门存放state为1的记录
+		List<NeedEntity> list_2 = new ArrayList<NeedEntity>();//专门存放state为2的记录
+		// 所有的记录
+		List<NeedEntity> list_all = imp.getList();
+		for(NeedEntity e : list_all){
+			if(e.getState()==0)
+				list_0.add(e);
+			else
+				list_1.add(e);
+		}
+				
+		// 将存放所有记录的list_all清空，然后把三个list按照顺序存进去
+		list_all.clear();
+		list_all.addAll(list_0);
+		list_all.addAll(list_1);
+		
+		
+		return list_all;
 	}
 	
 	

@@ -1,3 +1,4 @@
+
 $(document).ready(function(){
 	/**
 	 * 点击下一步按钮
@@ -90,6 +91,11 @@ $(document).ready(function(){
 		if($("#money").val()==null || $("#money").val()=='')
 			$("#reason3").text("打赏金额还没填呢～");
 		
+		else if(!/^[0-9]*$/.test($("#money").val())){
+//			alert($("#money").val());
+			$("#reason3").text("请输入正确的金额");
+		}
+		
 		//若都已填满，则提交表单
 		else{
 			//显示loading
@@ -108,7 +114,7 @@ $(document).ready(function(){
 		    	//发送请求
 		    	var url = "";
 		    	//若从“提高赏金”页面调过来，则从本地读取各个参数
-		    	alert("fromWhere="+localStorage.getItem("fromWhere"));
+//		    	alert("fromWhere="+localStorage.getItem("fromWhere"));
 		    	if(localStorage.getItem("fromWhere")=="increaseMoney"){
 		    		url = "post/postAction!increaseMoney?needEntity.id="+localStorage.getItem("require_id")+"&needEntity.money="+$("#money").val();
 		    		localStorage.setItem("fromWhere","");
@@ -116,7 +122,7 @@ $(document).ready(function(){
 		    	//若从发布需求一步步到这个页面，则从界面上直接获取各个参数
 		    	else
 		    		url = "post/postAction!postNeed?needEntity.title="+$("#title").val()+"&needEntity.content="+$("#content").val()+"&needEntity.money="+$("#money").val()+"&needEntity.needer_id="+localStorage.getItem("id")+"&needEntity.needer_name="+localStorage.getItem("name")+"&needEntity.needer_phone="+localStorage.getItem("phone")+"&needEntity.needer_skill="+localStorage.getItem("skill");
-		    	alert(url);
+//		    	alert(url);
 		    	$.get(url,
 				  
 				  function(data,status){
@@ -133,7 +139,7 @@ $(document).ready(function(){
 				    //若返回yes
 				    else{
 				    	//将匹配到的大神人数显示
-				    	alert(data);
+//				    	alert(data);
 //				    	localStorage.setItem("count",json.count);//将得到的大神人数存到本地，因为注册成功后会在注册页面发布需求，然后将count值保存到本地，最后跳转到发布成功页面显示count。若count不存到本地，当从本地获取count后显示在页面上就会显示null
 				    	$("#count").text(json.count);
 				    	//跳转至page4

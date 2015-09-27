@@ -1,35 +1,144 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
+<script type="text/javascript" src="js/tongji.js"></script>
 <head>
-	<meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width" />
-<link rel="stylesheet" href="http://apps.bdimg.com/libs/jquerymobile/1.3.0/jquery.mobile-1.3.0.min.css">
-<script src="http://apps.bdimg.com/libs/jquery/1.8.3/jquery.min.js"></script>
-<script src="http://apps.bdimg.com/libs/jquerymobile/1.3.0/jquery.mobile-1.3.0.min.js"></script>
-<script type="text/javascript" src="js/index.js"></script>
+	<meta name="keywords" content="代做毕设,毕设帮,毕业设计,毕设,5188,软件代做,Android" />
+	<meta name="description" content="毕设帮5188.help，毕业设计在线求助平台！百位大神在线，大神为你做毕设！毕设帮，最专业的毕业设计外包平台" />
+  	<title>毕设帮－毕业设计在线求助平台</title>
+	<link rel="icon" type="image/vnd.microsoft.icon" href="images/logo1.png">
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge, chrome = 1">
+	<meta name="baidu-site-verification" content="xedSUFYLJc" />
+	<link href="http://solar.fbcontent.cn/s/5afdd6c5-Home.css" rel="stylesheet">
+	
+<script type="text/javascript">
+if(!IsPC()){
+	window.location.href="index_phone.html";
+}
+
+function IsPC() {
+    var userAgentInfo = navigator.userAgent;
+    var Agents = ["Android", "iPhone",
+                "SymbianOS", "Windows Phone",
+                "iPad", "iPod"];
+    var flag = true;
+    for (var v = 0; v < Agents.length; v++) {
+        if (userAgentInfo.indexOf(Agents[v]) > 0) {
+            flag = false;
+            break;
+        }
+    }
+    return flag;
+}
+</script>
 </head>
+
 <body>
+<h1 style="display:none;">毕设帮</h1>
 
-<div data-role="page" id="page1" data-fullscreen="true">
+	<div class="wrap">
+	<div class="hero-wrap">
+	<div class="hero">
+		<!-- 大手机 -->
+		<img src="images/phone.png" width="508" height="618" class="phone">
+		<div class="logo">
+			<!-- APP LOGO+文字 -->
+			<img src="images/logo2.png" width="415" height="123">
+		</div>
+		<!-- 
+		<a href="/g?client=IPHONE&amp;vendor=" class="download iphone">
+			<p>iPhone</p>
+		</a>
+		
+		<a href="/g?client=ANDROID&amp;vendor=" class="download android">
+			<p>Android</p>
+		</a>
+		 -->
+		 
+		<div class="download barcode">
+			<div class="img">
+				<!-- 首页二维码 -->
+				<img src="images/2code_index.png" width="250" height="250">
+			</div>
+			<p>手机网页版</p>
+		</div>
+		 
+		<div class="download barcode">
+			<div class="img">
+				<!-- 首页二维码 -->
+				<img src="images/2code_index.png" width="250" height="250">
+			</div>
+			<p>微信订阅</p>
+		</div>
+		
+		<!-- 向下箭头，无需修改 -->
+		<img src="http://solar.fbcontent.cn/s/14a7ee1e-blue-arrow.png" width="50" height="25" class="arrow">
+	</div>
+	</div>
 	
-	<div data-role="header">
-		<h1>5188.help</h1>  
-  	</div>
+	<div class="content-wrap">
+		<div class="content">
+			<p class="icon ape">
+				<!-- 第二屏第一幅图 -->
+				<img src="images/contact-icon.png" width="176" height="166">
+				<!-- <img src="http://solar.fbcontent.cn/s/f2cf837d-ape.png" width="176" height="166"> -->
+			</p>
+			
+			<p>
+				<!-- 第二屏第一幅图的文字 -->
+				<img src="images/pic1.png" width="147" height="35">
+			</p>
+			
+			<p>百位大神在线提供帮助</p>
+			<p></p>
+		</div>
+		
+		<div class="content">
+			<p class="icon camera">
+				<!-- 第二屏第二幅图 -->
+				<img src="images/cloud-icon.png" width="176" height="166">
+			</p>
+			
+			<p>
+				<!-- 第二屏第二幅图的文字 -->
+				<img src="images/pic2.png" width="146" height="35">
+			</p>
+			
+			<p>手机网页轻松访问</p>
+		</div>
+		
+		<div class="content free">
+			<p class="icon">
+				<!-- 第二屏第三幅图 -->
+				<img src="images/web-code.png" width="176" height="166">
+			</p>
+			
+			<p>
+				<!-- 第二屏第三幅图的文字 -->
+				<img src="images/pic3_4.png" width="146" height="35">
+			</p>
+			
+			<p>智能选择最合适的大神</p><p>为您提供帮助</p>
+			
+		</div>
+	</div>
 	
-  	<div data-role="content">
-  		<h1 style="text-align:center;">毕设帮</h1>
-  		<h3 style="text-align:center">毕业设计在线求助平台</h3>
-
-      <hr>
-
-  		<h5 style="text-align:center">当前365位大神在线</h5>
-  		<a href="getHelp.html" data-role="button" rel="external">获取帮助</a>
-  		<a href="provideHelp.html" data-role="button" rel="external">提供帮助</a>
-      <a href="login.html" rel="external" style="float:right;">已有帐号?登录</a>
-      
-  	</div>
-
-</div>
-
+	<div class="footer-link" style="text-align:center;">
+	<!-- 
+		<p>
+			<a target="true" nofollow href="http://www.miibeian.gov.cn/">京ICP备11010502027230号</a>
+			<span class="split">&nbsp;|&nbsp;</span>
+			<span>京公网安备11010502025105</span>
+			<span class="split">&nbsp;|&nbsp;</span>
+			<span>联系电话：010-50948088 (周一至周五 10:00-18:00)</span>
+		</p>
+	 -->
+		<p>
+			<span>我要帮帮出品</span>
+			<span>5188.help</span>
+		</p>
+	</div>
+	</div>
 </body>
+
 </html>
