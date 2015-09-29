@@ -9,6 +9,8 @@ import java.util.TimerTask;
 
 import org.apache.struts2.interceptor.ApplicationAware;
 
+import com.bsb.core.LogTool;
+import com.bsb.core.MyLog;
 import com.bsb.core.Parameter;
 import com.bsb.entity.MsgEntity;
 import com.bsb.entity.NeedEntity;
@@ -35,6 +37,9 @@ public class PostAction extends ActionSupport implements ApplicationAware{
 	 * 开启“获取所有入驻的provider”线程(线程内部每隔1小时获取一次)
 	 */
 	public String startGetProviders(){
+//		LogTool.getLogger().info("#准备开启# 线程【获取所有入驻的provider】");
+		MyLog.log(Parameter.INFO,"线程【获取所有入驻的provider】#准备开启# ");
+		
 		Timer timer = new Timer();
         TimerTask task =new TimerTask(){
             public void run(){
@@ -42,18 +47,23 @@ public class PostAction extends ActionSupport implements ApplicationAware{
                 List<UserEntity> list = service.getAllProviderList();
                 //查询失败，再尝试三次，三次失败就等待下一次
                 if(list==null){
+                	MyLog.log(Parameter.ERROR,"线程【获取所有入驻的provider】#查询失败或结果为空，准备三次尝试# ");
                 	for(int i=0;i<3;i++){
                 		list = service.getAllProviderList();
-                		if(list!=null)
+                		if(list!=null){
+                			MyLog.log(Parameter.INFO,"线程【获取所有入驻的provider】#查询成功，第"+i+1+"次尝试成功# ");
                 			break;
+                		}
+                		MyLog.log(Parameter.ERROR,"线程【获取所有入驻的provider】#查询失败或结果为空，第"+i+1+"次尝试失败或仍为空# ");
                 	}
                 }
                 //将providers存入application
                 application.put(Parameter.ProviderList, list);
-                System.out.println("一次查询完毕！application中的list size:"+list.size());
+//                LogTool.getLogger().info("#已经开启# 线程【获取所有入驻的provider】，当前Application中的provider数："+list.size());
+                MyLog.log(Parameter.INFO,"线程【获取所有入驻的provider】#已经开启，当前Application中provider人数："+list.size()+"# ");
             }
         };
-        timer.scheduleAtFixedRate(task, new Date(),2000);//当前时间开始起动 每次间隔2秒再启动
+        timer.scheduleAtFixedRate(task, new Date(),1800000);//当前时间开始起动 每次间隔2秒再启动
 		return "startGetProviders";
 	}
 	
@@ -70,6 +80,7 @@ public class PostAction extends ActionSupport implements ApplicationAware{
 				|| needEntity.getTitle()==null || needEntity.getTitle().equals("")){
 			this.result = "no";
 			this.reason = "content、title、needer_id、needer_name、needer_phone、needer_skill、needer_title不能为空";
+			MyLog.log(Parameter.ERROR,"【发布一个需求】#参数为空# ");
 			return "postNeed";
 		}
 		
@@ -79,9 +90,7 @@ public class PostAction extends ActionSupport implements ApplicationAware{
 		if(list==null){
 			list = service.getAllProviderList();
 			application.put(Parameter.ProviderList, list);
-			
-			for(UserEntity e : list)
-				System.out.println("查出来的大神:"+e.getName());
+			MyLog.log(Parameter.ERROR,"【发布一个需求】#当前application中的大神信息为空，已经重新获取，当前大神人数:"+list.size()+"# ");
 		}
 		
 		//进行匹配
@@ -97,18 +106,15 @@ public class PostAction extends ActionSupport implements ApplicationAware{
 			for(int i=0;i<provider_skill_int.size();i++){
 				int c = provider_skill_int.get(i)-needer_skill_int.get(i);
 				if(c<0){
-					System.out.println("大神"+e.getName()+"匹配失败！");
 					break;
 				}
 				if((i+1)==provider_skill_int.size()){
-					System.out.println("大神"+e.getName()+"匹配成功！");
 					success_providers.add(e);
 				}
 			}
 		}
 		
-		System.out.println("成功匹配到的大神数："+success_providers.size());
-
+		
 		//将List<UserEntity>——>List<NeedHelpEntity>
 		List<NeedHelpEntity> needHelpList = new ArrayList<NeedHelpEntity>();
 		for(UserEntity e : success_providers){
@@ -124,8 +130,12 @@ public class PostAction extends ActionSupport implements ApplicationAware{
 		if(!result){
 			this.result = "no";
 			this.reason = service.getReason();
+			MyLog.log(Parameter.ERROR,"【发布一个需求】#匹配失败##"+needEntity.getNeeder_name()+"匹配失败的原因:"+this.reason+"# ");
+			return "postNeed";
 		}
 		
+		MyLog.log(Parameter.INFO,"【发布一个需求】#成功匹配##为"+needEntity.getNeeder_name()+"匹配到大神人数:"+success_providers.size()+"# ");
+
 		this.count = success_providers.size();
 		return "postNeed";
 	}
@@ -157,7 +167,10 @@ public class PostAction extends ActionSupport implements ApplicationAware{
 		if(!service.getResult()){
 			this.result = "no";
 			this.reason = service.getReason();
+			MyLog.log(Parameter.ERROR,"【(Android)获取抢单短信】#失败##原因："+this.reason+"# ");
+			return "getUnGrabMsgList";
 		}
+//		MyLog.log(Parameter.INFO,"【(Android)获取抢单短信】#成功##获取抢单短信条数："+msgList.size()+"# ");
 		return "getUnGrabMsgList";
 	}
 	
@@ -169,11 +182,14 @@ public class PostAction extends ActionSupport implements ApplicationAware{
 		if(require_id==null || require_id.equals("")){
 			this.result = "no";
 			this.reason = "require_id不能为空";
+			MyLog.log(Parameter.ERROR,"【根据require_id获取需求详情】#失败##原因："+this.reason+"# ");
 			return "getNeedDetail";
 		}
 		
 		//获取需求详情
 		this.needEntity = service.getNeedDetail(Integer.parseInt(require_id));
+		
+		MyLog.log(Parameter.INFO,"【根据require_id获取需求详情】#成功##require_id："+this.require_id+"# ");
 		return "getNeedDetail";
 	}
 
@@ -189,6 +205,8 @@ public class PostAction extends ActionSupport implements ApplicationAware{
 				|| userEntity.getSkill()==null || userEntity.getSkill().equals("")){
 			this.result = "no";
 			this.reason = "require_id、id、name、phone、skill不能为空";
+			
+			MyLog.log(Parameter.ERROR,"【provider抢单】#失败##provider_name:"+userEntity==null?"null":userEntity.getName()+",失败原因："+this.reason+"# ");
 			return "grabSingle";
 		}
 		
@@ -196,7 +214,10 @@ public class PostAction extends ActionSupport implements ApplicationAware{
 		if(!result){
 			this.result = "no";
 			this.reason = service.getReason();
+			MyLog.log(Parameter.ERROR,"【provider抢单】#失败##provider_name:"+userEntity.getName()+",失败原因："+this.reason+"# ");
 		}
+		
+		MyLog.log(Parameter.INFO,"【provider抢单】#成功##provider_name:"+userEntity.getName()+"抢了订单:"+require_id+"# ");
 		return "grabSingle";
 	}
 	
@@ -206,6 +227,9 @@ public class PostAction extends ActionSupport implements ApplicationAware{
 	 */
 	public String query30MUnGrabMsgList(){
 		this.msgList = service.query30MUnGrabMsgList();
+		
+		MyLog.log(Parameter.INFO,"【(Android)查询need表中30分钟未抢单的需求】");
+		
 		return "query30MUnGrabMsgList";
 	}
 	
@@ -217,6 +241,9 @@ public class PostAction extends ActionSupport implements ApplicationAware{
 		if(needEntity==null || needEntity.getId()<=0 || needEntity.getMoney()<=0){
 			this.result = "no";
 			this.reason = "needEntity.id、needEntity.money不能为空";
+			
+			MyLog.log(Parameter.ERROR,"【提高赏金】#失败##neeeder_id:"+userEntity==null?"null":userEntity.getId()+",失败原因："+this.reason+"# ");
+			
 			return "increaseMoney";
 		}
 		
@@ -228,7 +255,11 @@ public class PostAction extends ActionSupport implements ApplicationAware{
 		if(count<=0){
 			this.result = "no";
 			this.reason = service.getReason();
+			MyLog.log(Parameter.ERROR,"【提高赏金】#失败##neeeder_id:"+userEntity.getId()+",失败原因："+this.reason+"# ");
+			return "increaseMoney";
 		}
+		
+		MyLog.log(Parameter.INFO,"【提高赏金】#成功##neeeder_id:"+userEntity.getId()+",新赏金:"+needEntity.getMoney()+"# ");
 		return "increaseMoney";
 		/*
 		//获取application中的所有providers
@@ -293,6 +324,9 @@ public class PostAction extends ActionSupport implements ApplicationAware{
 		if(require_id==null || require_id.equals("")){
 			this.result = "no";
 			this.reason = "require_id不能为空";
+			
+			MyLog.log(Parameter.ERROR,"【放弃订单】#失败##require_id:"+require_id+",失败原因："+this.reason+"# ");
+			
 			return "neederGiveUp";
 		}
 		
@@ -300,8 +334,11 @@ public class PostAction extends ActionSupport implements ApplicationAware{
 		if(!result){
 			this.result = "no";
 			this.reason = service.getReason();
+			MyLog.log(Parameter.ERROR,"【放弃订单】#失败##require_id:"+require_id+",失败原因："+this.reason+"# ");
 		}
 		
+		
+		MyLog.log(Parameter.INFO,"【放弃订单】#成功##require_id:"+require_id+"# ");
 		return "neederGiveUp";
 	}
 	
@@ -313,10 +350,15 @@ public class PostAction extends ActionSupport implements ApplicationAware{
 		if(needer_id==null || needer_id.equals("")){
 			this.result = "no";
 			this.reason = "needer_id不能为空";
+			
+			MyLog.log(Parameter.ERROR,"【获取指定needer的所有订单情况】#失败##needer_id:"+needer_id+",失败原因："+this.reason+"# ");
+			
 			return "getOrderListByNeederId";
 		}
 		
 		this.needList = service.getOrderListByNeederId(Integer.parseInt(needer_id));
+		MyLog.log(Parameter.ERROR,"【获取指定needer的所有订单情况】#成功##needer_id:"+needer_id+"# ");
+		
 		return "getOrderListByNeederId";
 	}
 	
@@ -328,10 +370,15 @@ public class PostAction extends ActionSupport implements ApplicationAware{
 		if(provider_id==null || provider_id.equals("")){
 			this.result = "no";
 			this.reason = "provider_id不能为空";
+			
+			MyLog.log(Parameter.ERROR,"【获取指定provider的所有订单情况 】#失败##provider_id:"+provider_id+",失败原因："+this.reason+"# ");
+			
 			return "getOrderListByProviderId";
 		}
 		
 		this.needList = service.getOrderListByProviderId(Integer.parseInt(provider_id));
+		
+		MyLog.log(Parameter.INFO,"【获取指定provider的所有订单情况 】#成功##provider_id:"+provider_id+"# ");
 		return "getOrderListByProviderId";
 	}
 	
@@ -343,10 +390,15 @@ public class PostAction extends ActionSupport implements ApplicationAware{
 		if(provider_id==null || provider_id.equals("")){
 			this.result = "no";
 			this.reason = "provider_id不能为空";
+			
+			MyLog.log(Parameter.ERROR,"【获取指定provider的个人信息】#失败##provider_id:"+provider_id+",失败原因："+this.reason+"# ");
+						
 			return "getUserEntityByProviderId";
 		}
 		
 		this.userEntity = service.getUserEntityByProviderId(Integer.parseInt(provider_id));
+		MyLog.log(Parameter.INFO,"【获取指定provider的个人信息】#成功##provider_id:"+provider_id+"# ");
+		
 		return "getUserEntityByProviderId";
 	}
 	
@@ -358,6 +410,8 @@ public class PostAction extends ActionSupport implements ApplicationAware{
 		if(userEntity==null || userEntity.getId()<=0 || userEntity.getSkill()==null || userEntity.getSkill().equals("")){
 			this.result = "no";
 			this.reason = "provider_id、skill不能为空";
+			MyLog.log(Parameter.ERROR,"【修改指定provider的擅长的技术】#失败##失败原因："+this.reason+"# ");
+			
 			return "updateSkillByProviderId";
 		}
 		
@@ -365,7 +419,10 @@ public class PostAction extends ActionSupport implements ApplicationAware{
 		if(!result){
 			this.result = "no";
 			this.reason = service.getReason();
+			MyLog.log(Parameter.ERROR,"【修改指定provider的擅长的技术】#失败##失败原因："+this.reason+"# ");
 		}
+		
+		MyLog.log(Parameter.INFO,"【修改指定provider的擅长的技术】#成功##"+userEntity.getName()+"将技能修改为"+userEntity.getSkill()+"#");
 		return "updateSkillByProviderId";
 	}
 	
@@ -375,6 +432,7 @@ public class PostAction extends ActionSupport implements ApplicationAware{
 	 */
 	public String queryUnPushNeederMsgList(){
 		this.msgList = service.queryUnPushNeederMsgList();
+		MyLog.log(Parameter.INFO,"【(Android)查询need表未发送的信息，并设为已发送】#");
 		return "queryUnPushNeederMsgList";
 	}
 	
@@ -386,13 +444,18 @@ public class PostAction extends ActionSupport implements ApplicationAware{
 		if(require_id==null || "".equals(require_id)){
 			this.result = "no";
 			this.reason = "require_id不能为空";
+			MyLog.log(Parameter.ERROR,"【获取某一条需求的状态】#失败##失败原因："+this.reason+"# ");
 			return "getStateById";
 		}
 		
 		this.state = service.getStateById(Integer.parseInt(require_id));
-		if(state<=0)
+		if(state<=0){
 			this.result = "no";
+			MyLog.log(Parameter.ERROR,"【获取某一条需求的状态】#失败##失败原因："+this.reason+"# ");
+			return "getStateById";
+		}
 		
+		MyLog.log(Parameter.INFO,"【获取某一条需求的状态】#成功##require_id:"+require_id+"# ");
 		return "getStateById";
 	}
 	

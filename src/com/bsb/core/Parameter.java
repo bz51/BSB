@@ -14,6 +14,10 @@ public class Parameter {
 	public static final String ProviderList = "providerList";
 	
 	public static final String IndexPage = "http://5188.help";
+	public static final String LOG_FILE_PATH = "/bsb/bsb.log";
+//	public static final String LOG_FILE_PATH = " /Users/chibozhou/bsb_log/bsb.log";
+	public static final String INFO = "INFO";
+	public static final String ERROR = "ERROR";
 	
 	
 }
