@@ -360,7 +360,7 @@ public class PostService {
 		List<MsgEntity> msgList = new ArrayList<MsgEntity>();
 		for (NeedEntity e : imp.getList()) {
 			MsgEntity msgEntity = new MsgEntity();
-			msgEntity.setPhone(e.getProvider_phone());
+			msgEntity.setPhone(e.getNeeder_phone());
 			msgEntity.setContent("[毕设帮]您的订单已被"+e.getProvider_name()+"抢单，赶紧查看订单详情吧："+ Parameter.IndexPage);
 			msgList.add(msgEntity);
 		}
