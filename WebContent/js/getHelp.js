@@ -164,6 +164,24 @@ $(document).ready(function(){
 		}
 	});
 	
+	
+	/**
+	 * 点击“返回”按钮
+	 */
+	$("#fanhui").click(function(){
+		//判断是从哪个页面跳转过来
+		//若是从本单详情页面跳过来，那么设置fromWhere为提高赏金页
+		if(localStorage.getItem("fromWhere")=="increaseMoney"){
+			window.location.href="adminNeeder.html";
+		}
+		
+		//如果从前面一步步跳过来，那返回的话就简单返回即可
+		else
+			window.history.go(-1);
+	});
+	
+	
+	
 	//注册完后发布，发布成功则跳转到本页，显示匹配到的大神个数
 	$("#count").text(localStorage.getItem("count"));
 	

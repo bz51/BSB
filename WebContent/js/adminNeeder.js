@@ -10,6 +10,19 @@ $(document).ready(function(){
         html: ""           //要显示的html内容，如图片等  
     }); 
     
+    //若从提高赏金页面返回到本单详情，则要显示原本的本单详情
+    if(localStorage.getItem("fromWhere")=="increaseMoney"){
+    	$("#title1").text(localStorage.getItem("title"));
+		$("#time1").text(localStorage.getItem("time"));
+		//在详情页加载之前，就把needer_skill的代码值存下来；这样当点击“提高赏金”时，从页面获取的needer_skill不是中文
+		$("#needer_skill1").text(skill2String(localStorage.getItem("needer_skill")));
+		$("#money1").text(localStorage.getItem("money"));
+		$("#content1").text(localStorage.getItem("content"));
+		localStorage.setItem("fromWhere","");
+		window.location.href="#pageDetail1";
+    }
+    
+    
 	//发送请求
 	$.get("post/postAction!getOrderListByNeederId?needer_id="+localStorage.getItem("id"),
 		  
@@ -73,9 +86,10 @@ $(document).ready(function(){
 		    	//刷新listview
     			$("#list").listview("refresh");
 		    }
-		    
-	});
 	
+	});
+    
+    
 	/**
 	 * 点击查看已抢单详情
 	 */
@@ -211,12 +225,12 @@ $(document).ready(function(){
 			    	//若未被抢单，则可以提高赏金
 			    	else{
 			    		//将本条需求的详细信息记录到本地
-			    		localStorage.setItem("title",$("#title1").text());
+			    		localStorage.setItem("title",$("#title1").text())
 			    		localStorage.setItem("time",$("#time1").text());
 			    		//详情页加载之前needer_skill的代码形式就已经存入本地了，这里就不用再存了
 //			    		localStorage.setItem("needer_skill",$("#needer_skill1").text());
-			    		//若要提高赏金，那旧赏金就不需要了
-//			    		localStorage.setItem("money",$("#money1").text());
+			    		//若要提高赏金，那旧赏金就不需要了(但现在为了返回时用，所以将money存储起来)
+			    		localStorage.setItem("money",$("#money1").text());
 			    		localStorage.setItem("content",$("#content1").text());
 			    		//记录fromWhere
 			    		localStorage.setItem("fromWhere","increaseMoney");
@@ -229,4 +243,50 @@ $(document).ready(function(){
 		
 	});
 	
+	
+	//开启定时线程，每隔10秒检查下当前成功抢单的订单数，若增多：“已有大神抢单”，并更新orderCount
+	setInterval('clock()',5000);//1000为1秒钟	
+	
+	
+	window.clock = function () {
+    	
+		$.get("post/postAction!getOrderListByNeederId?needer_id="+localStorage.getItem("id"),
+    			  
+    		function(data,status){
+    			var json = eval('(' + data + ')');
+    			
+    			//若返回no
+    			if(json.result=="no"){
+    				alert("后台定时线程获取数据失败");
+    			}
+    			   
+    			//若返回yes，显示查询到的结果
+    			else{
+    				//计算当前成功抢单的订单数
+    				var orderCount = 0;
+    				$.each(json.needList, function(index, val) {
+    					if(val.state==1)
+    						orderCount++;
+    				});
+    				
+    				//若本地订单数为空，则将当前获取的订单数存至本地
+    				if(localStorage.getItem("orderCount")==null || localStorage.getItem("orderCount")==''){
+    					localStorage.setItem("orderCount",orderCount);
+    				}
+    				
+    				//若本地orderCount(订单数)存在，则进行比较
+    				else{
+//    					alert("orderCount="+localStorage.getItem("orderCount")+",length="+orderCount);
+    					//成功抢单的订单数增多，则提示“您的订单已有大神抢单”
+    					if(orderCount>localStorage.getItem("orderCount")){
+    						alert("您的订单已有大神抢单!点击查看");
+    						localStorage.setItem("orderCount",orderCount);
+    						window.location.href="adminNeeder.html";
+    					}
+    					
+    					//成功抢单的订单数减少、不变，则不作任何处理
+    				}
+    			}
+    	});
+    };
 });

@@ -1,6 +1,7 @@
 document.write("<script language=javascript src='js/common.js'></script>");
 
 $(document).ready(function(){
+	
 	//显示loading
     $.mobile.loading('show', {  
         text: '数据加载中...', //加载器中显示的文字  
@@ -194,4 +195,51 @@ $(document).ready(function(){
 			window.history.go(-1);
 		}
 	});
+	
+	
+	//开启定时线程，每隔10秒检查下当前大神的订单数，若增多：“您有新的订单”，若减少：“订单被别人抢了”
+	setInterval('clock()',5000);//1000为1秒钟
+	
+	
+	window.clock = function () {
+    	
+    	$.get("post/postAction!getOrderListByProviderId?provider_id="+localStorage.getItem("id"),
+    			  
+    		function(data,status){
+    			var json = eval('(' + data + ')');
+    			
+    			//若返回no
+    			if(json.result=="no"){
+    				alert("后台定时线程获取数据失败");
+    			}
+    			   
+    			//若返回yes，显示查询到的结果
+    			else{
+    				//若本地订单数为空，则将当前获取的订单数存至本地
+    				if(localStorage.getItem("orderCount")==null || localStorage.getItem("orderCount")==''){
+    					localStorage.setItem("orderCount",json.needList.length);
+    				}
+    				
+    				//若本地orderCount(订单数)存在，则进行比较
+    				else{
+//    					alert("orderCount="+localStorage.getItem("orderCount")+",length="+json.needList.length);
+    					//订单数增多，提示用户“您有新的订单”
+    					if(json.needList.length>localStorage.getItem("orderCount")){
+    						alert("您有新的订单");
+    						localStorage.setItem("orderCount",json.needList.length);
+    						window.location.href="adminHelper.html";
+    					}
+    					
+    					//订单数减少，提示用户“手慢了，订单已被别人抢走”
+    					else if(json.needList.length<localStorage.getItem("orderCount")){
+    						alert("手慢了，订单已被别人抢走");
+    						localStorage.setItem("orderCount",json.needList.length);
+    						window.location.href="adminHelper.html";
+    					}
+    					
+    					//若订单数量没变，那么啥也不干等待下一次循环
+    				}
+    			}
+    	});
+    };
 });

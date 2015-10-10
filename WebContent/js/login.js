@@ -97,7 +97,7 @@ $(document).ready(function(){
 								    //若返回yes，需求发布成功
 								    else{
 								    	//将匹配到的大神人数保存至本地
-								    	localStorage.setItem("count",json.count)
+								    	localStorage.setItem("count",json.count);
 								    	//跳转至getHelp.html#page4
 								    	window.location.href="getHelp.html#page4";
 								    }
@@ -114,6 +114,10 @@ $(document).ready(function(){
 					    
 					    //从首页跳来，直接进入个人中心
 					    else{
+					    	//先将json中的role存到本地
+					    	localStorage.setItem("role",json.role);
+					    	
+					    	//然后跳转至指定个人中心
 					    	if(json.role==0)
 				    			window.location.href="adminNeeder.html";
 				    		else
