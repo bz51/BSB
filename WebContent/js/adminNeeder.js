@@ -11,16 +11,16 @@ $(document).ready(function(){
     }); 
     
     //若从提高赏金页面返回到本单详情，则要显示原本的本单详情
-    if(localStorage.getItem("fromWhere")=="increaseMoney"){
-    	$("#title1").text(localStorage.getItem("title"));
-		$("#time1").text(localStorage.getItem("time"));
-		//在详情页加载之前，就把needer_skill的代码值存下来；这样当点击“提高赏金”时，从页面获取的needer_skill不是中文
-		$("#needer_skill1").text(skill2String(localStorage.getItem("needer_skill")));
-		$("#money1").text(localStorage.getItem("money"));
-		$("#content1").text(localStorage.getItem("content"));
-		localStorage.setItem("fromWhere","");
-		window.location.href="#pageDetail1";
-    }
+//    if(localStorage.getItem("fromWhere")=="increaseMoney"){
+//    	$("#title1").text(localStorage.getItem("title"));
+//		$("#time1").text(localStorage.getItem("time"));
+//		//在详情页加载之前，就把needer_skill的代码值存下来；这样当点击“提高赏金”时，从页面获取的needer_skill不是中文
+//		$("#needer_skill1").text(skill2String(localStorage.getItem("needer_skill")));
+//		$("#money1").text(localStorage.getItem("money"));
+//		$("#content1").text(localStorage.getItem("content"));
+//		localStorage.setItem("fromWhere","");
+//		window.location.href="#pageDetail1";
+//    }
     
     
 	//发送请求

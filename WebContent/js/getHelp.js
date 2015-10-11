@@ -54,9 +54,21 @@ $(document).ready(function(){
 			skill = skill+"1";
 		else
 			skill = skill+"0";
+		if($('#checkbox13').is(':checked'))
+			skill = skill+"1";
+		else
+			skill = skill+"0";
+		if($('#checkbox14').is(':checked'))
+			skill = skill+"1";
+		else
+			skill = skill+"0";
+		if($('#checkbox15').is(':checked'))
+			skill = skill+"1";
+		else
+			skill = skill+"0";
 		
 		//若全为0表示没有选
-		if(skill=="000000000000")
+		if(skill=="000000000000000")
 			$("#reason").text("请选择你的毕设所涉及的技术");
 		
 		//若已经选好，将skill保存至本地，然后跳转下一步
@@ -172,7 +184,9 @@ $(document).ready(function(){
 		//判断是从哪个页面跳转过来
 		//若是从本单详情页面跳过来，那么设置fromWhere为提高赏金页
 		if(localStorage.getItem("fromWhere")=="increaseMoney"){
-			window.location.href="adminNeeder.html";
+			localStorage.setItem("fromWhere","");
+//			window.location.href="adminNeeder.html";
+			window.history.go(-2);
 		}
 		
 		//如果从前面一步步跳过来，那返回的话就简单返回即可
@@ -181,12 +195,17 @@ $(document).ready(function(){
 	});
 	
 	
-	
 	//注册完后发布，发布成功则跳转到本页，显示匹配到的大神个数
 	$("#count").text(localStorage.getItem("count"));
 	
 	//注册完后发布，若发布失败，跳转回本页，并将money显示在框中
 	if(localStorage.getItem("money")!=null && localStorage.getItem("money")!='')
 		$("#money").text(localStorage.getItem("money"));
+	
+	
+	//若是要提高赏金，则将第三页的title改为“提高赏金”；若是一步步过来，则无需修改title
+	if(localStorage.getItem("fromWhere")=="increaseMoney"){
+		$("#titlePage3").text("提高赏金");
+	}
 	
 });

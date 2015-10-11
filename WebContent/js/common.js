@@ -50,33 +50,45 @@
 			}
 			if(index==4){
 				if(val=="1")
-					result = result + "、IOS";
+					result = result + "、Android";
 			}
 			if(index==5){
 				if(val=="1")
-					result = result + "、PHP";
+					result = result + "、IOS";
 			}
 			if(index==6){
 				if(val=="1")
-					result = result + "、Andorid";
+					result = result + "、JSP";
 			}
 			if(index==7){
 				if(val=="1")
-					result = result + "、大数据";
+					result = result + "、ASP/.NET";
 			}
 			if(index==8){
 				if(val=="1")
-					result = result + "、算法";
+					result = result + "、PHP";
 			}
 			if(index==9){
 				if(val=="1")
-					result = result + "、软件测试";
+					result = result + "、j2EE";
 			}
 			if(index==10){
 				if(val=="1")
-					result = result + "、游戏";
+					result = result + "、算法";
 			}
 			if(index==11){
+				if(val=="1")
+					result = result + "、大数据";
+			}
+			if(index==12){
+				if(val=="1")
+					result = result + "、软件测试";
+			}
+			if(index==13){
+				if(val=="1")
+					result = result + "、游戏";
+			}
+			if(index==14){
 				if(val=="1")
 					result = result + "、其他";
 			}
@@ -86,6 +98,10 @@
 		if(result.charAt(0)=="、"){
 			result = result.substr(1);
 		}
+		
+		//判断skill长度，若超过xx个字符就截取
+		if(result.length>21)
+			result = result.substr(0,21)+"……";
 		return result;
 	}
 	
