@@ -55,9 +55,21 @@ $(document).ready(function(){
 			skill = skill+"1";
 		else
 			skill = skill+"0";
+		if($('#checkbox13').is(':checked'))
+			skill = skill+"1";
+		else
+			skill = skill+"0";
+		if($('#checkbox14').is(':checked'))
+			skill = skill+"1";
+		else
+			skill = skill+"0";
+		if($('#checkbox15').is(':checked'))
+			skill = skill+"1";
+		else
+			skill = skill+"0";
 		
 		//若全为0表示没有选
-		if(skill=="000000000000")
+		if(skill=="000000000000000")
 			$("#reason").text("请选择你擅长的技术");
 		
 		//若已经选好，将skill保存至本地，判断是否登录
