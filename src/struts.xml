@@ -146,4 +146,18 @@
     		
 		</action>
     </package>
+    
+    
+   	<!-- 后台管理模块 -->
+    <package name="admin" namespace="/admin" extends="default">
+		<action name="adminAction" class="com.bsb.admin.AdminAction">
+		
+			<!-- 获取所有用户信息 -->
+			<result name="getAllUser" type="json">
+    			<param name="includeProperties">userList.*,reason,result</param>
+    			<param name="contentType">text/html</param> 
+    		</result>
+    		
+		</action>
+    </package>
 </struts>
