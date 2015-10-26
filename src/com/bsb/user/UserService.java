@@ -35,7 +35,7 @@ public class UserService {
 		entity.setPhone(phone);
 		
 		//将AuthCodeEntity存入DB
-		UserDaoSaveCode_PhoneImp imp = new UserDaoSaveCode_PhoneImp(entity);
+		UserDaoSendCodeByAlidayu_PhoneImp imp = new UserDaoSendCodeByAlidayu_PhoneImp(entity);
 		boolean db_result = imp.hibernateOperation();
 		
 		//对执行结果进行判断

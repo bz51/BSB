@@ -1,10 +1,16 @@
 package com.bsb.user;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.interceptor.ApplicationAware;
 
+import com.bsb.core.SMS;
 import com.bsb.entity.MsgEntity;
 import com.bsb.entity.UserEntity;
 import com.bsb.tools.RandomNumber;
@@ -23,6 +29,12 @@ public class UserAction extends ActionSupport implements ApplicationAware{
 	private List<MsgEntity> msgList;
 	private String result = "yes";
 	private String reason;
+	
+	//微信验证Token
+	private String signature;
+	private String timestamp;
+	private String nonce;
+	private String echostr;
 	
 	/**
 	 * 用户获取验证码
@@ -43,7 +55,7 @@ public class UserAction extends ActionSupport implements ApplicationAware{
 		
 		System.out.println("验证码："+code);
 		
-		//存入DB，等待Android发送
+		//存入DB，等待Android发送(已改成使用alidayu发送短信)
 		boolean result = service.saveCode_Phone(phone, code);
 		if(result && service.getResult()){
 			this.result = "yes";
@@ -186,6 +198,20 @@ public class UserAction extends ActionSupport implements ApplicationAware{
 	}
 	
 	
+	/**
+	 * 用于验证微信Token
+	 * @throws IOException 
+	 */
+	public void authToken() throws IOException{
+		HttpServletResponse response = ServletActionContext.getResponse();
+		response.setCharacterEncoding("UTF-8");//½â¾öÖÐÎÄÂÒÂë
+		PrintWriter out = response.getWriter();
+		out.println(echostr);
+		out.flush();
+		out.close();
+	}
+	
+	
 	
 	public String getPhone() {
 		return phone;
@@ -290,6 +316,47 @@ public class UserAction extends ActionSupport implements ApplicationAware{
 	public void setMsgList(List<MsgEntity> msgList) {
 		this.msgList = msgList;
 	}
+
+
+	public String getSignature() {
+		return signature;
+	}
+
+
+	public void setSignature(String signature) {
+		this.signature = signature;
+	}
+
+
+	public String getTimestamp() {
+		return timestamp;
+	}
+
+
+	public void setTimestamp(String timestamp) {
+		this.timestamp = timestamp;
+	}
+
+
+	public String getNonce() {
+		return nonce;
+	}
+
+
+	public void setNonce(String nonce) {
+		this.nonce = nonce;
+	}
+
+
+	public String getEchostr() {
+		return echostr;
+	}
+
+
+	public void setEchostr(String echostr) {
+		this.echostr = echostr;
+	}
+	
 	
 	
 }
