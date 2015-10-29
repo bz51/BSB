@@ -23,18 +23,25 @@ $(document).ready(function(){
 			$.post("user/userAction!signin",
 				  {
 					phone:$("#phone").val(),
-					password:$("#password").val()
+					password:$("#password").val(),
+					open_token:localStorage.getItem("open_token")//??????注册是一定要提交open_token的，若提交时open_token没了怎么办？?????????
 				  },
 				  
 				  function(data,status){
 				    var json = eval('(' + data + ')');
-				    
+//				    alert(data);
 				    //隐藏加载器  
 				    $.mobile.loading('hide');
 				    
 				    //若返回no
 				    if(json.result=="no"){
 				    	$("#reason").text(json.reason);
+				    	//本地的open_token存在，而服务器的open_token不存在，则重新跳转至授权页
+				    	if(json.reason=='open_token is missing'){
+				    		alert("授权过期啦，是否重新授权呀？");
+							//进行微信授权(state携带参数open_token)
+							window.location.href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx1a4c2e86c17d1fc4&redirect_uri=http://www.5188.help/wechat/wechatAction!auth_return_login&response_type=code&scope=snsapi_base&state="+localStorage.getItem("open_token")+"#wechat_redirect";
+				    	}
 				    }
 				   
 				    //若返回yes，将用户信息保存到cookie
@@ -44,6 +51,7 @@ $(document).ready(function(){
 					    localStorage.setItem("name",json.name);
 					    localStorage.setItem("phone",json.phone);
 					    localStorage.setItem("skill",json.skill);
+					    localStorage.setItem("open_id",json.open_id);//将服务器传回的open_id存入本地
 					    
 					  //判断往哪儿跳转
 					    var fromWhere = localStorage.getItem("fromWhere");

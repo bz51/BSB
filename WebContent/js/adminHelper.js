@@ -152,7 +152,7 @@ $(document).ready(function(){
 	    });  
 
 	    //发送请求
-	    $.get("post/postAction!grabSingle?require_id="+localStorage.getItem("require_id")+"&userEntity.name="+localStorage.getItem("name")+"&userEntity.phone="+localStorage.getItem("phone")+"&userEntity.skill="+localStorage.getItem("skill")+"&userEntity.id="+localStorage.getItem("id")+"&userEntity.role=1",
+	    $.get("post/postAction!grabSingle?require_id="+localStorage.getItem("require_id")+"&userEntity.name="+localStorage.getItem("name")+"&userEntity.phone="+localStorage.getItem("phone")+"&userEntity.skill="+localStorage.getItem("skill")+"&userEntity.id="+localStorage.getItem("id")+"&userEntity.role=1&userEntity.weixin_id="+localStorage.getItem("open_id"),
 			  
 			 function(data,status){
 			   var json = eval('(' + data + ')');

@@ -123,6 +123,7 @@ public class PostAction extends ActionSupport implements ApplicationAware{
 			needHelpEntity.setProvider_name(e.getName());
 			needHelpEntity.setProvider_phone(e.getPhone());
 			needHelpEntity.setProvider_skill(e.getSkill());
+			needHelpEntity.setProvider_weixin(e.getWeixin_id());
 			needHelpList.add(needHelpEntity);
 		}
 		//插入DB

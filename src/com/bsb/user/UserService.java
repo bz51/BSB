@@ -113,7 +113,7 @@ public class UserService {
 	 * @param password
 	 * @return
 	 */
-	public UserEntity signin(String phone,String password){
+	public UserEntity signin(String phone,String password,String open_id){
 		//健壮性判断
 		if(phone==null || phone.equals("") || password==null || password.equals("")){
 			this.result = false;
@@ -121,13 +121,17 @@ public class UserService {
 			return null;
 		}
 		
-		//执行操作
+		//登录鉴权
 		String hql = "from "+Parameter.UserEntity+" where phone='"+phone+"' and password='"+password+"' and state=1";
 		List<UserEntity> list = CoreDao.queryListByHql(hql);
 		
-		//判断结果
-		if(list!=null && list.size()>0)
-			return list.get(0);
+		//判断结果，若该用户存在
+		if(list!=null && list.size()>0){
+			UserEntity entity = list.get(0);
+			//将open_id存入user表
+			CoreDao.updateByHql("update UserEntity set weixin_id='"+open_id+"' where id="+entity.getId());
+			return entity;
+		}
 		
 		else{
 			this.result = false;

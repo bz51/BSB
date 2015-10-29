@@ -2,6 +2,7 @@ package com.bsb.user;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -10,11 +11,16 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.interceptor.ApplicationAware;
 
+import com.bsb.core.CoreDao;
+import com.bsb.core.HttpRequest;
 import com.bsb.core.SMS;
 import com.bsb.entity.MsgEntity;
+import com.bsb.entity.OpenTokenId;
 import com.bsb.entity.UserEntity;
 import com.bsb.tools.RandomNumber;
 import com.opensymphony.xwork2.ActionSupport;
+import com.qq.connect.utils.json.JSONException;
+import com.qq.connect.utils.json.JSONObject;
 
 public class UserAction extends ActionSupport implements ApplicationAware{
 	private UserService service = new UserService();
@@ -26,6 +32,8 @@ public class UserAction extends ActionSupport implements ApplicationAware{
 	private String authcode;
 	private String role;
 	private String skill;
+	private String open_token;
+	private String open_id;
 	private List<MsgEntity> msgList;
 	private String result = "yes";
 	private String reason;
@@ -35,6 +43,9 @@ public class UserAction extends ActionSupport implements ApplicationAware{
 	private String timestamp;
 	private String nonce;
 	private String echostr;
+	
+	private String state;
+	private String code;
 	
 	/**
 	 * 用户获取验证码
@@ -53,7 +64,7 @@ public class UserAction extends ActionSupport implements ApplicationAware{
 		//存入application
 		application.put(this.phone, code);
 		
-		System.out.println("验证码："+code);
+		System.out.println("验证码："+application.get(this.phone));
 		
 		//存入DB，等待Android发送(已改成使用alidayu发送短信)
 		boolean result = service.saveCode_Phone(phone, code);
@@ -74,7 +85,7 @@ public class UserAction extends ActionSupport implements ApplicationAware{
 	 * @return
 	 */
 	public String login(){
-		//健壮性判断
+		//1.健壮性判断
 		if(name==null || name.equals("") || password==null || password.equals("")
 				|| role==null || role.equals("") || phone==null || phone.equals("") || authcode==null || authcode.equals("")){
 			this.result = "no";
@@ -82,7 +93,7 @@ public class UserAction extends ActionSupport implements ApplicationAware{
 			return "login";
 		}
 		
-		//若为provider，需要传递skill
+		//1.2.若为provider，需要传递skill
 		if(role.equals("1")){
 			if(skill==null || skill.equals("")){
 				this.result = "no";
@@ -91,16 +102,18 @@ public class UserAction extends ActionSupport implements ApplicationAware{
 			}
 		}
 		
-		//判断验证码是否正确
+		//2.判断验证码是否正确
+		//2.1获取application中的验证码
 		String code = (String) application.get(phone);
 		System.out.println("验证码："+code);
-		//若application中的数据已丢失
+		
+		//2.2判断application中验证码是否存在
 		if(code==null || code.equals("")){
 			this.result = "no";
 			this.reason = "application中的数据已丢失，请重新获取验证码";
 			return "login";
 		}
-		//若application中的验证码还存在，则进行比较
+		//2.3若application中的验证码还存在，则进行比较
 		else{
 			//验证失败
 			if(!code.equals(authcode)){
@@ -115,6 +128,25 @@ public class UserAction extends ActionSupport implements ApplicationAware{
 				entity.setName(name);
 				entity.setPassword(password);
 				entity.setPhone(phone);
+				
+				//从数据库中取open_token对应的open_id
+				List<String> list = new ArrayList<String>();
+				list = CoreDao.queryListByHql("select open_id from OpenTokenId where open_token='"+open_token+"'");
+//				SMS.sendMsg("open_token="+open_token+"open_id="+list.get(0), "15251896025");
+				//open_token不存在，则返回“open_token is missing”，客户端需重新授权
+				if(list.size()==0){
+					this.result = "no";
+					this.reason = "open_token is missing";
+					return "login";
+				}
+				
+				//open_token存在
+				else{
+					System.out.println("open_id="+list.get(0));
+					this.open_id = list.get(0);
+					entity.setWeixin_id(open_id);
+				}
+				
 				if(role.equals("0"))
 					entity.setRole(0);
 				else
@@ -134,12 +166,23 @@ public class UserAction extends ActionSupport implements ApplicationAware{
 					this.id = id+"";
 					//删掉Application中的健值对
 					application.remove(this.phone);
+//					application.remove(this.open_token);
 				}
 				return "login";
 			}
 		}
 	}
 	
+	public String test(){
+//		application.put(open_token, "chai");
+		String keys = "";
+		Object[] arr = application.keySet().toArray();
+		for(int i=0;i<arr.length;i++)
+			keys = keys+"," + arr[i].toString().substring(0,5);
+		SMS.sendMsg(keys, "15251896025");
+//		this.open_id = application.get(open_token);
+		return "test";
+	}
 	
 	
 	/**
@@ -153,8 +196,23 @@ public class UserAction extends ActionSupport implements ApplicationAware{
 			return "signin";
 		}
 		
-		//登录鉴权
-		UserEntity entity = service.signin(phone, password);
+		//从数据库中取open_token对应的open_id
+		List<String> list = new ArrayList<String>();
+		list = CoreDao.queryListByHql("select open_id from OpenTokenId where open_token='"+open_token+"'");
+		//open_token不存在，则返回“open_token is missing”，客户端需重新授权
+		if(list.size()==0){
+			this.result = "no";
+			this.reason = "open_token is missing";
+			return "signin";
+		}
+		//open_token存在
+		else{
+			System.out.println("open_id="+list.get(0));
+			open_id = list.get(0);
+		}
+		
+		//登录鉴权(这里包含了将open_id存入user表)
+		UserEntity entity = service.signin(phone, password,open_id);
 		
 		//登录结果判断
 		//登录失败
@@ -170,6 +228,7 @@ public class UserAction extends ActionSupport implements ApplicationAware{
 			this.phone = entity.getPhone();
 			this.role = entity.getRole()+"";
 			this.skill = entity.getSkill();
+			//open_id是全局变量，已经获取到了，无需再赋值
 			this.result = "yes";
 		}
 		return "signin";
@@ -212,6 +271,31 @@ public class UserAction extends ActionSupport implements ApplicationAware{
 	}
 	
 	
+	/**
+	 * 微信授权(获取open_id后返回首页)
+	 * @throws JSONException 
+	 */
+	public String auth_return_index() throws JSONException{
+		//进入这个接口的时候就已经获取到code、state
+		//获取open_token
+		String open_token = state;
+		
+		//通过code获取open_id
+		String result = HttpRequest.sendGet("https://api.weixin.qq.com/sns/oauth2/access_token", "appid=wx1a4c2e86c17d1fc4&secret=ba95beea6a08dc2abf245ae8d8c7dc3e&code="+code+"&grant_type=authorization_code");
+		JSONObject json_result = new JSONObject(result);
+		String open_id = json_result.getString("openid");
+		
+		//open_token＋open_id存储在数据库中！！！
+		OpenTokenId entity = new OpenTokenId();
+		entity.setOpen_id(open_id);
+		entity.setOpen_token(open_token);
+		CoreDao.save(entity);
+		
+		//将open_token和open_id发送到chaibozhou手机上
+		//这里open_id都已经有了！applicaiton中也取出来了！
+//		SMS.sendMsg("app中open_id="+application.get(open_token)+",open_token="+open_token+"", "15251896025");
+		return "auth_return_index";
+	}
 	
 	public String getPhone() {
 		return phone;
@@ -293,9 +377,9 @@ public class UserAction extends ActionSupport implements ApplicationAware{
 	}
 
 
-	public Map<String, Object> getApplication() {
-		return application;
-	}
+//	public Map<String, Object> getApplication() {
+//		return application;
+//	}
 
 
 	public String getAuthcode() {
@@ -356,6 +440,53 @@ public class UserAction extends ActionSupport implements ApplicationAware{
 	public void setEchostr(String echostr) {
 		this.echostr = echostr;
 	}
+
+
+	public String getOpen_token() {
+		return open_token;
+	}
+
+
+	public void setOpen_token(String open_token) {
+		this.open_token = open_token;
+	}
+
+
+	public String getOpen_id() {
+		return open_id;
+	}
+
+
+	public void setOpen_id(String open_id) {
+		this.open_id = open_id;
+	}
+
+
+	public Map<String, Object> getApplication() {
+		return application;
+	}
+
+
+	public String getState() {
+		return state;
+	}
+
+
+	public void setState(String state) {
+		this.state = state;
+	}
+
+
+	public String getCode() {
+		return code;
+	}
+
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+
 	
 	
 	

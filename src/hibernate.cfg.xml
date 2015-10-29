@@ -12,7 +12,7 @@
         <property name="hibernate.connection.username">root</property>
         <property name="hibernate.connection.password">bz220382</property>
        <!-- <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/bsb?characterEncoding=utf-8</property> -->
-       <property name="hibernate.connection.url">jdbc:mysql://115.28.217.42:3306/devbsb?characterEncoding=utf-8</property>
+       <property name="hibernate.connection.url">jdbc:mysql://115.28.217.42:3306/bsb?characterEncoding=utf-8</property>
         <property name="hibernate.hbm2ddl.auto">update</property>
         <property name="hibernate.show_sql">true</property><!-- 配置显示sql语句 -->
   		<property name="format_sql">true</property><!-- 让输出的sql语句格式化 -->
@@ -24,6 +24,7 @@
         <mapping class="com.bsb.entity.NeedEntity"/>
         <mapping class="com.bsb.entity.NeedHelpEntity"/>
         <mapping class="com.bsb.entity.UserEntity"/>
+        <mapping class="com.bsb.entity.OpenTokenId"/>
         
     </session-factory>
 </hibernate-configuration>

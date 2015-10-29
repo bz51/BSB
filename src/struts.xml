@@ -35,13 +35,18 @@
 		
 			<!-- 注册 -->
 			<result name="login" type="json">
-    			<param name="includeProperties">id,name,role,skill,phone,reason,result</param>
+    			<param name="includeProperties">id,name,role,skill,phone,open_id,open_token,reason,result</param>
+    			<param name="contentType">text/html</param> 
+    		</result>
+			<!-- 测试专用 -->
+			<result name="test" type="json">
+    			<param name="includeProperties">open_id,open_token</param>
     			<param name="contentType">text/html</param> 
     		</result>
 		
 			<!-- 登录 -->
 			<result name="signin" type="json">
-    			<param name="includeProperties">id,name,role,skill,phone,reason,result</param>
+    			<param name="includeProperties">id,name,role,skill,phone,reason,open_id,result</param>
     			<param name="contentType">text/html</param> 
     		</result>
 		
@@ -56,6 +61,8 @@
     			<!-- <param name="includeProperties">echostr</param>
     			<param name="contentType">text/html</param>  -->
     		</result>
+			<!-- 微信授权(返回首页) -->
+			<result name="auth_return_index" type="redirect">/index_phone_test.html</result>
     		
 		</action>
     </package>
@@ -176,6 +183,17 @@
     			<param name="includeProperties">userList.*,reason,result</param>
     			<param name="contentType">text/html</param> 
     		</result>
+			<!-- 测试专用 -->
+			<result name="test" type="json">
+    			<param name="includeProperties"></param>
+    			<param name="contentType">text/html</param> 
+    		</result>
+		
+			<!-- 微信授权(返回首页) -->
+			<result name="auth_return_index">/index_phone_test.html</result>
+		
+			<!-- 微信授权(返回登录页) -->
+			<result name="auth_return_login">/login.html</result>
     		
 		</action>
     </package>

@@ -133,7 +133,7 @@ $(document).ready(function(){
 		    	}
 		    	//若从发布需求一步步到这个页面，则从界面上直接获取各个参数
 		    	else
-		    		url = "post/postAction!postNeed?needEntity.title="+$("#title").val()+"&needEntity.content="+$("#content").val()+"&needEntity.money="+$("#money").val()+"&needEntity.needer_id="+localStorage.getItem("id")+"&needEntity.needer_name="+localStorage.getItem("name")+"&needEntity.needer_phone="+localStorage.getItem("phone")+"&needEntity.needer_skill="+localStorage.getItem("skill");
+		    		url = "post/postAction!postNeed?needEntity.title="+$("#title").val()+"&needEntity.content="+$("#content").val()+"&needEntity.money="+$("#money").val()+"&needEntity.needer_id="+localStorage.getItem("id")+"&needEntity.needer_name="+localStorage.getItem("name")+"&needEntity.needer_phone="+localStorage.getItem("phone")+"&needEntity.needer_skill="+localStorage.getItem("skill")+"&needEntity.needer_weixin="+localStorage.getItem("open_id");
 //		    	alert(url);
 		    	$.get(url,
 				  
