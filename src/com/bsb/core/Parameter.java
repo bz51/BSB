@@ -1,5 +1,11 @@
 package com.bsb.core;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.bsb.entity.UserEntity;
+
 public class Parameter {
 	public static final String AuthCodeEntity = "AuthCodeEntity";
 	public static final String MsgEntity = "MsgEntity";
@@ -19,5 +25,10 @@ public class Parameter {
 	public static final String INFO = "INFO";
 	public static final String ERROR = "ERROR";
 	
-	
+	/** 所有大神都存在这里 */
+	public static List<UserEntity> Providers_Parameters = null;
+	/** access_token */
+	public static String AccessToken_Parameters = null;
+	/** 所有新用户的open_id和open_token都存在这里 */
+	public static Map<String,String> OpenTokenId_Parameters = new HashMap<String,String>();
 }

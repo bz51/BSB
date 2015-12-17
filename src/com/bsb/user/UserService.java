@@ -128,8 +128,11 @@ public class UserService {
 		//判断结果，若该用户存在
 		if(list!=null && list.size()>0){
 			UserEntity entity = list.get(0);
-			//将open_id存入user表
-			CoreDao.updateByHql("update UserEntity set weixin_id='"+open_id+"' where id="+entity.getId());
+			//判断该用户的open_id和获取到的open_id是否相同，若不同再更新
+			if(!open_id.equals(entity.getWeixin_id())){
+				//将open_id存入user表
+				CoreDao.updateByHql("update UserEntity set weixin_id='"+open_id+"' where id="+entity.getId());
+			}
 			return entity;
 		}
 		

@@ -13,6 +13,7 @@ import org.apache.struts2.interceptor.ApplicationAware;
 
 import com.bsb.core.CoreDao;
 import com.bsb.core.HttpRequest;
+import com.bsb.core.Parameter;
 import com.bsb.core.SMS;
 import com.bsb.entity.MsgEntity;
 import com.bsb.entity.OpenTokenId;
@@ -129,12 +130,28 @@ public class UserAction extends ActionSupport implements ApplicationAware{
 				entity.setPassword(password);
 				entity.setPhone(phone);
 				
-				//从数据库中取open_token对应的open_id
-				List<String> list = new ArrayList<String>();
-				list = CoreDao.queryListByHql("select open_id from OpenTokenId where open_token='"+open_token+"'");
-//				SMS.sendMsg("open_token="+open_token+"open_id="+list.get(0), "15251896025");
+//				//从数据库中取open_token对应的open_id
+//				List<String> list = new ArrayList<String>();
+//				list = CoreDao.queryListByHql("select open_id from OpenTokenId where open_token='"+open_token+"'");
+////				SMS.sendMsg("open_token="+open_token+"open_id="+list.get(0), "15251896025");
+//				//open_token不存在，则返回“open_token is missing”，客户端需重新授权
+//				if(list.size()==0){
+//					this.result = "no";
+//					this.reason = "open_token is missing";
+//					return "login";
+//				}
+//				
+//				//open_token存在
+//				else{
+//					System.out.println("open_id="+list.get(0));
+//					this.open_id = list.get(0);
+//					entity.setWeixin_id(open_id);
+//				}
+				
+				//从Parameter中取open_token对应的open_id
+				this.open_id = Parameter.OpenTokenId_Parameters.get(open_token);
 				//open_token不存在，则返回“open_token is missing”，客户端需重新授权
-				if(list.size()==0){
+				if(open_id==null || "".equals(open_id)){
 					this.result = "no";
 					this.reason = "open_token is missing";
 					return "login";
@@ -142,8 +159,7 @@ public class UserAction extends ActionSupport implements ApplicationAware{
 				
 				//open_token存在
 				else{
-					System.out.println("open_id="+list.get(0));
-					this.open_id = list.get(0);
+					System.out.println("open_id="+open_id);
 					entity.setWeixin_id(open_id);
 				}
 				
@@ -196,19 +212,32 @@ public class UserAction extends ActionSupport implements ApplicationAware{
 			return "signin";
 		}
 		
-		//从数据库中取open_token对应的open_id
-		List<String> list = new ArrayList<String>();
-		list = CoreDao.queryListByHql("select open_id from OpenTokenId where open_token='"+open_token+"'");
-		//open_token不存在，则返回“open_token is missing”，客户端需重新授权
-		if(list.size()==0){
+//		//从数据库中取open_token对应的open_id
+//		List<String> list = new ArrayList<String>();
+//		list = CoreDao.queryListByHql("select open_id from OpenTokenId where open_token='"+open_token+"'");
+//		//open_token不存在，则返回“open_token is missing”，客户端需重新授权
+//		if(list.size()==0){
+//			this.result = "no";
+//			this.reason = "open_token is missing";
+//			return "signin";
+//		}
+//		//open_token存在
+//		else{
+//			System.out.println("open_id="+list.get(0));
+//			open_id = list.get(0);
+//		}
+		
+		// 从Parameter中取open_token对应的open_id]
+		open_id = Parameter.OpenTokenId_Parameters.get(open_token);
+		// open_token不存在，则返回“open_token is missing”，客户端需重新授权
+		if (open_id==null || "".equals(open_id)) {
 			this.result = "no";
 			this.reason = "open_token is missing";
 			return "signin";
 		}
-		//open_token存在
-		else{
-			System.out.println("open_id="+list.get(0));
-			open_id = list.get(0);
+		// open_token存在
+		else {
+			System.out.println("open_id=" + open_id);
 		}
 		
 		//登录鉴权(这里包含了将open_id存入user表)

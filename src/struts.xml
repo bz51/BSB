@@ -178,6 +178,12 @@
     <package name="wechat" namespace="/wechat" extends="default">
 		<action name="wechatAction" class="com.bsb.wechat.WeChatAction">
 		
+			<!-- 获取access_token -->
+			<result name="getAccessToken" type="json">
+    			<param name="includeProperties">access_token</param>
+    			<param name="contentType">text/html</param> 
+    		</result>
+		
 			<!-- 获取所有用户信息 -->
 			<result name="authToken" type="json">
     			<param name="includeProperties">userList.*,reason,result</param>
@@ -195,6 +201,11 @@
 			<!-- 微信授权(返回登录页) -->
 			<result name="auth_return_login">/login.html</result>
     		
+    		<!-- 请求发送模板信息（测试） -->
+    		<result name="getMuBanInfo" type="json">
+    			<param name="includeProperties"></param>
+    			<param name="contentType">text/html</param> 
+    		</result>
 		</action>
     </package>
 </struts>

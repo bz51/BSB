@@ -20,8 +20,8 @@ public class SMS {
 		TaobaoClient client = new DefaultTaobaoClient(url, appkey, secret);
 		AlibabaAliqinFcSmsNumSendRequest req = new AlibabaAliqinFcSmsNumSendRequest();
 		req.setSmsType("normal");
-		req.setSmsFreeSignName("注册验证");
-		req.setSmsParam("{\"code\":\""+code+"\",\"product\":\"【毕设帮】\"}");
+		req.setSmsFreeSignName("毕设帮");
+		req.setSmsParam("{\"code\":\""+code+"\",\"product\":\"毕设帮\"}");
 		req.setRecNum(phone);
 		req.setSmsTemplateCode("SMS_1615033");
 		AlibabaAliqinFcSmsNumSendResponse response;
@@ -50,4 +50,8 @@ public class SMS {
 //		AlibabaAliqinFcSmsNumSendResponse rsp = client.execute(req, sessionKey);
 //		System.out.println(rsp.getBody());
 //	}
+	
+	public static void main(String[] argus){
+		sendMsg("1010","15251896025");
+	}
 }

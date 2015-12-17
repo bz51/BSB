@@ -58,12 +58,16 @@ public class PostAction extends ActionSupport implements ApplicationAware{
                 	}
                 }
                 //将providers存入application
-                application.put(Parameter.ProviderList, list);
+//                application.put(Parameter.ProviderList, list);
+                //将providers存入Parameter
+                Parameter.Providers_Parameters = list;
 //                LogTool.getLogger().info("#已经开启# 线程【获取所有入驻的provider】，当前Application中的provider数："+list.size());
                 //Mylog.log(Parameter.INFO,"线程【获取所有入驻的provider】#已经开启，当前Application中provider人数："+list.size()+"# ");
+                
+                System.out.println("Parameter中所有大神数="+Parameter.Providers_Parameters.size());
             }
         };
-        timer.scheduleAtFixedRate(task, new Date(),1800000);//当前时间开始起动 每次间隔2秒再启动
+        timer.scheduleAtFixedRate(task, new Date(),1800000);//当前时间开始起动 每次间隔30分钟再启动
 		return "startGetProviders";
 	}
 	
@@ -84,12 +88,13 @@ public class PostAction extends ActionSupport implements ApplicationAware{
 			return "postNeed";
 		}
 		
-		//获取application中的所有providers
-		List<UserEntity> list = (List<UserEntity>) application.get(Parameter.ProviderList);
-		//若application中providers为空，则主动去DB中查一下，再放到application中
+		//获取Parameter中的所有providers
+		List<UserEntity> list = Parameter.Providers_Parameters;
+		//若Parameter中providers为空，则主动去DB中查一下，再放到Parameter中
 		if(list==null){
+			System.out.println("Parameter中没有大神信息，正在去数据库查……");
 			list = service.getAllProviderList();
-			application.put(Parameter.ProviderList, list);
+			Parameter.Providers_Parameters = list;
 			//Mylog.log(Parameter.ERROR,"【发布一个需求】#当前application中的大神信息为空，已经重新获取，当前大神人数:"+list.size()+"# ");
 		}
 		

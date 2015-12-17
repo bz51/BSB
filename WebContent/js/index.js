@@ -41,7 +41,7 @@ $(document).ready(function(){
 //			alert("本地已存在open_token，直接停留首页即可!");
 	}
 	
-	//情况2:本地有id，无openid：本地生成open_token，服务器生成open_token＋open_id键值对，state＝2，返回登录页面
+	//情况2:(针对老用户)本地有id，无openid：本地生成open_token，服务器生成open_token＋open_id键值对，state＝2，返回登录页面
 	else if((localStorage.getItem("open_id")==null || localStorage.getItem("open_id")=='' || localStorage.getItem("open_id")=='null') 
 			&& (localStorage.getItem("id")!=null && localStorage.getItem("id")!='')){
 //		alert("情况2");
