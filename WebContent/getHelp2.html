@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<script type="text/javascript" src="js/tongji.js"></script>
+<head>
+	<meta charset="utf-8"/>
+  <meta name="keywords" content="代做毕设,毕设帮,毕业设计,毕设,5188,软件代做,Android" />
+	<meta name="description" content="毕设帮(5188.help)，在校硕士生为你答疑解惑，大神为你做毕设！毕设帮，最贴心的毕业设计求助平台！毕设帮，打造毕业设计第一品牌！师兄师姐为你指点迷津，妈妈再也不用担心我的毕业设计啦～" />
+  	<meta name="viewport" content="width=device-width" />
+  	<title>毕设帮(5188.help) － 毕业设计在线求助平台</title>
+<link rel="stylesheet" href="http://apps.bdimg.com/libs/jquerymobile/1.3.0/jquery.mobile-1.3.0.min.css">
+<script src="http://apps.bdimg.com/libs/jquery/1.8.3/jquery.min.js"></script>
+<script src="http://apps.bdimg.com/libs/jquerymobile/1.3.0/jquery.mobile-1.3.0.min.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script src="http://files.cnblogs.com/mofish/sha1.js"></script>
+<script type="text/javascript" src="js/getHelp2.js"></script>
+</head>
+<body>
+<h1 style="display:none;">毕设帮(5188.help)</h1>
+
+<!-- 获取帮助第一步 -->
+<div data-role="page" id="page1" data-fullscreen="true">
+	
+	<div data-role="header">
+    <a href="#" data-role="button" data-rel="back" data-icon="arrow-l">返回</a>
+		<h2>获取帮助-Step1</h2> 
+  	</div>
+	
+  	<div data-role="content">
+      <label for="fname" style="font-size:17px;font-weight:bold;">你毕设的方向:</label>
+
+      <select>
+        <option value="mon">计算机类</option>
+      </select>
+
+      <label style="font-size:17px;font-weight:bold;">你毕设中涉及的技术:</label>
+
+      <table width="100%">
+          <tr>
+            <td><label><input id="checkbox1" type="checkbox" value=""/>Java</label></td>
+            <td><label><input id="checkbox2" type="checkbox" value="" />C/C++</label></td>
+            
+          </tr>
+          <tr>
+            <td><label><input id="checkbox3" type="checkbox" value="" />Python</label></td>
+            <td><label><input id="checkbox4" type="checkbox" value=""/>C#</label></td>
+            
+          </tr>
+          <tr>
+            <td><label><input id="checkbox5" type="checkbox" value="" />Android</label></td>
+            <td><label><input id="checkbox6" type="checkbox" value="" />IOS</label></td>
+          </tr>
+          
+          <tr>
+            <td width="50%"><label><input id="checkbox7" type="checkbox" value="" />JSP</label></td>
+            <td width="50%"><label><input id="checkbox8" type="checkbox" value="" />ASP/.NET</label></td>
+          </tr>
+          
+          <tr>
+            <td><label><input id="checkbox9" type="checkbox" value="" />PHP</label></td>
+            <td><label><input id="checkbox10" type="checkbox" value="" />J2EE</label></td>
+          </tr>
+          
+          <tr>
+            <td><label><input id="checkbox11" type="checkbox" value=""/>算法</label></td>
+            <td><label><input id="checkbox12" type="checkbox" value="" />大数据</label></td>
+            
+          </tr>
+          <tr>
+            <td><label><input id="checkbox13" type="checkbox" value="" />软件测试</label></td>
+            <td><label><input id="checkbox14" type="checkbox" value=""/>游戏</label></td>
+            
+          </tr>
+          <tr>
+            <td><label><input id="checkbox15" type="checkbox" value="" />其他</label></td>
+            <!-- <td><label><input id="checkbox12" type="checkbox" value="" /></label></td> -->
+          </tr>
+      </table>
+      
+      
+      <label id="reason" style="color:red;"></label>  
+      <a href="" data-role="button" data-theme="b" id="nextBtn">下一步</a>
+
+  	</div>
+
+  	
+</div>
+
+
+
+
+<!-- 获取帮助第二步 -->
+<div data-role="page" id="page2" data-fullscreen="true"
+>
+  
+  <div data-role="header">
+    <a href="#" data-role="button" data-rel="back" data-icon="arrow-l">返回</a>
+    <h2>获取帮助-Step2</h2> 
+  </div>
+  
+    <div data-role="content">
+      <label for="title" style="font-size:17px;font-weight:bold;">毕设标题:</label>
+      <input type="text" name="title" id="title">
+      <br>
+      <label for="fname" style="font-size:17px;font-weight:bold;">需求详细描述:</label>
+      <textarea id="content" style="min-height:150px;" placeholder="告诉大神们，你毕设的具体内容是什么?你想获得什么样的帮助？"></textarea>
+      
+      <label id="reason2" style="color:red;"></label>  
+      <a href="" data-role="button" data-theme="b" id="next2Btn">下一步</a>
+    </div>
+    
+</div>
+
+
+
+
+<!-- 获取帮助第三步 -->
+<div data-role="page" id="page3" data-fullscreen="true">
+  
+  <div data-role="header">
+    <a href="#" data-role="button" data-icon="arrow-l" id="fanhui">返回</a>
+    <h2 id="titlePage3">获取帮助-Step3</h2>
+  </div>
+  
+    <div data-role="content">
+      <label for="money" style="font-size:17px;font-weight:bold;">打赏金额:</label>
+      <input id="money" type="tel" name="money" id="money" placeholder="RMB">
+      
+      <label id="reason3" style="color:red;"></label>  
+      <a href="" data-role="button" data-theme="b" id="submitBtn">完成</a>
+
+      <br>
+
+      <label style="font-size:15px;color:#666666;">平均打赏金额(仅供参考):</label>
+      <table class="table" width="100%" style="color:#666666;font-size:14px;text-align:center;margin-top:10px;">
+        <tr>
+          <th class="th" width="50%">类别</th>
+          <th class="th">易</th>
+          <th class="th">中</th>
+          <th class="th">难</th>
+        </tr>
+        <tr>
+          <td class="td">B/S架构系统</td>
+          <td class="td"></td>
+          <td class="td"></td>
+          <td class="td"></td>
+        </tr>
+        <tr>
+          <td class="td">Android/IOS</td>
+          <td class="td"></td>
+          <td class="td"></td>
+          <td class="td"></td>
+        </tr>
+        <tr>
+          <td class="td">桌面应用程序</td>
+          <td class="td"></td>
+          <td class="td"></td>
+          <td class="td"></td>
+        </tr>
+        <tr>
+          <td class="td">算法设计</td>
+          <td class="td"></td>
+          <td class="td"></td>
+          <td class="td"></td>
+        </tr>
+        <tr>
+          <td class="td">前沿技术(大数据、云计算、机器学习等)</td>
+          <td class="td"></td>
+          <td class="td"></td>
+          <td class="td"></td>
+        </tr>
+      </table>
+    </div>
+    
+    <style type="text/css">
+      .table{border-collapse:collapse;border-spacing:0;border-left:1px solid #CCCCCC;border-top:1px solid #CCCCCC;background:#efefef;border-color: #CCCCCC;}
+.th,.td{border-right:1px solid #CCCCCC;border-bottom:1px solid #CCCCCC;padding:5px 15px;}
+  .th{font-weight:bold;background:#ccc;}
+    </style>
+
+</div>
+
+
+
+
+<!-- 获取帮助第4步 -->
+<div data-role="page" id="page4" data-fullscreen="true">
+  
+  <div data-role="header">
+    <h2>获取帮助-Step4</h2>
+  </div>
+  
+    <div data-role="content">
+      <h2 style="text-align:center;color:red;">发布成功</h2>
+      <!-- <h2 style="text-align:center;">共匹配到<span style="color:red;" id="count">365</span>位大神</h2>
+      <h3 style="text-align:center;">等待大神抢单……</h3> -->
+      <h2 style="text-align:center;">等待客服确认此单</h2>
+      <h3 style="font-size:16px;text-align:center;color:red;">客服即将与您联系，请保持手机畅通</h3>
+
+      <br>
+      <br>
+      
+      <a href="adminNeeder.html" data-role="button" data-theme="b" rel="external">查看订单</a>
+      <span style="font-size:14px;color:red;font-weight:bold;">*客服即将与您联系，请保持手机畅通</span>
+    </div>
+    
+</div>
+
+</body>
+</html>

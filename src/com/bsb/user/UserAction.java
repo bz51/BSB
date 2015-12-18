@@ -19,6 +19,7 @@ import com.bsb.entity.MsgEntity;
 import com.bsb.entity.OpenTokenId;
 import com.bsb.entity.UserEntity;
 import com.bsb.tools.RandomNumber;
+import com.bsb.wechat.WeChatAction;
 import com.opensymphony.xwork2.ActionSupport;
 import com.qq.connect.utils.json.JSONException;
 import com.qq.connect.utils.json.JSONObject;
@@ -84,8 +85,9 @@ public class UserAction extends ActionSupport implements ApplicationAware{
 	/**
 	 * 注册
 	 * @return
+	 * @throws JSONException 
 	 */
-	public String login(){
+	public String login() throws JSONException{
 		//1.健壮性判断
 		if(name==null || name.equals("") || password==null || password.equals("")
 				|| role==null || role.equals("") || phone==null || phone.equals("") || authcode==null || authcode.equals("")){
@@ -183,6 +185,10 @@ public class UserAction extends ActionSupport implements ApplicationAware{
 					//删掉Application中的健值对
 					application.remove(this.phone);
 //					application.remove(this.open_token);
+					//删除Parameter中的open_id和open_token
+					Parameter.OpenTokenId_Parameters.remove(open_token);
+					//微信通知管理员
+					WeChatAction.sendToAllAdmin_newUser(entity);
 				}
 				return "login";
 			}
@@ -259,6 +265,8 @@ public class UserAction extends ActionSupport implements ApplicationAware{
 			this.skill = entity.getSkill();
 			//open_id是全局变量，已经获取到了，无需再赋值
 			this.result = "yes";
+			//删除Parameter中的open_id和open_token
+			Parameter.OpenTokenId_Parameters.remove(open_token);
 		}
 		return "signin";
 	}

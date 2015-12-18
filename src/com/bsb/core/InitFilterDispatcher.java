@@ -34,6 +34,9 @@ public class InitFilterDispatcher extends StrutsPrepareAndExecuteFilter implemen
         //定时线程1:每隔1.5时获取一次access_token5400000
         getAccess_token(5400000);
         
+        //定时线程1:每隔1.5时获取一次ticket
+        getTicket(5400000);
+        
         //定时线程2:每隔30分钟更新一次大神列表
         new PostAction().startGetProviders(); 
     }    
@@ -65,6 +68,35 @@ public class InitFilterDispatcher extends StrutsPrepareAndExecuteFilter implemen
             }
         };
         timer.scheduleAtFixedRate(task, new Date(),time);//当前时间开始起动 每次间隔n秒再启动
+		return true;
+	}
+	
+	
+	/**
+	 * 定时线程：获取ticket
+	 */
+	private boolean getTicket(long time){
+		if(time<=0)
+			return false;
+		
+		Timer timer = new Timer();
+		TimerTask task =new TimerTask(){
+			public void run(){
+				//获取ticket
+				String param = "access_token="+Parameter.AccessToken_Parameters+"&type=jsapi";
+				String ticket_result = HttpRequest.sendGet("https://api.weixin.qq.com/cgi-bin/ticket/getticket", param);
+				String ticket = "";
+				try {
+					ticket = new JSONObject(ticket_result).getString("ticket");
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				Parameter.Ticket_Parameter = ticket;
+				System.out.println("获取到的ticket="+ticket);
+				System.out.println("Parameter中的ticket="+Parameter.Ticket_Parameter);
+			}
+		};
+		timer.scheduleAtFixedRate(task, 10000,time);//当前时间开始起动 每次间隔n秒再启动
 		return true;
 	}
 	

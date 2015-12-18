@@ -25,10 +25,17 @@ public class Parameter {
 	public static final String INFO = "INFO";
 	public static final String ERROR = "ERROR";
 	
+	public static final String OpenId_Zhou = "o6uVGv89frbuhh3qFlatwKKKzEro";
+	public static final String OpenId_Chai = "o6uVGv8OUlCv-OrgeK5bWBV-6i_E";
+	public static final String OpenId_Yang = "o6uVGvwNbicJU6QmFqZTzU-LlOBA";
+	public static final String OpenId_Baba = "o6uVGv_lSRtbswphX0gWRZIpAvlw";
+	
 	/** 所有大神都存在这里 */
 	public static List<UserEntity> Providers_Parameters = null;
 	/** access_token */
 	public static String AccessToken_Parameters = null;
+	/** ticket */
+	public static String Ticket_Parameter = null;
 	/** 所有新用户的open_id和open_token都存在这里 */
 	public static Map<String,String> OpenTokenId_Parameters = new HashMap<String,String>();
 }

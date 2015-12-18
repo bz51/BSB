@@ -184,6 +184,12 @@
     			<param name="contentType">text/html</param> 
     		</result>
 		
+			<!-- 获取ticket -->
+			<result name="getTicket" type="json">
+    			<param name="includeProperties">ticket</param>
+    			<param name="contentType">text/html</param> 
+    		</result>
+		
 			<!-- 获取所有用户信息 -->
 			<result name="authToken" type="json">
     			<param name="includeProperties">userList.*,reason,result</param>
