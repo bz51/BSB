@@ -26,9 +26,11 @@ public abstract class HibernateTemplate {
 		
 			session.getTransaction().commit();
 		} catch (HibernateException e) {
+			System.out.println("error1:"+e.getMessage());
 			result = false;
 			reason = Parameter.HibernateException;
 			e.printStackTrace();
+			System.out.println("error2:"+e.getMessage());
 		}finally{
 			HibernateSessionFactory.closeSession();
 		}

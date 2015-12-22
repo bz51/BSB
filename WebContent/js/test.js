@@ -37,7 +37,7 @@ $(document).ready(function(){
 	    		//Post的内容
 	    		touser:"o6uVGv8OUlCv-OrgeK5bWBV-6i_E",
 	    		template_id:"rhTqtWR1H0hfFI3DQAZLySeetoaz15f5G6969IhZW3Q",
-	    		url:"http://www.5188.help",
+	    		url:"http://www.erhuowang.cn",
 	    		topcolor:"#FF0000",
 	    		first:"你好，这是First",
 	    		OrderSn:"01212121",

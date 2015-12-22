@@ -1,7 +1,12 @@
 package com.bsb.core;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -11,6 +16,7 @@ import javax.servlet.ServletException;
 import org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter;
 import org.apache.struts2.interceptor.ApplicationAware;
 
+import com.bsb.entity.OpenTokenId;
 import com.bsb.post.PostAction;
 import com.qq.connect.utils.json.JSONException;
 import com.qq.connect.utils.json.JSONObject;
@@ -38,7 +44,10 @@ public class InitFilterDispatcher extends StrutsPrepareAndExecuteFilter implemen
         getTicket(5400000);
         
         //定时线程2:每隔30分钟更新一次大神列表
-        new PostAction().startGetProviders(); 
+        new PostAction().startGetProviders();
+        
+        //读取DB中的Open_token和open_id
+        readOpenTokenIdFromDB();
     }    
 	
 	
@@ -100,6 +109,69 @@ public class InitFilterDispatcher extends StrutsPrepareAndExecuteFilter implemen
 		return true;
 	}
 	
+	
+	
+	@Override
+	public void destroy() {
+		super.destroy();
+		System.out.println("detroy……");
+		
+		//将内存中的open_token和open_id存入DB
+		saveOpenTokenIdToDB();
+	}
+
+
+	/**
+	 * 将内存中的open_token和open_id存入DB
+	 * @return
+	 */
+	private boolean saveOpenTokenIdToDB(){
+		//存储OpenTokenId的List
+		List<OpenTokenId> list = new ArrayList<OpenTokenId>();
+		//将内存中的open_token和open_id存至数据库
+		Set<String> open_tokens  = Parameter.OpenTokenId_Parameters.keySet();
+		for(String open_token : open_tokens){
+			//获取open_id
+			String open_id = Parameter.OpenTokenId_Parameters.get(open_token);
+			//将open_id和open_token存入entity
+			OpenTokenId entity = new OpenTokenId();
+			entity.setOpen_id(open_id);
+			entity.setOpen_token(open_token);
+			//将当前entity存入List
+			list.add(entity);
+		}
+		//将List存入DB
+		return CoreDao.saveList(list);
+	}
+	
+	
+	/**
+	 * 读取DB中的Open_token和open_id
+	 */
+	private boolean readOpenTokenIdFromDB(){
+		//从DB中读取所有OpenTokenId
+		List<OpenTokenId> list = new ArrayList<OpenTokenId>();
+		list = CoreDao.queryListByHql("from OpenTokenId");
+		
+		//将所有的OpenTokenId存入内存
+		Map<String,String> map = new HashMap<String,String>();
+		for(OpenTokenId e : list){
+			map.put(e.getOpen_token(), e.getOpen_id());
+		}
+		
+		Parameter.OpenTokenId_Parameters = map;
+		
+		//打印
+		Iterator<String> it = map.keySet().iterator();
+		while(it.hasNext()){
+			String key = (String) it.next();
+			System.out.println(key+"="+map.get(key));
+		}
+		
+		return true;
+	}
+	
+
 	@Override
 	public void setApplication(Map<String, Object> application) {
 		this.application = application;

@@ -16,6 +16,7 @@ import com.bsb.entity.MsgEntity;
 import com.bsb.entity.NeedEntity;
 import com.bsb.entity.NeedHelpEntity;
 import com.bsb.entity.UserEntity;
+import com.bsb.wechat.TemplateMsg;
 import com.opensymphony.xwork2.ActionSupport;
 
 public class PostAction extends ActionSupport implements ApplicationAware{
@@ -30,6 +31,11 @@ public class PostAction extends ActionSupport implements ApplicationAware{
 	private String provider_id;
 	private int count;
 	private int state;
+	private String contract;
+	private String skill;
+	private String provider_name;
+	private String password;
+	private String content;
 	private String result = "yes";
 	private String reason;
 	
@@ -75,6 +81,7 @@ public class PostAction extends ActionSupport implements ApplicationAware{
 	/**
 	 * 发布一个需求
 	 */
+	/**
 	public String postNeed(){
 		//健壮性判断
 		if(needEntity==null || needEntity.getContent()==null || needEntity.getContent().equals("")
@@ -145,24 +152,33 @@ public class PostAction extends ActionSupport implements ApplicationAware{
 		this.count = success_providers.size();
 		return "postNeed";
 	}
+	*/
+	
 	
 	/**
-	 * 将Stirng——>int数组
-	 * @param str
-	 * @return
+	 * 发布一条信息（现用）
 	 */
-	private List<Integer> String2IntList(String str){
-		if(str==null)
-			return null;
+	public String postNeed(){
+		// 健壮性判断
+		if (needEntity == null || needEntity.getContent() == null || needEntity.getContent().equals("")
+				|| needEntity.getMoney() <= 0 || needEntity.getNeeder_id() <= 0 || needEntity.getNeeder_name() == null
+				|| needEntity.getNeeder_name().equals("") || needEntity.getNeeder_phone() == null
+				|| needEntity.getNeeder_phone().equals("") || needEntity.getNeeder_skill() == null
+				|| needEntity.getNeeder_skill().equals("") || needEntity.getTitle() == null
+				|| needEntity.getTitle().equals("")) {
+			this.result = "no";
+			this.reason = "content、title、needer_id、needer_name、needer_phone、needer_skill、needer_title不能为空";
+			return "postNeed";
+		}		
 		
-		List<Integer> list = new ArrayList<Integer>();
-		for(int i=0;i<str.length();i++){
-			char c = str.charAt(i);
-			list.add(Integer.parseInt(c+""));
-		}
+		//发布一条信息
+		service.postNeed(needEntity);
+		this.result = service.getResult()+"";
+		this.reason = service.getReason();
 		
-		return list;
+		return "postNeed";
 	}
+	
 	
 	
 	/**
@@ -465,6 +481,190 @@ public class PostAction extends ActionSupport implements ApplicationAware{
 		return "getStateById";
 	}
 	
+	
+	
+	
+	/**
+	 * 管理员获取求助者发布的信息
+	 */
+	public String getNeedEntityList(){
+		//获取求助者发布的信息
+		this.needList = service.getNeedEntityList(state);
+		this.result = service.getResult()+"";
+		this.reason = service.getReason();
+		return "getNeedEntityList";
+	}
+	
+	
+	
+	/**
+	 * 管理员发布/修改一份合同
+	 */
+	public String postContract(){
+		//健壮性判断
+		if(this.contract==null || "".equals(contract) || this.require_id==null || "".equals(require_id)){
+			this.result = "no";
+			this.reason = "contract、require_id不能为空";
+			return "postContract";
+		}
+		
+		//发布/修改一份合同
+		service.postContract(contract,require_id);
+		if(!service.getResult()){
+			this.result = "no";
+			this.reason = service.getReason();
+		}
+		
+		return "postContract";
+	}
+	
+	
+	
+	/**
+	 * 求助者确认合同
+	 */
+	public String confirmContract(){
+		//健壮性判断
+		if(require_id==null || "".equals(require_id) || skill==null || "".equals(skill)){
+			this.result = "no";
+			this.reason = "require_id、skill不能为空";
+			return "confirmContract";
+		}
+		
+		//求助者确认合同
+		this.count = service.confirmContract(this.require_id,this.skill);
+		if(!service.getResult()){
+			this.result = "no";
+			this.reason = service.getReason();
+		}
+		return "confirmContract";
+	}
+	
+	
+	
+	/**
+	 * 大神放弃此单(确认订单前放弃)
+	 */
+	public String providerGiveupOrderPre(){
+		//健壮性判断
+		if(this.require_id==null || "".equals(this.require_id) || this.provider_name==null || "".equals(this.provider_name)){
+			this.result = "no";
+			this.reason = "require_id、provider_name不能为空";
+			return "providerGiveupOrderPre";
+		}
+		
+		//大神放弃此单
+		service.providerGiveupOrderPre(this.require_id,this.provider_name);
+		return "providerGiveupOrderPre";
+	}
+	
+	
+	
+	/**
+	 * 大神确认可以开始服务 
+	 */
+	public String providerConfirm(){
+		//健壮性判断
+		if(this.require_id==null || "".equals(this.require_id)){
+			this.result = "no";
+			this.reason = "require_id不能为空";
+			return "providerConfirm";
+		}
+		
+		//大神确认可以开始服务 
+		service.providerConfirm(this.require_id);
+		if(!service.getResult()){
+			this.result = "no";
+			this.reason = service.getReason();
+		}
+		return "providerConfirm";
+	}
+	
+	
+	
+	/**
+	 * 求助者付款成功 
+	 */
+	public String neederPay(){
+		//健壮性判断
+		if(this.require_id==null || "".equals(this.require_id)){
+			this.result = "no";
+			this.reason = "require_id不能为空";
+			return "neederPay";
+		}
+		
+		service.neederPay(this.require_id);
+		if(!service.getResult()){
+			this.result = "no";
+			this.reason = service.getReason();
+		}
+		return "neederPay";
+	}
+	
+	
+	
+	/**
+	 * 大神完成开发
+	 */
+	public String finishDevelop(){
+		//健壮性判断
+		if(this.require_id==null || "".equals(this.require_id)){
+			this.result = "no";
+			this.reason = "require_id不能为空";
+			return "finishDevelop";
+		}
+		
+		service.finishDevelop(this.require_id);
+		if(!service.getResult()){
+			this.result = "no";
+			this.reason = service.getReason();
+		}
+		return "finishDevelop";
+	}
+	
+	
+	
+	/**
+	 * 求助者点击通过验收
+	 */
+	public String confirmOrder(){
+		//健壮性判断
+		if(this.require_id==null || "".equals(this.require_id) || this.password==null || "".equals(this.password) || this.needer_id==null || "".equals(this.needer_id)){
+			this.result = "no";
+			this.reason = "require_id、password、needer_id不能为空";
+			return "confirmOrder";
+		}
+		
+		service.confirmOrder(this.require_id,this.password,this.needer_id);
+		if(!service.getResult()){
+			this.result = "no";
+			this.reason = service.getReason();
+		}
+		
+		return "confirmOrder";
+	}
+	
+	
+	/**
+	 * 求助者/大神申请仲裁
+	 */
+	public String applyArbitration(){
+		//健壮性判断
+		if(this.require_id==null || "".equals(this.require_id) || this.content==null || "".equals(this.content)){
+			this.result = "no";
+			this.reason = "require_id、content不能为空";
+			return "applyArbitration";
+		}
+		
+		service.applyArbitration(this.require_id,this.content);
+		if(!service.getResult()){
+			this.result = "no";
+			this.reason = service.getReason();
+		}
+		
+		return "applyArbitration";
+	}
+	
 	public String getResult() {
 		return result;
 	}
@@ -583,6 +783,56 @@ public class PostAction extends ActionSupport implements ApplicationAware{
 
 	public void setState(int state) {
 		this.state = state;
+	}
+
+
+	public String getContract() {
+		return contract;
+	}
+
+
+	public void setContract(String contract) {
+		this.contract = contract;
+	}
+
+
+	public String getSkill() {
+		return skill;
+	}
+
+
+	public void setSkill(String skill) {
+		this.skill = skill;
+	}
+
+
+	public String getProvider_name() {
+		return provider_name;
+	}
+
+
+	public void setProvider_name(String provider_name) {
+		this.provider_name = provider_name;
+	}
+
+
+	public String getPassword() {
+		return password;
+	}
+
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+
+	public String getContent() {
+		return content;
+	}
+
+
+	public void setContent(String content) {
+		this.content = content;
 	}
 	
 	

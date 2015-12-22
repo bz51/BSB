@@ -27,6 +27,8 @@ public class NeedHelpEntity {
 	private String provider_phone;
 	private String provider_skill;
 	private int post;
+	private Timestamp deadline;
+	private String contract;
 	
 	@Id
 	@GeneratedValue
@@ -131,6 +133,18 @@ public class NeedHelpEntity {
 	}
 	public void setRequire_id(int require_id) {
 		this.require_id = require_id;
+	}
+	public Timestamp getDeadline() {
+		return deadline;
+	}
+	public void setDeadline(Timestamp deadline) {
+		this.deadline = deadline;
+	}
+	public String getContract() {
+		return contract;
+	}
+	public void setContract(String contract) {
+		this.contract = contract;
 	}
 	
 	

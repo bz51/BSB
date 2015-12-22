@@ -6,10 +6,12 @@ import java.util.List;
 
 import com.bsb.core.CoreDao;
 import com.bsb.core.Parameter;
+import com.bsb.core.UpdateStateAndGetEntityImp;
 import com.bsb.entity.MsgEntity;
 import com.bsb.entity.NeedEntity;
 import com.bsb.entity.NeedHelpEntity;
 import com.bsb.entity.UserEntity;
+import com.bsb.wechat.TemplateMsg;
 
 public class PostService {
 	private boolean result = true;
@@ -27,9 +29,10 @@ public class PostService {
 	
 	
 	/**
-	 * 发布一个需求
+	 * 发布一个需求(弃用)
 	 * @return
 	 */
+	/**
 	public boolean postNeed(NeedEntity needEntity,List<NeedHelpEntity> needHelpList){
 		//健壮性判断
 		if(needEntity==null || needEntity.getContent()==null || needEntity.getContent().equals("")
@@ -53,6 +56,27 @@ public class PostService {
 		PostDaoPostNeedImp imp = new PostDaoPostNeedImp(needEntity, needHelpList);
 		return imp.hibernateOperation();
 		
+	}
+	*/
+	
+	/**
+	 * 发布一条需求（现用）
+	 * PS:健壮性判断放到Action层完成，这里不再做判断了！
+	 */
+	public void postNeed(NeedEntity needEntity){
+		//将状态设置为“3:拟定合同中”
+		needEntity.setState(3);
+		
+		//将信息存入need表
+		int result = CoreDao.save(needEntity);
+		if(result==-1){
+			this.result = false;
+			this.reason = "数据库插入失败";
+			return;
+		}
+		
+		//通知管理员拟定合同
+		TemplateMsg.sendTemplateMsg_writeContractToAdmin(needEntity);
 	}
 	
 	
@@ -117,6 +141,11 @@ public class PostService {
 		boolean result = imp.hibernateOperation();
 		if(!result)
 			this.reason = imp.getReason();
+		
+		//向求助者发送抢单成功通知
+		TemplateMsg.sendTemplateMsg_grabSingleSuccessToNe(imp.getNeedEntity());
+		//向大神发送抢单成功通知
+		TemplateMsg.sendTemplateMsg_grabSingleSuccessToPro(imp.getNeedEntity());
 		return result;
 	}
 	
@@ -366,14 +395,6 @@ public class PostService {
 		}
 		return msgList;
 	}
-	
-	public boolean getResult() {
-		return result;
-	}
-	public String getReason() {
-		return reason;
-	}
-
 
 	
 	/**
@@ -387,4 +408,284 @@ public class PostService {
 	}
 	
 	
+	
+	
+	
+	
+	
+	public boolean getResult() {
+		return result;
+	}
+	public String getReason() {
+		return reason;
+	}
+
+
+	/**
+	 * 管理员获取求助者发布的信息
+	 */
+	public List<NeedEntity> getNeedEntityList(int state) {
+		//查询求助者的需求列表
+		String hql = "";
+		if(state == -1)
+			hql = "from NeedEntity";
+		else
+			hql = "from NeedEntity where state="+state;
+		List<NeedEntity> list = CoreDao.queryListByHql(hql);
+		if(list==null){
+			this.result = false;
+			this.reason = "发布信息失败";
+			return null;
+		}
+		
+		return list;
+	}
+
+
+	
+	/**
+	 * 发布/修改一份合同
+	 * @param contract
+	 * @param require_id
+	 */
+	public void postContract(String contract, String require_id) {
+		//更新need表中require_id这条记录的contract字段
+		PostDaoPostContract imp = new PostDaoPostContract(contract, require_id);
+		result = imp.hibernateOperation();
+		
+		//通知求助者去确认合同
+		TemplateMsg.sendTemplateMsg_confirmContract(imp.getNeedEntity());
+		
+		if(!result)
+			this.reason = "数据库更新失败";
+	}
+
+
+	
+	/**
+	 * 求助者确认合同
+	 * @param require_id
+	 */
+	public int confirmContract(String require_id,String skill) {
+		//1.获取符合条件的大神
+		List<UserEntity> providerList = getAllMatchProvider(skill);
+		
+		//2.将List<UserEntity>——>List<NeedHelpEntity>
+		List<NeedHelpEntity> needHelpList = new ArrayList<NeedHelpEntity>();
+		for(UserEntity e : providerList){
+			NeedHelpEntity needHelpEntity = new NeedHelpEntity();
+			needHelpEntity.setProvider_id(e.getId());
+			needHelpEntity.setProvider_name(e.getName());
+			needHelpEntity.setProvider_phone(e.getPhone());
+			needHelpEntity.setProvider_skill(e.getSkill());
+			needHelpEntity.setProvider_weixin(e.getWeixin_id());
+			needHelpList.add(needHelpEntity);
+		}
+		
+		//3.将匹配结果存入need_help表中，4.更新need表中的状态0，5.查询need表中该条记录的全部信息
+		PostDaoMatchProviderImp imp = new PostDaoMatchProviderImp(require_id,needHelpList);
+		this.result = imp.hibernateOperation();
+		if(!result)
+			this.reason = imp.getReason();
+		
+		//6.发送模板消息To求助者(您已确认合同，等待大神抢单)
+		TemplateMsg.sendTemplateMsg_successContract(imp.getNeedEntity());
+		//7.发送模板消息To大神们(xxx想您求助，赶紧抢单)
+		
+		for(NeedHelpEntity e : needHelpList)
+			TemplateMsg.sendTemplateMsg_grabSingle(e);
+		
+		return providerList.size();
+	}
+	
+	
+	/**
+	 * 获取符合条件的大神
+	 */
+	private List<UserEntity> getAllMatchProvider(String skill){
+		//从内存中读取所有的大神
+		List<UserEntity> list = Parameter.Providers_Parameters;
+		
+		// 若Parameter中providers为空，则主动去DB中查一下，再放到Parameter中
+		if (list == null) {
+			System.out.println("Parameter中没有大神信息，正在去数据库查……");
+			list = this.getAllProviderList();
+			Parameter.Providers_Parameters = list;
+		}
+		
+		
+		// 进行匹配
+		// 获取needer的skill数组
+		List<Integer> needer_skill_int = String2IntList(skill);
+		System.out.println("needer_skill_int＝" + needer_skill_int.toString());
+		// 用于存放匹配成功的providers
+		List<UserEntity> success_providers = new ArrayList<UserEntity>();
+		// 遍历所有的provider
+		for (UserEntity e : list) {
+			// 将每一个provider_skill转换成int数组
+			List<Integer> provider_skill_int = String2IntList(e.getSkill());
+			for (int i = 0; i < provider_skill_int.size(); i++) {
+				int c = provider_skill_int.get(i) - needer_skill_int.get(i);
+				if (c < 0) {
+					break;
+				}
+				if ((i + 1) == provider_skill_int.size()) {
+					success_providers.add(e);
+				}
+			}
+		}
+		
+		return success_providers;
+	}
+	
+	
+	/**
+	 * 将Stirng——>int数组
+	 * @param str
+	 * @return
+	 */
+	private List<Integer> String2IntList(String str){
+		if(str==null)
+			return null;
+		
+		List<Integer> list = new ArrayList<Integer>();
+		for(int i=0;i<str.length();i++){
+			char c = str.charAt(i);
+			list.add(Integer.parseInt(c+""));
+		}
+		
+		return list;
+	}
+
+
+	/**
+	 * 大神放弃此单
+	 * @param require_id
+	 */
+	public void providerGiveupOrderPre(String require_id,String provider_name) {
+		//修改need表中该条记录，把大神信息清空
+		this.result = CoreDao.updateByHql("update NeedEntity set provider_id=0,provider_weixin=null,provider_name=null,provider_phone=null,provider_skill=null where id="+require_id);
+		if(!result){
+			this.reason = "清空旧大神信息时失败";
+			return;
+		}
+		
+		//获取求助者skill
+		NeedEntity needEntity = CoreDao.queryUniqueById(Long.parseLong(require_id), Parameter.NeedEntity);
+		
+		//重新匹配大神
+		//1.获取符合条件的大神
+		List<UserEntity> providerList = getAllMatchProvider(needEntity.getNeeder_skill());
+		
+		//2.将List<UserEntity>——>List<NeedHelpEntity>
+		List<NeedHelpEntity> needHelpList = new ArrayList<NeedHelpEntity>();
+		for(UserEntity e : providerList){
+			NeedHelpEntity needHelpEntity = new NeedHelpEntity();
+			needHelpEntity.setProvider_id(e.getId());
+			needHelpEntity.setProvider_name(e.getName());
+			needHelpEntity.setProvider_phone(e.getPhone());
+			needHelpEntity.setProvider_skill(e.getSkill());
+			needHelpEntity.setProvider_weixin(e.getWeixin_id());
+			needHelpList.add(needHelpEntity);
+		}
+		
+		//3.将匹配结果存入need_help表中，4.更新need表中的状态0，5.查询need表中该条记录的全部信息
+		PostDaoMatchProviderImp imp = new PostDaoMatchProviderImp(require_id,needHelpList);
+		this.result = imp.hibernateOperation();
+		if(!result)
+			this.reason = imp.getReason();
+		
+		//6.发送模板消息To求助者(大神已放弃订单，但系统以为你重新匹配)
+		imp.getNeedEntity().setProvider_name(provider_name);
+		TemplateMsg.sendTemplateMsg_proGiveupOrderToNe(imp.getNeedEntity());
+		//7.发送模板消息To大神们(xxx想您求助，赶紧抢单)
+		for(NeedHelpEntity e : needHelpList)
+			TemplateMsg.sendTemplateMsg_grabSingle(e);
+	}
+
+
+	
+	/**
+	 * 大神确认可以开始服务
+	 * @param require_id
+	 */
+	public void providerConfirm(String require_id) {
+		//更新状态，并获取NeedEntity
+		UpdateStateAndGetEntityImp imp = new UpdateStateAndGetEntityImp(6,Long.parseLong(require_id));
+		imp.hibernateOperation();
+		
+		//向大神发送确认订单的通知
+		TemplateMsg.sendTemplateMsg_proConfirmOrderToPro(imp.getNeedEntity());
+		//向求助者发送付款通知
+		TemplateMsg.sendTemplateMsg_proConfirmOrderToNe(imp.getNeedEntity());
+	}
+
+
+	
+	/**
+	 * 求助者付款成功
+	 * @param require_id
+	 */
+	public void neederPay(String require_id) {
+		//更新状态，并获取NeedEntity
+		UpdateStateAndGetEntityImp imp = new UpdateStateAndGetEntityImp(7,Long.parseLong(require_id));
+		imp.hibernateOperation();
+		
+		//向大神发送开发中的通知
+		TemplateMsg.sendTemplateMsg_paySuccessToPro(imp.getNeedEntity());
+		//向求助者发送付款成功通知
+		//由微信支付发送……
+	}
+
+
+	
+	
+	/**
+	 * 大神完成开发
+	 * @param require_id
+	 */
+	public void finishDevelop(String require_id) {
+		//更新状态，并获取NeedEntity
+		UpdateStateAndGetEntityImp imp = new UpdateStateAndGetEntityImp(8,Long.parseLong(require_id));
+		imp.hibernateOperation();
+		
+		//向大神发送开发完成的通知
+		TemplateMsg.sendTemplateMsg_finishDevToPro(imp.getNeedEntity());
+		//向求助者发送开发完成通知
+		TemplateMsg.sendTemplateMsg_finishDevToNe(imp.getNeedEntity());
+	}
+
+
+	
+	
+	/**
+	 * 求助者点击通过验收
+	 * @param require_id
+	 * @param password
+	 */
+	public void confirmOrder(String require_id, String password,String needer_id) {
+		PostDaoConfirmOrderImp imp = new PostDaoConfirmOrderImp(require_id,password,needer_id);
+		imp.hibernateOperation();
+		if(!imp.getResult()){
+			this.result = false;
+			this.reason = imp.getReason();
+			return;
+		}
+		
+		//向大神发送开发完成的通知
+		TemplateMsg.sendTemplateMsg_finishOrderToPro(imp.getNeedEntity());
+		//向求助者发送开发完成通知
+		TemplateMsg.sendTemplateMsg_finishOrderToNe(imp.getNeedEntity());
+	}
+
+
+	
+	/**
+	 * 求助者/大神申请仲裁
+	 * @param require_id
+	 * @param content
+	 */
+	public void applyArbitration(String require_id, String content) {
+		
+	}
 }

@@ -156,6 +156,60 @@
     			<param name="includeProperties">state,reason,result</param>
     			<param name="contentType">text/html</param> 
     		</result>
+		
+			<!-- 获取求助者发布的需求信息 -->
+			<result name="getNeedEntityList" type="json">
+    			<param name="includeProperties">needList.*,reason,result</param>
+    			<param name="contentType">text/html</param> 
+    		</result>
+		
+			<!-- 管理员发布/修改一份合同 -->
+			<result name="postContract" type="json">
+    			<param name="includeProperties">reason,result</param>
+    			<param name="contentType">text/html</param> 
+    		</result>
+		
+			<!-- 求助者确认合同 -->
+			<result name="confirmContract" type="json">
+    			<param name="includeProperties">count,reason,result</param>
+    			<param name="contentType">text/html</param> 
+    		</result>
+		
+			<!-- 大神放弃此单(确认订单前放弃) -->
+			<result name="providerGiveupOrderPre" type="json">
+    			<param name="includeProperties">reason,result</param>
+    			<param name="contentType">text/html</param> 
+    		</result>
+		
+			<!-- 大神确认可以开始服务 -->
+			<result name="providerConfirm" type="json">
+    			<param name="includeProperties">reason,result</param>
+    			<param name="contentType">text/html</param> 
+    		</result>
+		
+			<!-- 求助者付款成功 -->
+			<result name="neederPay" type="json">
+    			<param name="includeProperties">reason,result</param>
+    			<param name="contentType">text/html</param> 
+    		</result>
+		
+			<!-- 大神完成开发 -->
+			<result name="finishDevelop" type="json">
+    			<param name="includeProperties">reason,result</param>
+    			<param name="contentType">text/html</param> 
+    		</result>
+		
+			<!-- 求助者点击通过验收 -->
+			<result name="confirmOrder" type="json">
+    			<param name="includeProperties">reason,result</param>
+    			<param name="contentType">text/html</param> 
+    		</result>
+		
+			<!-- 求助者/大神申请仲裁 -->
+			<result name="applyArbitration" type="json">
+    			<param name="includeProperties">reason,result</param>
+    			<param name="contentType">text/html</param> 
+    		</result>
     		
 		</action>
     </package>

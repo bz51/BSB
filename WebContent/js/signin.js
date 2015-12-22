@@ -122,7 +122,7 @@ $(document).ready(function(){
 				    	if(json.reason=='open_token is missing'){
 				    		alert("授权过期啦，是否重新授权呀？");
 							//进行微信授权(state携带参数open_token)
-							window.location.href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx1a4c2e86c17d1fc4&redirect_uri=http://www.5188.help/wechat/wechatAction!auth_return_index&response_type=code&scope=snsapi_base&state="+localStorage.getItem("open_token")+"#wechat_redirect";
+							window.location.href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx1a4c2e86c17d1fc4&redirect_uri=http://www.erhuowang.cn/wechat/wechatAction!auth_return_index&response_type=code&scope=snsapi_base&state="+localStorage.getItem("open_token")+"#wechat_redirect";
 				    	}
 				    }
 				   

@@ -15,6 +15,7 @@ import com.bsb.tools.HibernateTemplate;
 public class PostDaoGrabSingleImp extends HibernateTemplate {
 	private long require_id;
 	private UserEntity providerEntity;
+	private NeedEntity needEntity;
 	
 	public PostDaoGrabSingleImp(long require_id, UserEntity providerEntity) {
 		super();
@@ -44,8 +45,15 @@ public class PostDaoGrabSingleImp extends HibernateTemplate {
 		
 		// 若未抢单，则将该条记录的state更新为已抢单，provider的信息填入need表
 		else{
-			String hql= "update "+Parameter.NeedEntity+" set provider_weixin='"+providerEntity.getWeixin_id()+"',provider_id="+providerEntity.getId()+",provider_name='"+providerEntity.getName()+"',provider_phone='"+providerEntity.getPhone()+"',provider_skill='"+providerEntity.getSkill()+"',state=1 where id="+require_id;
+			String hql= "update "+Parameter.NeedEntity+" set state=1,provider_weixin='"+providerEntity.getWeixin_id()+"',provider_id="+providerEntity.getId()+",provider_name='"+providerEntity.getName()+"',provider_phone='"+providerEntity.getPhone()+"',provider_skill='"+providerEntity.getSkill()+"' where id="+require_id;
 			session.createQuery(hql).executeUpdate();
+			//将查出来的NeedEntity中加入大神信息
+			entity.setProvider_id(providerEntity.getId());
+			entity.setProvider_name(providerEntity.getName());
+			entity.setProvider_phone(providerEntity.getPhone());
+			entity.setProvider_skill(providerEntity.getSkill());
+			entity.setProvider_weixin(providerEntity.getWeixin_id());
+			this.needEntity = entity;
 		}
 		
 		// 删除need_help表中所有require_id为该id的记录，提示抢单成功
@@ -56,5 +64,11 @@ public class PostDaoGrabSingleImp extends HibernateTemplate {
 		super.reason = "抢单成功";
 		return session;
 	}
+
+	public NeedEntity getNeedEntity() {
+		return needEntity;
+	}
+	
+	
 
 }

@@ -27,6 +27,8 @@ public class NeedEntity {
 	private String provider_skill;
 	private int post;
 	private int state;
+	private Timestamp deadline;
+	private String contract;
 	
 	@Id
 	@GeneratedValue
@@ -131,6 +133,18 @@ public class NeedEntity {
 	}
 	public void setState(int state) {
 		this.state = state;
+	}
+	public Timestamp getDeadline() {
+		return deadline;
+	}
+	public void setDeadline(Timestamp deadline) {
+		this.deadline = deadline;
+	}
+	public String getContract() {
+		return contract;
+	}
+	public void setContract(String contract) {
+		this.contract = contract;
 	}
 	
 	

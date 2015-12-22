@@ -16,7 +16,7 @@ $(document).ready(function(){
 			alert("open_token="+open_token);
 			localStorage.setItem("open_token",open_token);
 			//进行微信授权(state携带参数open_token)
-			window.location.href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx1a4c2e86c17d1fc4&redirect_uri=http://www.5188.help/wechat/wechatAction!auth_return_index&response_type=code&scope=snsapi_base&state="+open_token+"#wechat_redirect";
+			window.location.href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx1a4c2e86c17d1fc4&redirect_uri=http://www.erhuowang.cn/wechat/wechatAction!auth_return_index&response_type=code&scope=snsapi_base&state="+open_token+"#wechat_redirect";
 		}
 		
 		//本地有open_token:表示刚才服务器已经获取open_id，现在停留首页即可
@@ -36,7 +36,7 @@ $(document).ready(function(){
 			alert("open_token="+open_token);
 			localStorage.setItem("open_token",open_token);
 			//进行微信授权(state携带参数open_token)
-			window.location.href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx1a4c2e86c17d1fc4&redirect_uri=http://www.5188.help/wechat/wechatAction!auth_return_login&response_type=code&scope=snsapi_base&state="+open_token+"#wechat_redirect";
+			window.location.href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx1a4c2e86c17d1fc4&redirect_uri=http://www.erhuowang.cn/wechat/wechatAction!auth_return_login&response_type=code&scope=snsapi_base&state="+open_token+"#wechat_redirect";
 		}
 		
 		//本地有open_token:表示刚才服务器已经获取open_id，跳转至登录页面
@@ -73,7 +73,7 @@ $(document).ready(function(){
 	
 //	if(localStorage.getItem("open_id")==null || localStorage.getItem("open_id")==''){
 //		alert("id="+localStorage.getItem("open_id"));
-//		window.location.href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx1a4c2e86c17d1fc4&redirect_uri=www.5188.help/index_phone.html&response_type=code&scope=snsapi_base&state=123#wechat_redirect";
+//		window.location.href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx1a4c2e86c17d1fc4&redirect_uri=www.erhuowang.cn/index_phone.html&response_type=code&scope=snsapi_base&state=123#wechat_redirect";
 //	}
 //	
 //	//判断是否登录
