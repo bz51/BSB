@@ -42,11 +42,13 @@ public class PostDaoGetOrderListByProviderIdImp extends HibernateTemplate {
 			entity.setMoney(e.getMoney());
 			entity.setTime(e.getTime());
 			entity.setTitle(e.getTitle());
+			entity.setContract(e.getContent());
 			list.add(entity);
 		}
 		
 		// 从need表中获取该provider所有抢单成功的订单
-		String hql2 = "from "+Parameter.NeedEntity+" where provider_id="+this.provider_id+" and state=1";
+		String hql2 = "from "+Parameter.NeedEntity+" where provider_id="+this.provider_id;
+//		String hql2 = "from "+Parameter.NeedEntity+" where provider_id="+this.provider_id+" and state=1";
 		List<NeedEntity> needList = session.createQuery(hql2).list();
 		// 将成功抢到的单填入list中
 		for(NeedEntity e : needList)

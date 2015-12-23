@@ -35,6 +35,7 @@ public abstract class HibernateTemplate {
 			HibernateSessionFactory.closeSession();
 		}
 		System.out.println("HIbernateTemplate:"+result);
+		System.out.println("reason="+reason);
 		return result;
 	}
 	

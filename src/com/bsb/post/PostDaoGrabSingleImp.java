@@ -43,10 +43,11 @@ public class PostDaoGrabSingleImp extends HibernateTemplate {
 			return session;
 		}
 		
+		
 		// 若未抢单，则将该条记录的state更新为已抢单，provider的信息填入need表
 		else{
-			String hql= "update "+Parameter.NeedEntity+" set state=1,provider_weixin='"+providerEntity.getWeixin_id()+"',provider_id="+providerEntity.getId()+",provider_name='"+providerEntity.getName()+"',provider_phone='"+providerEntity.getPhone()+"',provider_skill='"+providerEntity.getSkill()+"' where id="+require_id;
-			session.createQuery(hql).executeUpdate();
+			String hql= "update "+Parameter.NeedEntity+" set state=:state,provider_weixin='"+providerEntity.getWeixin_id()+"',provider_id="+providerEntity.getId()+",provider_name='"+providerEntity.getName()+"',provider_phone='"+providerEntity.getPhone()+"',provider_skill='"+providerEntity.getSkill()+"' where id="+require_id;
+			session.createQuery(hql).setInteger("state",1).executeUpdate();
 			//将查出来的NeedEntity中加入大神信息
 			entity.setProvider_id(providerEntity.getId());
 			entity.setProvider_name(providerEntity.getName());

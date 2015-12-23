@@ -99,12 +99,13 @@
 
 
 
-<!-- 帮助者个人中心详情（未抢单） -->
+<!-- 帮助者个人中心详情（未抢单）{ -->
 <div data-role="page" id="pageDetail1" data-fullscreen="true">
   
   <div data-role="header">
     <a href="#" data-role="button" data-rel="back" data-icon="arrow-l">返回</a>
     <h2>本单详情</h2>
+    <a href="" data-role="button" data-theme="b" data-rel="dialog" id="grabSingle">立即抢单</a>
   </div>
   
   <div data-role="content">
@@ -126,15 +127,73 @@
         <td colspan="2"><span style="font-size:13px;color:#999999;" id="content1">需求详情需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介</span></td>
         <td></td>
       </tr>
-      <tr>
-        <td colspan="2"><a href="" data-role="button" data-theme="b" rel="external" id="grabSingle">立即抢单</a></td>
-        <td></td>
-      </tr>
     </table>
 
+
+
+    <!-- 合同｛ -->
+    <h3>需求合同</h3>
+    <hr>
+
+    <label style="text-align:center;color:#FF6600;text-align:left;font-size:14px;font-weight:bold;">*本合同作为交易保障凭证，具有法律效应<br>*抢单前请仔细阅读，确保有能力完成本单</label>
+
+    <!-- 整个合同div｛ -->
+    <div id="contract" style="">
+    <h4 style="color:#666666;">一、项目综述</h4>
+    <p style="color:#666666;font-size:14px;text-indent:2em;" id="contract1">CAD服务器软件是地铁无线集群通信系统的主要系统之一，为无线集群通信系统的ATS、时钟信息的接收和传输提供了唯一的通道，保障了调度系统的实时调度及整个无线集群通信系统间的时间统一。
+传统的CAD服务器软件是基于tetra体制下实现的，不仅要完成ATS、时钟信息的接收和传输，还要完成短信信息的传输、调度台及CAD服务器软件使用的数据的存储。
+</p>
+
+    <h4 style="color:#666666;">二、功能详述</h4>
+    <ol>
+      <li style="color:#666666;font-size:14px;">即时通信功能</li>
+      <p style="color:#666666;font-size:14px;text-indent:1.5em;">CAD服务器软件是地铁无线集群通信系统的主要系统之一。</p>
+      <li style="color:#666666;font-size:14px;">数据查询及显示功能</li>
+      <p style="color:#666666;font-size:14px;text-indent:1.5em;">CAD服务器软件是地铁无线集群通信系统的主要系统之一。</p>
+      <li style="color:#666666;font-size:14px;">数据修改功能</li>
+      <p style="color:#666666;font-size:14px;text-indent:1.5em;">CAD服务器软件是地铁无线集群通信系统的主要系统之一。</p>
+      <li style="color:#666666;font-size:14px;">即时通信功能</li>
+      <p style="color:#666666;font-size:14px;text-indent:1.5em;">CAD服务器软件是地铁无线集群通信系统的主要系统之一。</p>
+    </ol>
+
+    <h4 style="color:#666666;">三、项目验收</h4>
+      <ol>
+        <li style="color:#666666;font-size:14px;">项目完成后乙方需通过远程桌面为甲方部署程序，确保程序在甲方机器上稳定运行。</li>
+        <li style="color:#666666;font-size:14px;">项目完成后乙方需通过远程桌面为甲方部署程序，确保程序在甲方机器上稳定运行。</li>
+        <li style="color:#666666;font-size:14px;">项目完成后乙方需通过远程桌面为甲方部署程序，确保程序在甲方机器上稳定运行。</li>
+      </ol>
+    </div>
+    <!-- }整个合同div -->
+    <!-- a href="" id="showAllBtn" style="text-decoration:none;float:right;">展开</a> -->
+    <!-- ｝合同 -->
+
+
+    <a href="" data-role="button" data-theme="b" data-rel="dialog" id="grabSingle">立即抢单</a>
+<!--     <a href="#grabSingleSuccessDialog" data-rel="dialog" data-role="button" data-theme="b" id="grabSingle">立即抢单</a> -->
   </div>
   
 </div>
+<!-- }帮助者个人中心详情（未抢单） -->
+
+
+
+<!-- 对话框_抢单成功前提示{ -->
+<section id="grabSingleSuccessDialog" data-role="page">
+     <header data-role="header"><h2>毕设帮</h2></header>
+<div data-role="content" class="content">
+  <h3 style="color:red;text-align:center;">抢单成功</h3>
+  <h4>1.请尽快与对方电话联系，进一步了解需求</h4>
+  <h4>2.您若有能力完成此单请点击“开始服务"</h4>
+
+  <a href="" data-role="button" data-theme="b" id="grabSingleSuccessDialogKnownBtn">知道了</a>
+</div>
+   <footer data-role="footer"><h2>5188.com</h2></footer>
+</section>
+<!-- }对话框_抢单成功前提示 -->
+
+
+
+
 
 
 
@@ -184,7 +243,7 @@
         <td></td>
       </tr>
        <tr>
-        <td><a href="#querenKaishiDialog" data-role="button" data-theme="b" data-rel="dialog" id="increaseBtn">我已联系，开始服务</a></td>
+        <td><a href="#querenKaishiDialog" data-role="button" data-theme="b" data-rel="dialog">我已联系，可以开始服务</a></td>
         <td><a href="#dialog" data-role="button" data-theme="b" data-rel="dialog">放弃此单</a></td>
       </tr>
     </table>
@@ -202,7 +261,7 @@
   <table width="100%">
     <tr>
       <td><a href="#" data-role="button" data-rel="back">取消</a></td>
-      <td><a href="#pageDetail3" data-role="button" data-theme="b" id="giveUpBtn">确定</a></td>
+      <td><a href="" data-role="button" data-theme="b" id="querenKaishiDialogBtn">确定</a></td>
     </tr>
   </table>
 </div>
@@ -217,7 +276,7 @@
   <table width="100%">
     <tr>
       <td><a href="#" data-role="button" data-rel="back">取消</a></td>
-      <td><a href="" data-role="button" data-theme="b" id="giveUpBtn">放弃</a></td>
+      <td><a href="" data-role="button" data-theme="b" id="providerGiveupOrderPreBtn">放弃</a></td>
     </tr>
   </table>
 </div>
@@ -226,7 +285,7 @@
 
 
 <!-- 帮助者个人中心详情（等待求助者付款） -->
-<div data-role="page" id="pageDetail3" data-fullscreen="true">
+<div data-role="page" id="pageDetail6" data-fullscreen="true">
   
   <div data-role="header">
     <a href="" data-role="button" data-icon="arrow-l" id="fanhui">返回</a>
@@ -240,11 +299,11 @@
       <table width="100%">
         <tr>
           <th width="20%" style="font-weight:normal;">昵称:</th>
-          <td><span style="color:#009933;" id="needer_name2">王尼玛</span></td>
+          <td><span style="color:#009933;" id="needer_name6">王尼玛</span></td>
         </tr>
         <tr>
           <th width="20%" style="font-weight:normal;">电话:</th>
-          <td><span style="color:#009933;" id="needer_phone2">18951851183</span></td>
+          <td><span style="color:#009933;" id="needer_phone6">18951851183</span></td>
           <td><a href="tel:15251896025" data-role="button" data-mini="true">立即联系</a></td>
         </tr>
       </table>
@@ -254,30 +313,33 @@
     <hr>
     <table width="100%">
       <tr height="40px">
-        <td colspan="2" style="font-weight:bold;font-size:17px;" id="title2">基于Android的社区管理平台</td>
+        <td colspan="2" style="font-weight:bold;font-size:17px;" id="title6">基于Android的社区管理平台</td>
         <td></td>
       </tr>
       <tr>
-        <td width="70%"><span style="color:#009933;">已抢单</span></td>
-        <td width="30%"><span style="font-size:13px;" id="time2">9月15日 23:15</span></td>
+        <td width="70%"><span style="color:#009933;">等待付款中</span></td>
+        <td width="30%"><span style="font-size:13px;" id="time6">9月15日 23:15</span></td>
       </tr>
       <tr>
-        <td><span style="font-size:13px;" id="needer_skill2">计算机软件/Java/JSP</span></td>
-        <td><span style="font-size:13px;color:#FF6600;" id="money2">500元</span></td>
+        <td><span style="font-size:13px;" id="needer_skill6">计算机软件/Java/JSP</span></td>
+        <td><span style="font-size:13px;color:#FF6600;" id="money6">500元</span></td>
       </tr>
       <tr>
-        <td colspan="2"><span style="font-size:13px;color:#999999;" id="content2">需求详情需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介</span></td>
+        <td colspan="2"><span style="font-size:13px;color:#999999;" id="content6">需求详情需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介</span></td>
         <td></td>
       </tr>
     </table>
     </div>
-
+	
+	合同：<p id="contract6"></p>
+    <!-- 测试用：下一步按钮 -->
+    <!-- <a href="#pageDetail4" data-role="button">对方已付款</a> -->
 </div>
 
 
 
 <!-- 帮助者个人中心详情（开始服务） -->
-<div data-role="page" id="pageDetail4" data-fullscreen="true">
+<div data-role="page" id="pageDetail7" data-fullscreen="true">
   
   <div data-role="header">
     <a href="" data-role="button" data-icon="arrow-l" id="fanhui">返回</a>
@@ -293,11 +355,11 @@
       <table width="100%">
         <tr>
           <th width="20%" style="font-weight:normal;">昵称:</th>
-          <td><span style="color:#009933;" id="needer_name2">王尼玛</span></td>
+          <td><span style="color:#009933;" id="needer_name7">王尼玛</span></td>
         </tr>
         <tr>
           <th width="20%" style="font-weight:normal;">电话:</th>
-          <td><span style="color:#009933;" id="needer_phone2">18951851183</span></td>
+          <td><span style="color:#009933;" id="needer_phone7">18951851183</span></td>
           <td><a href="tel:15251896025" data-role="button" data-mini="true">立即联系</a></td>
         </tr>
       </table>
@@ -307,28 +369,28 @@
     <hr>
     <table width="100%">
       <tr height="40px">
-        <td colspan="2" style="font-weight:bold;font-size:17px;" id="title2">基于Android的社区管理平台</td>
+        <td colspan="2" style="font-weight:bold;font-size:17px;" id="title7">基于Android的社区管理平台</td>
         <td></td>
       </tr>
       <tr>
         <td width="70%"><span style="color:#009933;">已抢单</span></td>
-        <td width="30%"><span style="font-size:13px;" id="time2">9月15日 23:15</span></td>
+        <td width="30%"><span style="font-size:13px;" id="time7">9月15日 23:15</span></td>
       </tr>
       <tr>
-        <td><span style="font-size:13px;" id="needer_skill2">计算机软件/Java/JSP</span></td>
-        <td><span style="font-size:13px;color:#FF6600;" id="money2">500元</span></td>
+        <td><span style="font-size:13px;" id="needer_skill7">计算机软件/Java/JSP</span></td>
+        <td><span style="font-size:13px;color:#FF6600;" id="money7">500元</span></td>
       </tr>
       <tr>
-        <td colspan="2"><span style="font-size:13px;color:#999999;" id="content2">需求详情需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介</span></td>
+        <td colspan="2"><span style="font-size:13px;color:#999999;" id="content7">需求详情需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介</span></td>
         <td></td>
       </tr>
        <tr>
-        <td><a href="#finishDialog" data-role="button" data-theme="b" data-rel="dialog" id="increaseBtn">完成服务</a></td>
-        <td><a href="#dialog" data-role="button" data-theme="c" data-rel="dialog">放弃此单</a></td>
+        <td><a href="#finishDialog" data-role="button" data-theme="b" data-rel="dialog">完成服务</a></td>
+        <td><a href="" data-role="button" data-theme="c" data-rel="dialog">放弃此单</a></td>
       </tr>
     </table>
     </div>
-
+合同：<p id="contract7"></p>
 </div>
 
 
@@ -341,7 +403,7 @@
   <table width="100%">
     <tr>
       <td><a href="" data-role="button" data-rel="back">取消</a></td>
-      <td><a href="#yanshouDialog" data-role="button" data-theme="b" id="giveUpBtn" data-rel="dialog">确定</a></td>
+      <td><a href="#yanshouDialog" data-role="button" data-theme="b" id="" data-rel="dialog">确定</a></td>
     </tr>
   </table>
 </div>
@@ -359,7 +421,7 @@
   <h4>4.对方确认订单后您将获得赏金</h4>
   <h4>4.若对方恶意不确认订单，请点击“申请仲裁”</h4>
 
-  <a href="#pageDetail5" data-role="button" data-theme="b" id="giveUpBtn">知道了</a>
+  <a href="" data-role="button" data-theme="b" id="finishDevelopBtn">知道了</a>
 </div>
    <footer data-role="footer"><h2>5188.com</h2></footer>
 </section>
@@ -367,7 +429,7 @@
 
 
 <!-- 帮助者个人中心详情（等待对方验收） -->
-<div data-role="page" id="pageDetail5" data-fullscreen="true">
+<div data-role="page" id="pageDetail8" data-fullscreen="true">
   
   <div data-role="header">
     <a href="#" data-role="button" data-icon="arrow-l" id="fanhui">返回</a>
@@ -385,11 +447,11 @@
       <table width="100%">
         <tr>
           <th width="20%" style="font-weight:normal;">昵称:</th>
-          <td><span style="color:#009933;" id="needer_name2">王尼玛</span></td>
+          <td><span style="color:#009933;" id="needer_name8">王尼玛</span></td>
         </tr>
         <tr>
           <th width="20%" style="font-weight:normal;">电话:</th>
-          <td><span style="color:#009933;" id="needer_phone2">18951851183</span></td>
+          <td><span style="color:#009933;" id="needer_phone8">18951851183</span></td>
           <td><a href="tel:15251896025" data-role="button" data-mini="true" data-theme="b">立即联系</a></td>
         </tr>
       </table>
@@ -399,19 +461,19 @@
     <hr>
     <table width="100%">
       <tr height="40px">
-        <td colspan="2" style="font-weight:bold;font-size:17px;" id="title2">基于Android的社区管理平台</td>
+        <td colspan="2" style="font-weight:bold;font-size:17px;" id="title8">基于Android的社区管理平台</td>
         <td></td>
       </tr>
       <tr>
-        <td width="70%"><span style="color:#009933;">已抢单</span></td>
-        <td width="30%"><span style="font-size:13px;" id="time2">9月15日 23:15</span></td>
+        <td width="70%"><span style="color:#009933;">验收中</span></td>
+        <td width="30%"><span style="font-size:13px;" id="time8">9月15日 23:15</span></td>
       </tr>
       <tr>
-        <td><span style="font-size:13px;" id="needer_skill2">计算机软件/Java/JSP</span></td>
-        <td><span style="font-size:13px;color:#FF6600;" id="money2">500元</span></td>
+        <td><span style="font-size:13px;" id="needer_skill8">计算机软件/Java/JSP</span></td>
+        <td><span style="font-size:13px;color:#FF6600;" id="money8">500元</span></td>
       </tr>
       <tr>
-        <td colspan="2"><span style="font-size:13px;color:#999999;" id="content2">需求详情需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介</span></td>
+        <td colspan="2"><span style="font-size:13px;color:#999999;" id="content8">需求详情需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介</span></td>
         <td></td>
       </tr>
        <tr>
@@ -420,7 +482,9 @@
       </tr>
     </table>
     </div>
-
+合同：<p id="contract8"></p>
+  <!-- 测试用：下一步 -->
+  <!-- <a href="#pageDetail6" data-role="button" data-theme="c">对方已付款</a> -->
 </div>
 
 
@@ -438,7 +502,7 @@
 
 
 <!-- 帮助者个人中心详情（交易成功） -->
-<div data-role="page" id="pageDetail6" data-fullscreen="true">
+<div data-role="page" id="pageDetail9" data-fullscreen="true">
   
   <div data-role="header">
     <a href="#" data-role="button" data-icon="arrow-l" id="fanhui">返回</a>
@@ -453,11 +517,11 @@
       <table width="100%">
         <tr>
           <th width="20%" style="font-weight:normal;">昵称:</th>
-          <td><span style="color:#009933;" id="needer_name2">王尼玛</span></td>
+          <td><span style="color:#009933;" id="needer_name9">王尼玛</span></td>
         </tr>
         <tr>
           <th width="20%" style="font-weight:normal;">电话:</th>
-          <td><span style="color:#009933;" id="needer_phone2">18951851183</span></td>
+          <td><span style="color:#009933;" id="needer_phone9">18951851183</span></td>
         </tr>
       </table>
 
@@ -466,24 +530,24 @@
     <hr>
     <table width="100%">
       <tr height="40px">
-        <td colspan="2" style="font-weight:bold;font-size:17px;" id="title2">基于Android的社区管理平台</td>
+        <td colspan="2" style="font-weight:bold;font-size:17px;" id="title9">基于Android的社区管理平台</td>
         <td></td>
       </tr>
       <tr>
-        <td width="70%"><span style="color:#009933;">已抢单</span></td>
-        <td width="30%"><span style="font-size:13px;" id="time2">9月15日 23:15</span></td>
+        <td width="70%"><span style="color:#009933;">交易成功</span></td>
+        <td width="30%"><span style="font-size:13px;" id="time9">9月15日 23:15</span></td>
       </tr>
       <tr>
-        <td><span style="font-size:13px;" id="needer_skill2">计算机软件/Java/JSP</span></td>
-        <td><span style="font-size:13px;color:#FF6600;" id="money2">500元</span></td>
+        <td><span style="font-size:13px;" id="needer_skill9">计算机软件/Java/JSP</span></td>
+        <td><span style="font-size:13px;color:#FF6600;" id="money9">500元</span></td>
       </tr>
       <tr>
-        <td colspan="2"><span style="font-size:13px;color:#999999;" id="content2">需求详情需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介</span></td>
+        <td colspan="2"><span style="font-size:13px;color:#999999;" id="content9">需求详情需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介</span></td>
         <td></td>
       </tr>
     </table>
     </div>
-
+合同：<p id="contract9"></p>
 </div>
 </body>
 </html>

@@ -1,5 +1,6 @@
 package com.bsb.post;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -66,6 +67,7 @@ public class PostService {
 	public void postNeed(NeedEntity needEntity){
 		//将状态设置为“3:拟定合同中”
 		needEntity.setState(3);
+		needEntity.setTime(new Timestamp(new Date().getTime()));
 		
 		//将信息存入need表
 		int result = CoreDao.save(needEntity);
