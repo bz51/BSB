@@ -25,6 +25,7 @@
         <mapping class="com.bsb.entity.NeedHelpEntity"/>
         <mapping class="com.bsb.entity.UserEntity"/>
         <mapping class="com.bsb.entity.OpenTokenId"/>
+        <mapping class="com.bsb.entity.FeedBackEntity"/>
         
     </session-factory>
 </hibernate-configuration>

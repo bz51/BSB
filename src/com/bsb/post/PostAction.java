@@ -34,8 +34,13 @@ public class PostAction extends ActionSupport implements ApplicationAware{
 	private String contract;
 	private String skill;
 	private String provider_name;
+	private String needer_name;
 	private String password;
 	private String content;
+	private String role;
+	private String name;
+	private String user_id;
+	private String phone;
 	private String result = "yes";
 	private String reason;
 	
@@ -233,6 +238,7 @@ public class PostAction extends ActionSupport implements ApplicationAware{
 		}
 		
 		boolean result = service.grabSingle(Integer.parseInt(require_id), userEntity);
+		System.out.println("result_action="+result);
 		if(!result){
 			this.result = "no";
 			this.reason = service.getReason();
@@ -583,6 +589,34 @@ public class PostAction extends ActionSupport implements ApplicationAware{
 	
 	
 	/**
+	 * 求助者重找大神
+	 */
+	public String chongZhaoProvider(){
+		System.out.println("chongZhaoProvider………………………………");
+		System.out.println("needer_name="+this.needer_name);
+		System.out.println("require_id="+this.require_id);
+		//健壮性判断
+		if(this.require_id==null || "".equals(this.require_id) || this.needer_name==null || "".equals(this.needer_name)){
+			this.result = "no";
+			this.reason = "require_id、needer_name不能为空";
+			System.out.println(this.reason);
+			return "chongZhaoProvider";
+		}
+		
+		//求助者重找大神
+		this.needEntity = service.chongZhaoProvider(this.require_id,this.needer_name);
+		if(!service.getResult()){
+			this.result = "no";
+			this.reason = service.getReason();
+		}
+		
+		System.out.println("返回的result＝"+this.result);
+		return "chongZhaoProvider";
+	}
+	
+	
+	
+	/**
 	 * 求助者付款成功 
 	 */
 	public String neederPay(){
@@ -650,19 +684,43 @@ public class PostAction extends ActionSupport implements ApplicationAware{
 	 */
 	public String applyArbitration(){
 		//健壮性判断
-		if(this.require_id==null || "".equals(this.require_id) || this.content==null || "".equals(this.content)){
+		if(this.require_id==null || "".equals(this.require_id) || this.content==null || "".equals(this.content) || this.role==null || "".equals(this.role)){
 			this.result = "no";
-			this.reason = "require_id、content不能为空";
+			this.reason = "require_id、content、role不能为空";
 			return "applyArbitration";
 		}
 		
-		service.applyArbitration(this.require_id,this.content);
+		service.applyArbitration(this.require_id,this.content,this.role);
 		if(!service.getResult()){
 			this.result = "no";
 			this.reason = service.getReason();
 		}
 		
 		return "applyArbitration";
+	}
+	
+	
+	
+	
+	/**
+	 * 发布一条咨询客服信息
+	 * @return
+	 */
+	public String postFeedBack(){
+		//健壮性判断
+		if(this.name==null || "".equals(name) || this.user_id==null || "".equals(user_id) || this.phone==null || "".equals(phone) || this.role==null || "".equals(role) || this.content==null || "".equals(content)){
+			this.result = "no";
+			this.reason = "name、user_id、phone、role、content均不能为空！";
+			return "postFeedBack";
+		}
+		
+		service.postFeedBack(this.name,this.user_id,this.phone,this.role,this.content);
+		if(!service.getResult()){
+			this.result = "no";
+			this.reason = service.getReason();
+		}
+		
+		return "postFeedBack";
 	}
 	
 	public String getResult() {
@@ -833,6 +891,66 @@ public class PostAction extends ActionSupport implements ApplicationAware{
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+
+	public PostService getService() {
+		return service;
+	}
+
+
+	public void setService(PostService service) {
+		this.service = service;
+	}
+
+
+	public String getNeeder_name() {
+		return needer_name;
+	}
+
+
+	public void setNeeder_name(String needer_name) {
+		this.needer_name = needer_name;
+	}
+
+
+	public String getRole() {
+		return role;
+	}
+
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+
+
+	public String getName() {
+		return name;
+	}
+
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+
+	public String getUser_id() {
+		return user_id;
+	}
+
+
+	public void setUser_id(String user_id) {
+		this.user_id = user_id;
+	}
+
+
+	public String getPhone() {
+		return phone;
+	}
+
+
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}
 	
 	

@@ -8,6 +8,7 @@ import java.util.List;
 import com.bsb.core.CoreDao;
 import com.bsb.core.Parameter;
 import com.bsb.core.UpdateStateAndGetEntityImp;
+import com.bsb.entity.FeedBackEntity;
 import com.bsb.entity.MsgEntity;
 import com.bsb.entity.NeedEntity;
 import com.bsb.entity.NeedHelpEntity;
@@ -77,8 +78,9 @@ public class PostService {
 			return;
 		}
 		
-		//通知管理员拟定合同
-		TemplateMsg.sendTemplateMsg_writeContractToAdmin(needEntity);
+		else
+			//通知管理员拟定合同
+			TemplateMsg.sendTemplateMsg_writeContractToAdmin(needEntity);
 	}
 	
 	
@@ -141,13 +143,22 @@ public class PostService {
 		//进行抢单
 		PostDaoGrabSingleImp imp = new PostDaoGrabSingleImp(require_id, providerEntity);
 		boolean result = imp.hibernateOperation();
+		System.out.println("result_service="+result);
 		if(!result)
 			this.reason = imp.getReason();
-		
-		//向求助者发送抢单成功通知
-		TemplateMsg.sendTemplateMsg_grabSingleSuccessToNe(imp.getNeedEntity());
-		//向大神发送抢单成功通知
-		TemplateMsg.sendTemplateMsg_grabSingleSuccessToPro(imp.getNeedEntity());
+		//当返回结果正确时在发送微信消息，否则就不发（防止entity为空时出现空指针异常）
+		else{
+			//特地更新下need表中state字段
+			result = CoreDao.updateByHql("update NeedEntity set state=1");
+			if(!result)
+				this.reason = imp.getReason();
+			else{
+				//向求助者发送抢单成功通知
+				TemplateMsg.sendTemplateMsg_grabSingleSuccessToNe(imp.getNeedEntity());
+				//向大神发送抢单成功通知
+				TemplateMsg.sendTemplateMsg_grabSingleSuccessToPro(imp.getNeedEntity());
+			}
+		}
 		return result;
 	}
 	
@@ -455,11 +466,12 @@ public class PostService {
 		PostDaoPostContract imp = new PostDaoPostContract(contract, require_id);
 		result = imp.hibernateOperation();
 		
-		//通知求助者去确认合同
-		TemplateMsg.sendTemplateMsg_confirmContract(imp.getNeedEntity());
-		
-		if(!result)
+		if(!result){
 			this.reason = "数据库更新失败";
+		}else{
+			//通知求助者去确认合同
+			TemplateMsg.sendTemplateMsg_confirmContract(imp.getNeedEntity());
+		}
 	}
 
 
@@ -470,7 +482,7 @@ public class PostService {
 	 */
 	public int confirmContract(String require_id,String skill) {
 		//1.获取符合条件的大神
-		List<UserEntity> providerList = getAllMatchProvider(skill);
+		List<UserEntity> providerList = getAllMatchProvider(skill,null);
 		
 		//2.将List<UserEntity>——>List<NeedHelpEntity>
 		List<NeedHelpEntity> needHelpList = new ArrayList<NeedHelpEntity>();
@@ -489,22 +501,24 @@ public class PostService {
 		this.result = imp.hibernateOperation();
 		if(!result)
 			this.reason = imp.getReason();
-		
-		//6.发送模板消息To求助者(您已确认合同，等待大神抢单)
-		TemplateMsg.sendTemplateMsg_successContract(imp.getNeedEntity());
-		//7.发送模板消息To大神们(xxx想您求助，赶紧抢单)
-		
-		for(NeedHelpEntity e : needHelpList)
-			TemplateMsg.sendTemplateMsg_grabSingle(e);
-		
+		else {
+
+			// 6.发送模板消息To求助者(您已确认合同，等待大神抢单)
+			TemplateMsg.sendTemplateMsg_successContract(imp.getNeedEntity());
+			// 7.发送模板消息To大神们(xxx想您求助，赶紧抢单)
+			for (NeedHelpEntity e : needHelpList)
+				TemplateMsg.sendTemplateMsg_grabSingle(e);
+		}
 		return providerList.size();
 	}
 	
 	
 	/**
 	 * 获取符合条件的大神
+	 * @param skill 求助者的skill
+	 * @param provider_id 需要剔除的大神的id,若为空则不需要剔除
 	 */
-	private List<UserEntity> getAllMatchProvider(String skill){
+	private List<UserEntity> getAllMatchProvider(String skill,String provider_id){
 		//从内存中读取所有的大神
 		List<UserEntity> list = Parameter.Providers_Parameters;
 		
@@ -524,15 +538,18 @@ public class PostService {
 		List<UserEntity> success_providers = new ArrayList<UserEntity>();
 		// 遍历所有的provider
 		for (UserEntity e : list) {
-			// 将每一个provider_skill转换成int数组
-			List<Integer> provider_skill_int = String2IntList(e.getSkill());
-			for (int i = 0; i < provider_skill_int.size(); i++) {
-				int c = provider_skill_int.get(i) - needer_skill_int.get(i);
-				if (c < 0) {
-					break;
-				}
-				if ((i + 1) == provider_skill_int.size()) {
-					success_providers.add(e);
+			//若正在匹配的这个大神就是要剔除的那个大神，则将这个大神剔除掉
+			if(!(e.getId()+"").equals(provider_id)){
+				// 将每一个provider_skill转换成int数组
+				List<Integer> provider_skill_int = String2IntList(e.getSkill());
+				for (int i = 0; i < provider_skill_int.size(); i++) {
+					int c = provider_skill_int.get(i) - needer_skill_int.get(i);
+					if (c < 0) {
+						break;
+					}
+					if ((i + 1) == provider_skill_int.size()) {
+						success_providers.add(e);
+					}
 				}
 			}
 		}
@@ -565,6 +582,9 @@ public class PostService {
 	 * @param require_id
 	 */
 	public void providerGiveupOrderPre(String require_id,String provider_name) {
+		//获取求助者skill
+		NeedEntity needEntity = CoreDao.queryUniqueById(Long.parseLong(require_id), Parameter.NeedEntity);
+		
 		//修改need表中该条记录，把大神信息清空
 		this.result = CoreDao.updateByHql("update NeedEntity set provider_id=0,provider_weixin=null,provider_name=null,provider_phone=null,provider_skill=null where id="+require_id);
 		if(!result){
@@ -572,12 +592,10 @@ public class PostService {
 			return;
 		}
 		
-		//获取求助者skill
-		NeedEntity needEntity = CoreDao.queryUniqueById(Long.parseLong(require_id), Parameter.NeedEntity);
-		
 		//重新匹配大神
 		//1.获取符合条件的大神
-		List<UserEntity> providerList = getAllMatchProvider(needEntity.getNeeder_skill());
+		System.out.println("当前大神的id＝"+needEntity.getProvider_id());
+		List<UserEntity> providerList = getAllMatchProvider(needEntity.getNeeder_skill(),needEntity.getProvider_id()+"");
 		
 		//2.将List<UserEntity>——>List<NeedHelpEntity>
 		List<NeedHelpEntity> needHelpList = new ArrayList<NeedHelpEntity>();
@@ -596,13 +614,14 @@ public class PostService {
 		this.result = imp.hibernateOperation();
 		if(!result)
 			this.reason = imp.getReason();
-		
-		//6.发送模板消息To求助者(大神已放弃订单，但系统以为你重新匹配)
-		imp.getNeedEntity().setProvider_name(provider_name);
-		TemplateMsg.sendTemplateMsg_proGiveupOrderToNe(imp.getNeedEntity());
-		//7.发送模板消息To大神们(xxx想您求助，赶紧抢单)
-		for(NeedHelpEntity e : needHelpList)
-			TemplateMsg.sendTemplateMsg_grabSingle(e);
+		else{
+			//6.发送模板消息To求助者(大神已放弃订单，但系统以为你重新匹配)
+			imp.getNeedEntity().setProvider_name(provider_name);
+			TemplateMsg.sendTemplateMsg_proGiveupOrderToNe(imp.getNeedEntity());
+			//7.发送模板消息To大神们(xxx想您求助，赶紧抢单)
+			for(NeedHelpEntity e : needHelpList)
+				TemplateMsg.sendTemplateMsg_grabSingle(e);
+		}
 	}
 
 
@@ -616,10 +635,15 @@ public class PostService {
 		UpdateStateAndGetEntityImp imp = new UpdateStateAndGetEntityImp(6,Long.parseLong(require_id));
 		imp.hibernateOperation();
 		
-		//向大神发送确认订单的通知
-		TemplateMsg.sendTemplateMsg_proConfirmOrderToPro(imp.getNeedEntity());
-		//向求助者发送付款通知
-		TemplateMsg.sendTemplateMsg_proConfirmOrderToNe(imp.getNeedEntity());
+		if(imp.getResult()){
+			//向大神发送确认订单的通知
+			TemplateMsg.sendTemplateMsg_proConfirmOrderToPro(imp.getNeedEntity());
+			//向求助者发送付款通知
+			TemplateMsg.sendTemplateMsg_proConfirmOrderToNe(imp.getNeedEntity());
+		}else{
+			this.result = imp.getResult();
+			this.reason = imp.getReason();
+		}
 	}
 
 
@@ -633,10 +657,15 @@ public class PostService {
 		UpdateStateAndGetEntityImp imp = new UpdateStateAndGetEntityImp(7,Long.parseLong(require_id));
 		imp.hibernateOperation();
 		
-		//向大神发送开发中的通知
-		TemplateMsg.sendTemplateMsg_paySuccessToPro(imp.getNeedEntity());
-		//向求助者发送付款成功通知
-		//由微信支付发送……
+		if(imp.getResult()){
+			//向大神发送开发中的通知
+			TemplateMsg.sendTemplateMsg_paySuccessToPro(imp.getNeedEntity());
+			//向求助者发送付款成功通知
+			//由微信支付发送……
+		}else{
+			this.result = imp.getResult();
+			this.reason = imp.getReason();
+		}
 	}
 
 
@@ -651,10 +680,15 @@ public class PostService {
 		UpdateStateAndGetEntityImp imp = new UpdateStateAndGetEntityImp(8,Long.parseLong(require_id));
 		imp.hibernateOperation();
 		
-		//向大神发送开发完成的通知
-		TemplateMsg.sendTemplateMsg_finishDevToPro(imp.getNeedEntity());
-		//向求助者发送开发完成通知
-		TemplateMsg.sendTemplateMsg_finishDevToNe(imp.getNeedEntity());
+		if(imp.getResult()){
+			//向大神发送开发完成的通知
+			TemplateMsg.sendTemplateMsg_finishDevToPro(imp.getNeedEntity());
+			//向求助者发送开发完成通知
+			TemplateMsg.sendTemplateMsg_finishDevToNe(imp.getNeedEntity());
+		}else{
+			this.result = imp.getResult();
+			this.reason = imp.getReason();
+		}
 	}
 
 
@@ -674,10 +708,12 @@ public class PostService {
 			return;
 		}
 		
-		//向大神发送开发完成的通知
-		TemplateMsg.sendTemplateMsg_finishOrderToPro(imp.getNeedEntity());
-		//向求助者发送开发完成通知
-		TemplateMsg.sendTemplateMsg_finishOrderToNe(imp.getNeedEntity());
+		else{
+			//向大神发送开发完成的通知
+			TemplateMsg.sendTemplateMsg_finishOrderToPro(imp.getNeedEntity());
+			//向求助者发送开发完成通知
+			TemplateMsg.sendTemplateMsg_finishOrderToNe(imp.getNeedEntity());
+		}
 	}
 
 
@@ -687,7 +723,112 @@ public class PostService {
 	 * @param require_id
 	 * @param content
 	 */
-	public void applyArbitration(String require_id, String content) {
+	public void applyArbitration(String require_id, String content,String role) {
+		PostDaoApplyArbitrationImp imp = new PostDaoApplyArbitrationImp(require_id,content,role);
+		boolean result = imp.hibernateOperation();
+		if(!result){
+			this.result = result;
+			this.reason = imp.getReason();
+		}
+		
+		else{
+			//向发起者发送模板消息
+			TemplateMsg.sendTemplateMsg_applyArbitrationToPro(content, role.equals("1")?imp.getEntity().getProvider_weixin():imp.getEntity().getNeeder_weixin(), role, require_id);
+			//向被告发送模板消息
+			TemplateMsg.sendTemplateMsg_applyArbitrationToNe(content, role.equals("1")?imp.getEntity().getNeeder_weixin():imp.getEntity().getProvider_weixin(), role.equals("1")?"0":"1", require_id);
+			//向管理员发送模板消息
+			TemplateMsg.sendTemplateMsg_applyArbitrationToAdmin(content);
+		}
+	}
+
+
+	
+	/**
+	 * 求助者重找大神
+	 * @param require_id
+	 * @param needer_name
+	 */
+	public NeedEntity chongZhaoProvider(String require_id, String needer_name) {
+		//获取求助者skill
+		NeedEntity needEntity = CoreDao.queryUniqueById(Long.parseLong(require_id), Parameter.NeedEntity);
+		System.out.println("needEntity.");
+		System.out.println("获取need记录＝"+this.result);
+		
+		//修改need表中该条记录，把大神信息清空
+		this.result = CoreDao.updateByHql("update NeedEntity set provider_id=0,provider_weixin=null,provider_name=null,provider_phone=null,provider_skill=null where id="+require_id);
+		System.out.println("update结果＝"+this.result);
+		if(!result){
+			this.reason = "清空旧大神信息时失败";
+			return null;
+		}
+		
+		//重新匹配大神
+		//1.获取符合条件的大神
+		System.out.println("需要剔除的大神id＝"+needEntity.getProvider_id());
+		List<UserEntity> providerList = getAllMatchProvider(needEntity.getNeeder_skill(),needEntity.getProvider_id()+"");
+		
+		//2.将List<UserEntity>——>List<NeedHelpEntity>
+		List<NeedHelpEntity> needHelpList = new ArrayList<NeedHelpEntity>();
+		for(UserEntity e : providerList){
+			NeedHelpEntity needHelpEntity = new NeedHelpEntity();
+			needHelpEntity.setProvider_id(e.getId());
+			needHelpEntity.setProvider_name(e.getName());
+			needHelpEntity.setProvider_phone(e.getPhone());
+			needHelpEntity.setProvider_skill(e.getSkill());
+			needHelpEntity.setProvider_weixin(e.getWeixin_id());
+			needHelpList.add(needHelpEntity);
+		}
+		
+		//3.将匹配结果存入need_help表中，4.更新need表中的状态0，5.查询need表中该条记录的全部信息
+		PostDaoMatchProviderImp imp = new PostDaoMatchProviderImp(require_id,needHelpList);
+		this.result = imp.hibernateOperation();
+		if(!result){
+			this.reason = imp.getReason();
+			return null;
+		}
+		else{
+			//6.发送模板消息To求助者(重找大神成功)
+			imp.getNeedEntity().setNeeder_name(needer_name);;
+			TemplateMsg.sendTemplateMsg_neChongZhaoProviderToNe(needEntity);
+			//7.发送模板消息To大神(您的订单被放弃了)
+			TemplateMsg.sendTemplateMsg_neChongZhaoProviderToPro(needEntity);
+			return needEntity;
+		}
+	}
+
+
+	
+	/**
+	 * 发布一条咨询客服信息
+	 * a)保存数据库
+	 * b)通知管理员
+	 * @param name
+	 * @param user_id
+	 * @param phone
+	 * @param role
+	 * @param content
+	 */
+	public void postFeedBack(String name, String user_id, String phone, String role, String content) {
+		//将信息保存至DB
+		FeedBackEntity entity = new FeedBackEntity();
+		entity.setContent(content);
+		entity.setName(name);
+		entity.setPhone(phone);
+		entity.setRole(Integer.parseInt(role));
+		entity.setState(1);
+		entity.setTime(new Timestamp(new Date().getTime()));
+		entity.setUser_id(Integer.parseInt(user_id));
+		
+		int result = CoreDao.save(entity);
+		if(result==-1){
+			this.result = false;
+			this.reason = "插入数据库异常！";
+			return;
+		}
+		
+		//向管理员发模板消息
+		TemplateMsg.sendTemplateMsg_postFeedBackToAdmin(content,phone,role,name);
 		
 	}
+	
 }

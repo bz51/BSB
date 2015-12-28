@@ -127,7 +127,7 @@ public class TemplateMsg {
 		//first字段
 		TemplateData first = new TemplateData();
 		first.setColor("red");
-		first.setValue(entity.getNeeder_name()+"您好，需求合同我们已经为您定制完成，请点击详情查看哦");
+		first.setValue("您的需求合同我们已经为您定制完成，请点击详情查看");
 		m.put("first", first);
 		//发送方字段
 		TemplateData keyword1 = new TemplateData();
@@ -148,7 +148,7 @@ public class TemplateMsg {
 		//remark字段
 		TemplateData remark = new TemplateData();
 		remark.setColor("red");
-		remark.setValue("如需修改请及时与我们联系哦～");
+		remark.setValue("如需修改请及时与我们联系");
 		m.put("remark", remark);
 		t.setData(m);
 		
@@ -174,7 +174,7 @@ public class TemplateMsg {
 		//first字段
 		TemplateData first = new TemplateData();
 		first.setColor("red");
-		first.setValue(entity.getNeeder_name()+"您好，您的需求合同已确认！等待大神抢单中");
+		first.setValue("您已确认需求合同！请等待大神抢单");
 		m.put("first", first);
 		//合同编号字段
 		TemplateData keyword1 = new TemplateData();
@@ -215,7 +215,7 @@ public class TemplateMsg {
 		//first字段
 		TemplateData first = new TemplateData();
 		first.setColor("red");
-		first.setValue(entity.getProvider_name()+"您好，"+entity.getNeeder_name()+"向您求助，请立即抢单");
+		first.setValue(entity.getNeeder_name()+"向您求助，请立即抢单");
 		m.put("first", first);
 		//提交时间字段
 		TemplateData tradeDateTime = new TemplateData();
@@ -419,6 +419,88 @@ public class TemplateMsg {
 	
 	
 	/**
+	 * 发送求助者重找大神通知(求助者)
+	 */
+	public static boolean sendTemplateMsg_neChongZhaoProviderToNe(NeedEntity entity){
+		WxTemplate t = new WxTemplate();
+		t.setUrl(Parameter.URL_NeederAdmin);
+		//接受者的open_id
+		t.setTouser(entity.getNeeder_weixin());
+		//消息顶端颜色
+		t.setTopcolor("#000000");
+		//模板ID
+		t.setTemplate_id(Parameter.TemplateId_DingDanZhuangTaiGengXin);
+		//存储数据的Map
+		Map<String,TemplateData> m = new HashMap<String,TemplateData>();
+		//first字段
+		TemplateData first = new TemplateData();
+		first.setColor("red");
+		first.setValue("系统已为您重新匹配大神，请等待大神抢单");
+		m.put("first", first);
+		//订单编号字段
+		TemplateData OrderSn = new TemplateData();
+//		OrderSn.setColor("blue");
+		OrderSn.setValue("NO:01"+entity.getId());
+		m.put("OrderSn", OrderSn);
+		//订单状态字段
+		TemplateData OrderStatus = new TemplateData();
+		OrderStatus.setColor("#009900");
+		OrderStatus.setValue("等待大神抢单中……");
+		m.put("OrderStatus", OrderStatus);
+		//remark字段
+		TemplateData remark = new TemplateData();
+		remark.setColor("red");
+		remark.setValue("如有疑问请随时联系我们~");
+		m.put("remark", remark);
+		t.setData(m);
+		
+		//发送模板消息
+		return TemplateMsg.sendTemplateMessage(t);
+	}
+	
+	
+	/**
+	 * 发送求助者重找大神通知(大神)
+	 */
+	public static boolean sendTemplateMsg_neChongZhaoProviderToPro(NeedEntity entity){
+		WxTemplate t = new WxTemplate();
+		t.setUrl(Parameter.URL_HelperAdmin);
+		//接受者的open_id
+		t.setTouser(entity.getProvider_weixin());
+		//消息顶端颜色
+		t.setTopcolor("#000000");
+		//模板ID
+		t.setTemplate_id(Parameter.TemplateId_DingDanZhuangTaiGengXin);
+		//存储数据的Map
+		Map<String,TemplateData> m = new HashMap<String,TemplateData>();
+		//first字段
+		TemplateData first = new TemplateData();
+		first.setColor("red");
+		first.setValue("很抱歉，求助者"+entity.getNeeder_name()+"放弃了您的订单");
+		m.put("first", first);
+		//订单编号字段
+		TemplateData OrderSn = new TemplateData();
+//		OrderSn.setColor("blue");
+		OrderSn.setValue("NO:01"+entity.getId());
+		m.put("OrderSn", OrderSn);
+		//订单状态字段
+		TemplateData OrderStatus = new TemplateData();
+		OrderStatus.setColor("#009900");
+		OrderStatus.setValue("订单已失效");
+		m.put("OrderStatus", OrderStatus);
+		//remark字段
+		TemplateData remark = new TemplateData();
+		remark.setColor("red");
+		remark.setValue("如有疑问请随时联系我们~");
+		m.put("remark", remark);
+		t.setData(m);
+		
+		//发送模板消息
+		return TemplateMsg.sendTemplateMessage(t);
+	}
+	
+	
+	/**
 	 * 发送大神确认可以开始服务(大神)
 	 */
 	public static boolean sendTemplateMsg_proConfirmOrderToPro(NeedEntity entity){
@@ -435,7 +517,7 @@ public class TemplateMsg {
 		//first字段
 		TemplateData first = new TemplateData();
 		first.setColor("red");
-		first.setValue("您已确认订单，等待对方付款");
+		first.setValue("对方付款中，请耐心等待");
 		m.put("first", first);
 		//订单编号字段
 		TemplateData OrderSn = new TemplateData();
@@ -517,7 +599,7 @@ public class TemplateMsg {
 		//first字段
 		TemplateData first = new TemplateData();
 		first.setColor("red");
-		first.setValue("对方已付款，请进入开发阶段");
+		first.setValue("对方已付款，请立即进入开发阶段！");
 		m.put("first", first);
 		//订单编号字段
 		TemplateData OrderSn = new TemplateData();
@@ -777,7 +859,7 @@ public class TemplateMsg {
 		//first字段
 		TemplateData first = new TemplateData();
 		first.setColor("red");
-		first.setValue("仲裁提交成功，管理员正在处理中……");
+		first.setValue("仲裁提交成功，管理员正在处理中！");
 		m.put("first", first);
 		//订单编号字段
 		TemplateData OrderSn = new TemplateData();
@@ -822,7 +904,7 @@ public class TemplateMsg {
 		//first字段
 		TemplateData first = new TemplateData();
 		first.setColor("red");
-		first.setValue("对方已提出仲裁，管理员正在处理中……");
+		first.setValue("对方已提出仲裁，管理员正在处理中！");
 		m.put("first", first);
 		//订单编号字段
 		TemplateData OrderSn = new TemplateData();
@@ -927,14 +1009,75 @@ public class TemplateMsg {
 		return TemplateMsg.sendTemplateMessage(t);
 	}
 
-	
+
+
+	/**
+	 * 发送feedback提示(管理员)
+	 * @param content
+	 * @return
+	 */
+	public static boolean sendTemplateMsg_postFeedBackToAdmin(String content,String phone,String role,String name) {
+		WxTemplate t = new WxTemplate();
+		t.setUrl(Parameter.URL_Admin);
+		//接受者的open_id
+		t.setTouser(Parameter.OpenId_Chai);
+		//消息顶端颜色
+		t.setTopcolor("#000000");
+		//模板ID
+		t.setTemplate_id(Parameter.TemplateId_DingDanZhuangTaiGengXin);
+		//存储数据的Map
+		Map<String,TemplateData> m = new HashMap<String,TemplateData>();
+		//first字段
+		TemplateData first = new TemplateData();
+		first.setColor("red");
+		first.setValue(name+" 向你咨询如下问题：");
+		m.put("first", first);
+		//订单编号字段
+		TemplateData OrderSn = new TemplateData();
+		OrderSn.setColor("blue");
+		OrderSn.setValue("电话："+phone);
+		m.put("OrderSn", OrderSn);
+		//订单状态字段
+		TemplateData OrderStatus = new TemplateData();
+		OrderStatus.setColor("#009900");
+		OrderStatus.setValue("角色："+(role.equals("1")?"大神":"求助者"));
+		m.put("OrderStatus", OrderStatus);
+		//remark字段
+		TemplateData remark = new TemplateData();
+		remark.setColor("red");
+		remark.setValue("问题："+content);
+		m.put("remark", remark);
+		t.setData(m);
+		
+		boolean result = false;
+		//先发给chai
+		t.setTouser(Parameter.OpenId_Chai);
+		result = TemplateMsg.sendTemplateMessage(t);
+		if(!result)
+			return result;
+		
+		//再发给zhou
+		t.setTouser(Parameter.OpenId_Zhou);
+		result = TemplateMsg.sendTemplateMessage(t);
+		return result;
+	}
 	
 	public static void main(String[] args){
+		
+		//发送feedback提示(管理员)
+		sendTemplateMsg_postFeedBackToAdmin("被大神坑了怎么办？","15251896025","1","柴博周");
+		
+//		NeedEntity entity = new NeedEntity();
+//		entity.setProvider_weixin(Parameter.OpenId_Chai);
+//		entity.setId(25);
+//		entity.setNeeder_name("拆毛毛");
+//		System.out.println("发送结果："+TemplateMsg.sendTemplateMsg_neChongZhaoProviderToPro(entity));
+		
 		//发送仲裁结束提示(大神)
-		NeedEntity entity = new NeedEntity();
-		entity.setProvider_weixin(Parameter.OpenId_Chai);
-		entity.setId(25);
-		System.out.println("发送结果："+TemplateMsg.sendTemplateMsg_finishArbitrationToPro("金额将全部退换求助者",entity));
+//		NeedEntity entity = new NeedEntity();
+//		entity.setProvider_weixin(Parameter.OpenId_Chai);
+//		entity.setId(25);
+//		System.out.println("发送结果："+TemplateMsg.sendTemplateMsg_finishArbitrationToPro("金额将全部退换求助者",entity));
 		
 		
 		//发送仲裁结束提示(求助者)
@@ -1043,4 +1186,5 @@ public class TemplateMsg {
 
 		
 	}
+
 }

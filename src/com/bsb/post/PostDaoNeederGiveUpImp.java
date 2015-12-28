@@ -26,7 +26,7 @@ public class PostDaoNeederGiveUpImp extends HibernateTemplate {
 		int state = (int) session.createQuery(hql).uniqueResult();
 		
 		//若未被抢单，则可以放弃该单
-		if(state!=1){
+		if(state==0 || state==3){
 			// 更新need表，将state设为无效
 			String hql1 = "update "+Parameter.NeedEntity+" set state=2 where id="+this.require_id;
 			session.createQuery(hql1).executeUpdate();

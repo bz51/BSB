@@ -187,6 +187,12 @@
     			<param name="contentType">text/html</param> 
     		</result>
 		
+			<!-- 求助者重找大神 -->
+			<result name="chongZhaoProvider" type="json">
+    			<param name="includeProperties">needEntity,reason,result</param>
+    			<param name="contentType">text/html</param> 
+    		</result>
+		
 			<!-- 求助者付款成功 -->
 			<result name="neederPay" type="json">
     			<param name="includeProperties">reason,result</param>
@@ -210,6 +216,13 @@
     			<param name="includeProperties">reason,result</param>
     			<param name="contentType">text/html</param> 
     		</result>
+		
+			<!-- 发布一条咨询客服信息 -->
+			<result name="postFeedBack" type="json">
+    			<param name="includeProperties">reason,result</param>
+    			<param name="contentType">text/html</param> 
+    		</result>
+		
     		
 		</action>
     </package>
@@ -222,6 +235,18 @@
 			<!-- 获取所有用户信息 -->
 			<result name="getAllUser" type="json">
     			<param name="includeProperties">userList.*,reason,result</param>
+    			<param name="contentType">text/html</param> 
+    		</result>
+		
+			<!-- 获取所有反馈信息 -->
+			<result name="getFeedback" type="json">
+    			<param name="includeProperties">feedbackList.*,reason,result</param>
+    			<param name="contentType">text/html</param> 
+    		</result>
+		
+			<!-- 处理一条反馈信息 -->
+			<result name="doFeedback" type="json">
+    			<param name="includeProperties">reason,result</param>
     			<param name="contentType">text/html</param> 
     		</result>
     		

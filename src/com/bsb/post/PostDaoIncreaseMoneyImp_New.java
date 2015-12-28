@@ -26,6 +26,7 @@ public class PostDaoIncreaseMoneyImp_New extends HibernateTemplate{
 		// 根据require_id更新need_help表，更新money和post
 		String hql2 = "update "+Parameter.NeedHelpEntity+" set money="+money+",post=0 where require_id="+require_id;
 		this.count = session.createQuery(hql2).executeUpdate();
+		System.out.println("count="+this.count);
 					
 //		//判断该条需求是否已被抢单
 //		String hql = "select state from "+Parameter.NeedEntity+" where id="+require_id;

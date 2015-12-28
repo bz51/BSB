@@ -112,7 +112,7 @@ $(document).ready(function(){
 		else{
 			//显示loading
 		    $.mobile.loading('show', {  
-		        text: '正在匹配大神...', //加载器中显示的文字  
+		        text: '发布中...', //加载器中显示的文字  
 		        textVisible: true, //是否显示文字  
 		        theme: 'a',        //加载器主题样式a-e  
 		        textonly: false,   //是否只显示文字  
@@ -129,14 +129,13 @@ $(document).ready(function(){
 //		    	alert("fromWhere="+localStorage.getItem("fromWhere"));
 		    	if(localStorage.getItem("fromWhere")=="increaseMoney"){
 		    		url = "post/postAction!increaseMoney?needEntity.id="+localStorage.getItem("require_id")+"&needEntity.money="+$("#money").val();
-		    		localStorage.setItem("fromWhere","");
 		    	}
 		    	//若从发布需求一步步到这个页面，则从界面上直接获取各个参数
 		    	else
 		    		url = "post/postAction!postNeed?needEntity.title="+$("#title").val()+"&needEntity.content="+$("#content").val()+"&needEntity.money="+$("#money").val()+"&needEntity.needer_id="+localStorage.getItem("id")+"&needEntity.needer_name="+localStorage.getItem("name")+"&needEntity.needer_phone="+localStorage.getItem("phone")+"&needEntity.needer_skill="+localStorage.getItem("skill")+"&needEntity.needer_weixin="+localStorage.getItem("open_id");
-//		    	alert(url);
+		    	
+		    	alert(url);
 		    	$.get(url,
-				  
 				  function(data,status){
 				    var json = eval('(' + data + ')');
 				    
@@ -151,11 +150,15 @@ $(document).ready(function(){
 				    //若返回yes
 				    else{
 				    	//将匹配到的大神人数显示
-//				    	alert(data);
 //				    	localStorage.setItem("count",json.count);//将得到的大神人数存到本地，因为注册成功后会在注册页面发布需求，然后将count值保存到本地，最后跳转到发布成功页面显示count。若count不存到本地，当从本地获取count后显示在页面上就会显示null
 				    	$("#count").text(json.count);
-				    	//跳转至page4
-				    	window.location.href="#page4";
+				    	//页面跳转
+				    	if(localStorage.getItem("fromWhere")=="increaseMoney"){
+				    		window.location.href="#page5";
+				    		localStorage.setItem("fromWhere","");
+				    	}else{
+				    		window.location.href="#page4";
+				    	}
 				    }
 				  });
 		    }

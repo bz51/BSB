@@ -29,6 +29,8 @@ public class NeedEntity {
 	private int state;
 	private Timestamp deadline;
 	private String contract;
+	private String zhongcai;
+	private String zhongcai_result;
 	
 	@Id
 	@GeneratedValue
@@ -145,6 +147,18 @@ public class NeedEntity {
 	}
 	public void setContract(String contract) {
 		this.contract = contract;
+	}
+	public String getZhongcai() {
+		return zhongcai;
+	}
+	public void setZhongcai(String zhongcai) {
+		this.zhongcai = zhongcai;
+	}
+	public String getZhongcai_result() {
+		return zhongcai_result;
+	}
+	public void setZhongcai_result(String zhongcai_result) {
+		this.zhongcai_result = zhongcai_result;
 	}
 	
 	
