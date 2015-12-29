@@ -2,24 +2,26 @@ package com.bsb.wechat;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Timestamp;
-import java.util.Date;
+import java.io.StringReader;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.interceptor.ApplicationAware;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
-import com.bsb.core.CoreDao;
 import com.bsb.core.HttpRequest;
+import com.bsb.core.MD5;
 import com.bsb.core.Parameter;
-import com.bsb.entity.OpenTokenId;
 import com.bsb.entity.UserEntity;
+import com.bsb.tools.RandomNumber;
 import com.opensymphony.xwork2.ActionSupport;
 import com.qq.connect.utils.json.JSONException;
 import com.qq.connect.utils.json.JSONObject;
@@ -36,7 +38,7 @@ public class WeChatAction extends ActionSupport implements ApplicationAware{
 	private String state;
 	private String access_token;
 	private String ticket;//用于JS－SDK
-
+	private String prepay_id;
 	private Map<String,Object> application;
 	
 	
@@ -171,15 +173,19 @@ public class WeChatAction extends ActionSupport implements ApplicationAware{
 //		}
 		
 		
-		UserEntity entity = new UserEntity();
-		entity.setName("柴毛毛");
-		entity.setPhone("15251896025");
-		entity.setRole(1);
-		entity.setTime(new Timestamp(new Date().getTime()));
-		sendToAdmin_newUser(entity,Parameter.OpenId_Chai);
+//		UserEntity entity = new UserEntity();
+//		entity.setName("柴毛毛");
+//		entity.setPhone("15251896025");
+//		entity.setRole(1);
+//		entity.setTime(new Timestamp(new Date().getTime()));
+//		sendToAdmin_newUser(entity,Parameter.OpenId_Chai);
 //		sendToAdmin_newUser(entity,Parameter.OpenId_Yang);
 //		sendToAdmin_newUser(entity,Parameter.OpenId_Zhou);
 //		sendToAdmin_newUser(entity,Parameter.OpenId_Baba);
+		
+		
+		
+//		getPrepayId();
 	}
 	
 	/**
@@ -262,6 +268,79 @@ public class WeChatAction extends ActionSupport implements ApplicationAware{
 		return "getTicket";
 	}
 	
+	
+	
+	
+	/**
+	 * 获取Prepay_Id
+	 * @return
+	 * @throws ParserConfigurationException 
+	 * @throws IOException 
+	 * @throws SAXException 
+	 */
+	public String getPrepayId() throws ParserConfigurationException, SAXException, IOException{
+		String appid = "wx1a4c2e86c17d1fc4";
+		String attach = "附加数据";
+		String body = "商品描述xxxxxx";
+		String detail = "商品详情xxxxxxxxxxxx";
+		String device_info = "WEB";
+		String mch_id = "1279726201";
+		String nonce_str = RandomNumber.getFixLenthString(4);
+		String notify_url = "http://erhuowang.cn";
+		String openid = "o6uVGv8OUlCv-OrgeK5bWBV-6i_E";
+		String out_trade_no = RandomNumber.getFixLenthString(4);
+//		String spbill_create_ip = "117.136.45.99";
+		String spbill_create_ip = ServletActionContext.getRequest().getRemoteAddr();
+		System.out.println("ip="+spbill_create_ip);
+		String total_fee = "8";
+		String trade_type = "JSAPI";
+		
+		
+		String stringA = "appid="+appid+"&attach="+attach+"&body="+body+"&detail="+detail+"&device_info="
+				+device_info+"&mch_id="+mch_id+"&nonce_str="+nonce_str+"&notify_url="+notify_url+"&openid="+openid+"&out_trade_no="
+				+out_trade_no+"&spbill_create_ip="+spbill_create_ip+"&total_fee="+total_fee+"&trade_type="+trade_type;
+		
+		String stringSignTemp = stringA+"&key=chaibozhouzhouxiaobin19930620123";
+		
+		String sign = new MD5().GetMD5Code(stringSignTemp).toUpperCase();
+		
+		System.out.println("stringSignTemp="+stringSignTemp);
+		System.out.println("sign="+sign);
+		
+		String param = "<xml>"
+				+ "<appid>"+appid+"</appid>"
+				+ "<attach>"+attach+"</attach>"
+				+ "<body>"+body+"</body>"
+				+ "<detail>"+detail+"</detail>"
+				+ "<device_info>"+device_info+"</device_info>"
+				+ "<mch_id>"+mch_id+"</mch_id>"
+				+ "<nonce_str>"+nonce_str+"</nonce_str>"
+				+ "<notify_url>"+notify_url+"</notify_url>"
+				+ "<openid>"+openid+"</openid>"
+				+ "<out_trade_no>"+out_trade_no+"</out_trade_no>"
+				+ "<spbill_create_ip>"+spbill_create_ip+"</spbill_create_ip>"
+				+ "<total_fee>"+total_fee+"</total_fee>"
+				+ "<trade_type>"+trade_type+"</trade_type>"
+				+ "<sign>"+sign+"</sign>"
+				+ "</xml>";
+		
+		System.out.println("param="+param);
+		String result = HttpRequest.sendPost("https://api.mch.weixin.qq.com/pay/unifiedorder", param);
+		System.out.println("result="+result);
+		
+		
+		DocumentBuilderFactory builderFactory = DocumentBuilderFactory     
+                .newInstance();     
+        DocumentBuilder builder = builderFactory.newDocumentBuilder();  
+        Document document = builder.parse(new InputSource(new StringReader(result)));
+        this.prepay_id = document.getElementsByTagName("prepay_id").item(0).getTextContent();
+        System.out.println("pre_id="+prepay_id);
+        
+		return "getPrepayId";
+	}
+	
+	
+	
 	public String getCode() {
 		return code;
 	}
@@ -343,6 +422,16 @@ public class WeChatAction extends ActionSupport implements ApplicationAware{
 
 	public void setTicket(String ticket) {
 		this.ticket = ticket;
+	}
+
+
+	public String getPrepay_id() {
+		return prepay_id;
+	}
+
+
+	public void setPrepay_id(String prepay_id) {
+		this.prepay_id = prepay_id;
 	}
 	
 }

@@ -217,11 +217,12 @@ function clickFeedbackBtn(){
 				'<tr><td width="70%"><span style="color:#009933;">'+(index+1)+'.'+val.name+'</span></td><td width="30%"><span style="font-size:13px;">'+timeStamp2String(val.time)+'</span></td></tr>'+
 				'<tr><td><span style="font-size:13px;color:#999999;">'+val.phone+'</span></td><td><span style="font-size:13px;color:#FF6600;">'+role+'</span></td></tr>'+
 				'<tr><td colspan="2"><span style="font-size:12px;color:red;">'+val.content+'</span></td><td></td></tr>'+
-				'<tr><td><a href="" data-role="button" data-theme="b" onclick="clickHasDoBtn('+val.id+')">已处理</a></td><td></td></tr>'+
+				'<tr><td></td><td><a href="" class="doFeedbackBtn" data-role="button" data-theme="c" data-mini="true" onclick="clickHasDoBtn('+val.id+')">已处理</a></td></tr>'+
 				'</table></li>';
 				$("#list3").append(html);
 			});
 			
+			$(".doFeedbackBtn").button();
 			$("#list3").listview("refresh");
 		}
 		
@@ -266,6 +267,16 @@ function clickHasDoBtn(id){
 		}
 		
 	});
-
 	
 }
+	
+	
+	
+	
+	/**
+	 * 点击合同按钮
+	 * @param id
+	 */
+	function clickContractBtn(id){
+		window.location.href="payTest.html";
+	}

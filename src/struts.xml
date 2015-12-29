@@ -291,6 +291,24 @@
     			<param name="includeProperties"></param>
     			<param name="contentType">text/html</param> 
     		</result>
+    		
+    		<!-- 微信支付测试目录 -->
+    		<result name="payTest" type="json">
+    			<param name="includeProperties"></param>
+    			<param name="contentType">text/html</param> 
+    		</result>
+    		
+    		<!-- 微信支付正式目录 -->
+    		<result name="pay" type="json">
+    			<param name="includeProperties"></param>
+    			<param name="contentType">text/html</param> 
+    		</result>
+    		
+    		<!-- 获取prepay_id接口 -->
+    		<result name="getPrepayId" type="json">
+    			<param name="includeProperties">prepay_id,reason,result</param>
+    			<param name="contentType">text/html</param> 
+    		</result>
 		</action>
     </package>
 </struts>
