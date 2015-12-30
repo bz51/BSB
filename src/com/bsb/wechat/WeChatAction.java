@@ -20,7 +20,9 @@ import org.xml.sax.SAXException;
 import com.bsb.core.HttpRequest;
 import com.bsb.core.MD5;
 import com.bsb.core.Parameter;
+import com.bsb.entity.NeedEntity;
 import com.bsb.entity.UserEntity;
+import com.bsb.post.PostService;
 import com.bsb.tools.RandomNumber;
 import com.opensymphony.xwork2.ActionSupport;
 import com.qq.connect.utils.json.JSONException;
@@ -39,6 +41,13 @@ public class WeChatAction extends ActionSupport implements ApplicationAware{
 	private String access_token;
 	private String ticket;//用于JS－SDK
 	private String prepay_id;
+	private String require_id;
+	private String return_code;
+	private String return_msg;
+	private String attach;
+	private NeedEntity needEntity;
+	private String result = "yes";
+	private String reason;
 	private Map<String,Object> application;
 	
 	
@@ -279,20 +288,33 @@ public class WeChatAction extends ActionSupport implements ApplicationAware{
 	 * @throws SAXException 
 	 */
 	public String getPrepayId() throws ParserConfigurationException, SAXException, IOException{
+		//健壮性判断
+		if(this.require_id==null || "".equals(this.require_id)){
+			this.result = "no";
+			this.reason = "require_id不能为空！";
+			return "getPrepayId";
+		}
+		
+		WeChatService service = new WeChatService();
+		this.needEntity = service.getPrepayId(this.require_id);
+		if(!service.getResult()){
+			this.result = "no";
+			this.reason = service.getReason();
+			return "getPrepayId";
+		}
+		
 		String appid = "wx1a4c2e86c17d1fc4";
-		String attach = "附加数据";
-		String body = "商品描述xxxxxx";
+		String attach = needEntity.getId()+"";
+		String body = needEntity.getTitle();
 		String detail = "商品详情xxxxxxxxxxxx";
 		String device_info = "WEB";
 		String mch_id = "1279726201";
 		String nonce_str = RandomNumber.getFixLenthString(4);
-		String notify_url = "http://erhuowang.cn";
-		String openid = "o6uVGv8OUlCv-OrgeK5bWBV-6i_E";
-		String out_trade_no = RandomNumber.getFixLenthString(4);
-//		String spbill_create_ip = "117.136.45.99";
+		String notify_url = "http://erhuowang.cn/wechat/wechatAction!paySuccess";
+		String openid = needEntity.getNeeder_weixin();
+		String out_trade_no = "NO01"+this.needEntity.getId();
 		String spbill_create_ip = ServletActionContext.getRequest().getRemoteAddr();
-		System.out.println("ip="+spbill_create_ip);
-		String total_fee = "8";
+		String total_fee = needEntity.getMoney()+"00";
 		String trade_type = "JSAPI";
 		
 		
@@ -304,8 +326,8 @@ public class WeChatAction extends ActionSupport implements ApplicationAware{
 		
 		String sign = new MD5().GetMD5Code(stringSignTemp).toUpperCase();
 		
-		System.out.println("stringSignTemp="+stringSignTemp);
-		System.out.println("sign="+sign);
+//		System.out.println("stringSignTemp="+stringSignTemp);
+//		System.out.println("sign="+sign);
 		
 		String param = "<xml>"
 				+ "<appid>"+appid+"</appid>"
@@ -329,8 +351,7 @@ public class WeChatAction extends ActionSupport implements ApplicationAware{
 		System.out.println("result="+result);
 		
 		
-		DocumentBuilderFactory builderFactory = DocumentBuilderFactory     
-                .newInstance();     
+		DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();     
         DocumentBuilder builder = builderFactory.newDocumentBuilder();  
         Document document = builder.parse(new InputSource(new StringReader(result)));
         this.prepay_id = document.getElementsByTagName("prepay_id").item(0).getTextContent();
@@ -338,6 +359,50 @@ public class WeChatAction extends ActionSupport implements ApplicationAware{
         
 		return "getPrepayId";
 	}
+	
+	
+	
+	/**
+	 * 支付成功后微信调用的接口 
+	 */
+	public String paySuccess(){
+		//若微信返回的信息有问题
+		if(return_code==null || "".equals(return_code)){
+			TemplateMsg.sendTemplateMsg_applyArbitrationToAdmin("return_code为空");
+			this.return_code = "FAIL";
+			return "paySuccess";
+		}
+		
+		//若return_code为FAIL，则将错误原因发给管理员
+		if(return_code.equals("FAIL")){
+			TemplateMsg.sendTemplateMsg_applyArbitrationToAdmin("订单支付异常："+return_msg);
+			return "paySuccess";
+		}
+		
+		//若return_code为SUCCESS
+		if(return_code.equals("SUCCESS")){
+			//获取attach
+			if(this.attach==null || "".equals(this.attach)){
+				this.return_code = "FAIL";
+				return "paySuccess";
+			}
+			//将该条记录的状态改为开发中
+			else{
+				PostService service = new PostService();
+				service.neederPay(attach);
+				//数据更新失败需要通知管理员
+				if(!service.getResult()){
+					TemplateMsg.sendTemplateMsg_applyArbitrationToAdmin("require_id="+this.attach+"的订单付款已经成功，在将其状态更新为开发中的时候失败了！");
+					this.return_code = "FAIL";
+					return "paySuccess";
+				}
+			}
+			
+		}
+		return "paySuccess";
+	}
+	
+	
 	
 	
 	
@@ -433,5 +498,76 @@ public class WeChatAction extends ActionSupport implements ApplicationAware{
 	public void setPrepay_id(String prepay_id) {
 		this.prepay_id = prepay_id;
 	}
+
+
+	public String getRequire_id() {
+		return require_id;
+	}
+
+
+	public void setRequire_id(String require_id) {
+		this.require_id = require_id;
+	}
+
+
+	public String getResult() {
+		return result;
+	}
+
+
+	public void setResult(String result) {
+		this.result = result;
+	}
+
+
+	public String getReason() {
+		return reason;
+	}
+
+
+	public void setReason(String reason) {
+		this.reason = reason;
+	}
+
+
+	public NeedEntity getNeedEntity() {
+		return needEntity;
+	}
+
+
+	public void setNeedEntity(NeedEntity needEntity) {
+		this.needEntity = needEntity;
+	}
+
+
+	public String getReturn_code() {
+		return return_code;
+	}
+
+
+	public void setReturn_code(String return_code) {
+		this.return_code = return_code;
+	}
+
+
+	public String getReturn_msg() {
+		return return_msg;
+	}
+
+
+	public void setReturn_msg(String return_msg) {
+		this.return_msg = return_msg;
+	}
+
+
+	public String getAttach() {
+		return attach;
+	}
+
+
+	public void setAttach(String attach) {
+		this.attach = attach;
+	}
+	
 	
 }

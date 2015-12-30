@@ -527,6 +527,58 @@
 
 
 
+<!-- 求确认订单页 -->
+<div data-role="page" id="pageDetail_pay" data-fullscreen="true">
+  
+  <div data-role="header">
+    <a href="" data-role="button" data-icon="arrow-l" id="fanhui">返回</a>
+    <h2>确认订单</h2>
+    <a href="" data-role="button" class="ui-btn-right" data-theme="b" id="confirmPayBtn">确认订单</a>
+  </div>
+  
+    <div data-role="content">
+    	<table width="100%">
+    		<tr>
+    			<td width="80%"><h3 id="tips" style="margin-left:10px;">订单信息</h3></td>
+    			<td width="20%"><span id="payMoney" style="float:right;margin-right:20px;font-size:25px;color:#FF6600;font-weight:bold;">¥500</span></td>
+    		</tr>
+    	</table>
+		
+		    	
+    	<ul data-role="listview" data-inset="true" id="noDataList">
+    	
+        <li>
+        	<table width="100%">
+        		<tr style="margin-left:100px;">
+        			<td width="30%" style="color:#666666;text-weight:solid; font-size=13px;">商品名称</td>
+        			<td width="70%" id="payTitle" style="color:#666666;text-weight:solid;font-size=13px;">基于Android的摄取服务平台的实现</td>
+        		</tr>
+        	</table>
+        </li>
+        <li>
+        	<table width="100%">
+        		<tr style="margin-left:100px;">
+        			<td width="30%" style="color:#666666;text-weight:solid; font-size=13px;">托管方</td>
+        			<td width="70%" id="name" style="color:#666666;text-weight:solid;font-size=13px;">毕设帮交易资金托管平台</td>
+        		</tr>
+        	</table>
+        </li>
+        <li>
+        	<table width="100%" border="0px solid;">
+        		<tr style="margin-left:100px;">
+        			<td width="30%" style="color:#666666;text-weight:solid; font-size=13px;">订单号</td>
+        			<td width="70%" id="payRequireId" style="color:#666666;text-weight:solid;font-size=13px;">NO01232</td>
+        		</tr>
+        	</table>
+        </li>
+      </ul>
+    </div>
+
+</div>
+
+
+
+
 <!-- 求助者个人中心详情（大神开发中） -->
 <div data-role="page" id="pageDetail7" data-fullscreen="true">
   
