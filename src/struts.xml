@@ -299,10 +299,10 @@
     		</result>
     		
     		<!-- 微信支付正式目录 -->
-    		<result name="paySuccess" type="json">
-    			<param name="includeProperties">return_code,return_msg</param>
+    		<!-- <result name="paySuccess" type="json">
+    			<param name="includeProperties"></param>
     			<param name="contentType">text/html</param> 
-    		</result>
+    		</result> -->
     		
     		<!-- 获取prepay_id接口 -->
     		<result name="getPrepayId" type="json">
