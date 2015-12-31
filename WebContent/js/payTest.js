@@ -1,5 +1,12 @@
 document.write("<script language=javascript src='js/common.js'></script>");
-
+//document.onkeydown=function(){
+//	if(event.keyCode==8){//获取点击返回键的编号
+//			event.returnValue=false;
+//	if(event.srcElement.readOnly==true||event.srcElement.disabled==true)//判断当前的焦点是否在一个readonly、disabled节点里
+//	event.returnValue=false;
+//	}
+//	};
+window.history.forward(1);
 function pay(){
 	alert("点击了pay");
 	$.get("wechat/wechatAction!getJSTicket",  

@@ -13,7 +13,12 @@
 	
 <script type="text/javascript">
 if(!IsPC()){
-	window.location.href="index_phone.html";
+	if(is_weixin()){
+		window.location.href="index_phone.html";
+	}
+	else{
+		window.location.href="index_phone_other.html";
+	}
 }
 
 function IsPC() {
@@ -29,6 +34,16 @@ function IsPC() {
         }
     }
     return flag;
+}
+
+
+function is_weixin(){
+	var ua = navigator.userAgent.toLowerCase();
+	if(ua.match(/MicroMessenger/i)=="micromessenger") {
+		return true;
+ 	} else {
+		return false;
+	}
 }
 </script>
 </head>

@@ -2,7 +2,12 @@ $(document).ready(function(){
 	alert(IsPC());
 	//判断User 
 	if(!IsPC()){
-		window.location.href="index_phone.html";
+		if(is_weixin()){
+			window.location.href="index_phone.html";
+		}
+		else{
+			window.location.href="index_phone_other.html";
+		}
 	}
 	
 	function IsPC() {
@@ -18,5 +23,14 @@ $(document).ready(function(){
 	        }
 	    }
 	    return flag;
+	}
+	
+	function is_weixin(){
+		var ua = navigator.userAgent.toLowerCase();
+		if(ua.match(/MicroMessenger/i)=="micromessenger") {
+			return true;
+	 	} else {
+			return false;
+		}
 	}
 });

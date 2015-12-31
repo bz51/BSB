@@ -1,5 +1,6 @@
 document.write("<script language=javascript src='js/common.js'></script>");
 
+
 $(document).ready(function(){
 	//显示loading
     $.mobile.loading('show', {  
