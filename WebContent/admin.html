@@ -96,6 +96,21 @@
     </div>
   </div>
   
+  <select id="selectState">
+        <option value="3">合同拟草中</option>
+        <option value="4">等待用户确认合同</option>
+        <option value="0">大神抢单中</option>
+        <option value="1">大神确认中</option>
+        <option value="6">等待付款中</option>
+        <option value="7">开发中</option>
+        <option value="8">验收中</option>
+        <option value="9">交易成功</option>
+        <option value="11">大神放弃订单</option>
+        <option value="2">求助者放弃订单</option>
+        <option value="10">仲裁中</option>
+        <option value="12">仲裁结束</option>
+  </select>
+  
     <div data-role="content">
       <ul data-role="listview" id="list4">
 
@@ -105,7 +120,48 @@
 
 
 
+<!-- 查看订单详情 -->
+<div data-role="page" id="contractDetail" data-fullscreen="true">
+  
+  <div data-role="header">
+    <a href="" data-role="button" data-icon="arrow-l" id="fanhui">返回</a>
+    <h2>本单详情</h2>
+  </div>
+  
+  <div data-role="content">
 
+    <table width="100%">
+      <tr height="40px">
+        <td colspan="2" style="font-size:16px;font-weight:bold;" id="title">基于Android的社区管理平台</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td width="80%"><span style="font-size:15px;" id="time">9月15日 23:15</span></td>
+          <td width="20%"><span style="font-size:15px;color:#FF6600;font-weight:bold;" id="money">500元</span></td>
+      </tr>
+      <tr>
+        <td><span style="font-size:15px;" id="needer_skill">计算机软件/Java/JSP</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td colspan="2"><span style="font-size:15x;color:#999999;" id="content">需求详情需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介</span></td>
+        <td></td>
+      </tr>
+      <tr>
+          <td><img src="pic.png" width="" id="pic"></td>
+          <td></td>
+      </tr>
+      <tr>
+      	<td colspan="2"><textarea id="contract" style="min-height:150px;" placeholder="填写合同内容"></textarea></td>
+      	<td></td>
+      </tr>
+      <tr>
+        <td colspan="2"><a href="" data-role="button" data-theme="c" onclick="clickPostContractBtn()">发布合同</a></td>
+        <td></td>
+      </tr>
+    </table>
+  </div>
+</div>
 
 
 </body>

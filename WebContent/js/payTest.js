@@ -1,12 +1,4 @@
 document.write("<script language=javascript src='js/common.js'></script>");
-//document.onkeydown=function(){
-//	if(event.keyCode==8){//获取点击返回键的编号
-//			event.returnValue=false;
-//	if(event.srcElement.readOnly==true||event.srcElement.disabled==true)//判断当前的焦点是否在一个readonly、disabled节点里
-//	event.returnValue=false;
-//	}
-//	};
-window.history.forward(1);
 function pay(){
 	alert("点击了pay");
 	$.get("wechat/wechatAction!getJSTicket",  
@@ -286,8 +278,75 @@ function clickConfirmPay(){
 		}
 		
 	});
-
 }
+
+	
+	/**
+	 * 上传图片
+	 */
+	function clickUploadPic(){
+		alert();
+		//获取ticket
+		$.get("wechat/wechatAction!getJSTicket",
+			function(data,status){
+			var json = eval('(' + data + ')');
+				
+			localStorage.setItem("ticket",json.ticket);
+		
+			var nonceStr = randomString(16);
+			alert("nonceStr="+nonceStr);
+			var timestamp = Math.round(new Date().getTime()/1000);
+			alert("timestamp="+timestamp);
+			var url = "http://www.erhuowang.cn/payTest.html";
+			alert("url="+url);
+			var string1 = "jsapi_ticket="+localStorage.getItem("ticket")+"&noncestr="+nonceStr+"&timestamp="+timestamp+"&url="+url;
+			alert("string1="+string1);
+			var signature = hex_sha1(string1);
+			alert("signature="+signature);
+		
+			wx.config({
+				debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+				appId: "wx1a4c2e86c17d1fc4", // 必填，公众号的唯一标识
+				timestamp: timestamp, // 必填，生成签名的时间戳
+				nonceStr: nonceStr, // 必填，生成签名的随机串
+				signature: signature,// 必填，签名，见附录1
+				jsApiList: ['chooseImage','uploadImage','downloadImage','previewImage'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+			});
+		
+			wx.ready(function(){
+				wx.chooseImage({
+					count: 1, // 默认9
+					sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+					sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+					success: function (res) {
+						var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+						localStorage.setItem("localIds",res.localIds);
+						alert("localIds="+localIds);
+					}
+				});
+			
+				setTimeout(function (){
+					alert("localIds[0]="+localStorage.getItem("localIds"));
+					wx.uploadImage({
+						localId: localStorage.getItem("localIds"), // 需要上传的图片的本地ID，由chooseImage接口获得
+						isShowProgressTips: 1, // 默认为1，显示进度提示
+						success: function (res) {
+							var serverId = res.serverId; // 返回图片的服务器端ID
+							alert("上传成功，serverId＝"+serverId);
+						},
+						fail: function (res) {
+							alert(JSON.stringify(res));
+						}
+					});
+				},100);
+			});
+		
+			wx.error(function(res){
+
+			});
+		
+	});}
+	
 
 /**
  * 生成指定长度随机字符串

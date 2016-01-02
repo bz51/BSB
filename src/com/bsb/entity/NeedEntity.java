@@ -31,6 +31,7 @@ public class NeedEntity {
 	private String contract;
 	private String zhongcai;
 	private String zhongcai_result;
+	private String pic;
 	
 	@Id
 	@GeneratedValue
@@ -159,6 +160,12 @@ public class NeedEntity {
 	}
 	public void setZhongcai_result(String zhongcai_result) {
 		this.zhongcai_result = zhongcai_result;
+	}
+	public String getPic() {
+		return pic;
+	}
+	public void setPic(String pic) {
+		this.pic = pic;
 	}
 	
 	

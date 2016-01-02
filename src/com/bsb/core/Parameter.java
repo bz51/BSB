@@ -64,4 +64,5 @@ public class Parameter {
 	public static String Ticket_Parameter = null;
 	/** 所有新用户的open_id和open_token都存在这里 */
 	public static Map<String,String> OpenTokenId_Parameters = new HashMap<String,String>();
+	public static String uploadPath = "/usr/tomcat/webapps/upload/";
 }

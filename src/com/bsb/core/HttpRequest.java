@@ -1,13 +1,20 @@
 package com.bsb.core;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.struts2.ServletActionContext;
 
 public class HttpRequest {
 	   /**
@@ -62,6 +69,89 @@ public class HttpRequest {
             }
         }
         return result;
+    }
+    
+    
+    /**
+     * 下载图片
+     * @return文件名
+     */
+    public static String downloadByGet(String url, String param){
+    	// 设置上传文件目录  
+        String uploadPath = Parameter.uploadPath;
+//        String uploadPath = ServletActionContext.getServletContext().getRealPath("/upload");
+        File uploadPathDir  = new File(uploadPath);
+        if(!uploadPathDir.exists()){
+        	uploadPathDir.mkdirs();
+        }
+        System.out.println("上传目录为："+uploadPath);
+        // 设置目标文件
+        String fileName = new Date().getTime()/1000+"";
+        File toFile = new File(uploadPath, fileName);  
+        if(!toFile.exists()){
+        	try {
+				toFile.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+				return null;
+			}
+        }
+        //创建输出流
+        FileOutputStream out = null;
+        try {
+			out = new FileOutputStream(toFile);
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+			return null;
+		}
+    	
+    	String result = "";
+    	InputStream in = null;
+    	try {
+    		String urlNameString = url + "?" + param;
+    		URL realUrl = new URL(urlNameString);
+    		// 打开和URL之间的连接
+    		URLConnection connection = realUrl.openConnection();
+    		// 设置通用的请求属性
+    		connection.setRequestProperty("accept", "*/*");
+    		connection.setRequestProperty("connection", "Keep-Alive");
+    		connection.setRequestProperty("user-agent",
+    				"Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
+    		// 建立实际的连接
+    		connection.connect();
+    		// 获取所有响应头字段
+    		Map<String, List<String>> map = connection.getHeaderFields();
+    		// 遍历所有的响应头字段
+//            for (String key : map.keySet()) {
+//                System.out.println(key + "--->" + map.get(key));
+//            }
+    		// 定义 BufferedReader输入流来读取URL的响应
+    		//设置缓存  
+            byte[] buffer = new byte[1024];  
+            int length = 0;  
+    		in = connection.getInputStream();
+    		while ((length = in.read(buffer)) > 0) {  
+			    out.write(buffer, 0, length);  
+    		}
+    	} catch (Exception e) {
+    		System.out.println("发送GET请求出现异常！" + e);
+    		e.printStackTrace();
+    		return null;
+    	}
+    	// 使用finally块来关闭输入流
+    	finally {
+    		try {
+    			if (in != null) {
+    				in.close();
+    				out.close();
+    			}
+    		} catch (Exception e2) {
+    			e2.printStackTrace();
+    			return null;
+    		}
+    	}
+    	
+    	return fileName;
     }
 
     /**

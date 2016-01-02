@@ -41,6 +41,7 @@ public class PostAction extends ActionSupport implements ApplicationAware{
 	private String name;
 	private String user_id;
 	private String phone;
+	private String pic_id;
 	private String result = "yes";
 	private String reason;
 	
@@ -177,7 +178,7 @@ public class PostAction extends ActionSupport implements ApplicationAware{
 		}		
 		
 		//发布一条信息
-		service.postNeed(needEntity);
+		service.postNeed(needEntity,this.pic_id);
 		this.result = service.getResult()+"";
 		this.reason = service.getReason();
 		
@@ -951,6 +952,16 @@ public class PostAction extends ActionSupport implements ApplicationAware{
 
 	public void setPhone(String phone) {
 		this.phone = phone;
+	}
+
+
+	public String getPic_id() {
+		return pic_id;
+	}
+
+
+	public void setPic_id(String pic_id) {
+		this.pic_id = pic_id;
 	}
 	
 	

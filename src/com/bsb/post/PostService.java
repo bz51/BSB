@@ -6,12 +6,15 @@ import java.util.Date;
 import java.util.List;
 
 import com.bsb.core.CoreDao;
+import com.bsb.core.HttpRequest;
 import com.bsb.core.Parameter;
 import com.bsb.core.UpdateStateAndGetEntityImp;
+import com.bsb.entity.ErrorPicId;
 import com.bsb.entity.FeedBackEntity;
 import com.bsb.entity.MsgEntity;
 import com.bsb.entity.NeedEntity;
 import com.bsb.entity.NeedHelpEntity;
+import com.bsb.entity.OpenTokenId;
 import com.bsb.entity.UserEntity;
 import com.bsb.wechat.TemplateMsg;
 
@@ -65,7 +68,23 @@ public class PostService {
 	 * 发布一条需求（现用）
 	 * PS:健壮性判断放到Action层完成，这里不再做判断了！
 	 */
-	public void postNeed(NeedEntity needEntity){
+	public void postNeed(NeedEntity needEntity,String pic_id){
+		//从微信服务器下载图片
+		if(pic_id!=null && !"".equals(pic_id) && !"null".equals(pic_id)){
+//			String fileName = HttpRequest.downloadByGet("http://file.api.weixin.qq.com/cgi-bin/media/get", "access_token="+Parameter.AccessToken_Parameters+"&media_id=DxcN7Gno1rDYFAAcQjL0zgyAFusuq7pOS2nYxJelLTjYNEujrcf26FKWZF6BtyCG");
+			String fileName = HttpRequest.downloadByGet("http://file.api.weixin.qq.com/cgi-bin/media/get", "access_token="+Parameter.AccessToken_Parameters+"&media_id="+pic_id);
+			//图片下载失败时：1.提示管理员，2.将pic_id保存至数据库，让管理员手动下载
+			if(fileName==null){
+				ErrorPicId entity = new ErrorPicId();
+				entity.setPic_id(pic_id);
+				TemplateMsg.sendTemplateMsg_applyArbitrationToAdmin("从微信服务器下载图片至阿里云服务器时失败，图片id已保存至数据库，请及时手动下载！");
+				return;
+			}
+			//将图片名存至need表中
+			System.out.println("fileName="+fileName);
+			needEntity.setPic(fileName);
+		}
+		
 		//将状态设置为“3:拟定合同中”
 		needEntity.setState(3);
 		needEntity.setTime(new Timestamp(new Date().getTime()));

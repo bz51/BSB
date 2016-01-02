@@ -105,6 +105,86 @@
 		return result;
 	}
 	
+	/**
+	 * 将skill——>String(不省略)
+	 */
+	function skill2String_new(skill){
+		if(skill==null || skill=='')
+			return "skill不正确";
+		
+		var arr = skill.split("");
+		var result = "";
+		$.each(arr, function(index, val) {
+			if(index==0){
+				if(val=="1")
+					result = result + "Java";
+			}
+			if(index==1){
+				if(val=="1")
+					result = result + "、C/C++";
+			}
+			if(index==2){
+				if(val=="1")
+					result = result + "、Python";
+			}
+			if(index==3){
+				if(val=="1")
+					result = result + "、C#";
+			}
+			if(index==4){
+				if(val=="1")
+					result = result + "、Android";
+			}
+			if(index==5){
+				if(val=="1")
+					result = result + "、IOS";
+			}
+			if(index==6){
+				if(val=="1")
+					result = result + "、JSP";
+			}
+			if(index==7){
+				if(val=="1")
+					result = result + "、ASP/.NET";
+			}
+			if(index==8){
+				if(val=="1")
+					result = result + "、PHP";
+			}
+			if(index==9){
+				if(val=="1")
+					result = result + "、j2EE";
+			}
+			if(index==10){
+				if(val=="1")
+					result = result + "、算法";
+			}
+			if(index==11){
+				if(val=="1")
+					result = result + "、大数据";
+			}
+			if(index==12){
+				if(val=="1")
+					result = result + "、软件测试";
+			}
+			if(index==13){
+				if(val=="1")
+					result = result + "、游戏";
+			}
+			if(index==14){
+				if(val=="1")
+					result = result + "、其他";
+			}
+		});
+		
+		//去除开头的顿号
+		if(result.charAt(0)=="、"){
+			result = result.substr(1);
+		}
+		
+		return result;
+	}
+	
 	
 	/**
 	 * 判断是否符合金钱格式
