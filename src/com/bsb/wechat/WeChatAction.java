@@ -290,7 +290,7 @@ public class WeChatAction extends ActionSupport implements ApplicationAware{
 	 * @throws IOException 
 	 * @throws SAXException 
 	 */
-	public String getPrepayId() throws ParserConfigurationException, SAXException, IOException{
+	public String getPrepayId(){
 		//健壮性判断
 		if(this.require_id==null || "".equals(this.require_id)){
 			this.result = "no";
@@ -329,9 +329,6 @@ public class WeChatAction extends ActionSupport implements ApplicationAware{
 		
 		String sign = new MD5().GetMD5Code(stringSignTemp).toUpperCase();
 		
-//		System.out.println("stringSignTemp="+stringSignTemp);
-//		System.out.println("sign="+sign);
-		
 		String param = "<xml>"
 				+ "<appid>"+appid+"</appid>"
 				+ "<attach>"+attach+"</attach>"
@@ -354,11 +351,22 @@ public class WeChatAction extends ActionSupport implements ApplicationAware{
 		System.out.println("result="+result);
 		
 		
-		DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();     
-        DocumentBuilder builder = builderFactory.newDocumentBuilder();  
-        Document document = builder.parse(new InputSource(new StringReader(result)));
-        this.prepay_id = document.getElementsByTagName("prepay_id").item(0).getTextContent();
-        System.out.println("pre_id="+prepay_id);
+		try {
+			DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();   
+			DocumentBuilder builder = builderFactory.newDocumentBuilder();
+			Document document = builder.parse(new InputSource(new StringReader(result)));
+	        this.prepay_id = document.getElementsByTagName("prepay_id").item(0).getTextContent();
+	        System.out.println("pre_id="+prepay_id);
+		} catch (ParserConfigurationException e1) {
+			e1.printStackTrace();
+		} catch (SAXException e2) {
+			e2.printStackTrace();
+			this.result = "no";
+			this.reason = "XML中无prepay_id!";
+			return "getPrepayId";
+		} catch (IOException e3) {
+			e3.printStackTrace();
+		}
         
 		return "getPrepayId";
 	}
@@ -371,7 +379,7 @@ public class WeChatAction extends ActionSupport implements ApplicationAware{
 	 * @throws ParserConfigurationException 
 	 * @throws SAXException 
 	 */
-	public String paySuccess() throws IOException, ParserConfigurationException, SAXException{
+	public String paySuccess() throws IOException{
 		//获取微信返回的XML信息
 		BufferedReader bufr = new BufferedReader(new InputStreamReader(ServletActionContext.getRequest().getInputStream()));
 		String line = "";
@@ -379,13 +387,26 @@ public class WeChatAction extends ActionSupport implements ApplicationAware{
 		while((line=bufr.readLine())!=null){
 			content += line;
 		}
-		TemplateMsg.sendTemplateMsg_applyArbitrationToAdmin(content);
 		
 		//解析XML信息，获取return_code
-		DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();     
-        DocumentBuilder builder = builderFactory.newDocumentBuilder();  
-        Document document = builder.parse(new InputSource(new StringReader(content)));
-        String return_code = document.getElementsByTagName("return_code").item(0).getTextContent();
+		DocumentBuilderFactory builderFactory = null;
+		DocumentBuilder builder = null;
+		Document document = null;
+		String return_code = null;
+        try {
+        	builderFactory = DocumentBuilderFactory.newInstance();     
+            builder = builderFactory.newDocumentBuilder();  
+            document = builder.parse(new InputSource(new StringReader(content)));
+            return_code = document.getElementsByTagName("return_code").item(0).getTextContent();
+		} catch (ParserConfigurationException e1) {
+			e1.printStackTrace();
+		} catch (SAXException e2) {
+			e2.printStackTrace();
+			TemplateMsg.sendTemplateMsg_applyArbitrationToAdmin("订单支付失败：支付后微信返回的xml＝"+content);
+			return "getPrepayId";
+		} catch (IOException e3) {
+			e3.printStackTrace();
+		}
 		
 		//若微信返回的信息有问题
 		if(return_code==null || "".equals(return_code) || return_code.equals("FAIL")){

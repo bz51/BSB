@@ -207,7 +207,7 @@ $(document).ready(function(){
 	 * 点击“返回”按钮
 	 */
 	$("#fanhui").click(function(){
-		alert("fromWhere="+localStorage.getItem("fromWhere"));
+		//alert("fromWhere="+localStorage.getItem("fromWhere"));
 		//判断是从哪个页面跳转过来
 		//若是从抢单页面跳过来，那么返回的话需要返回到列表，并且刷新
 		if(localStorage.getItem("fromWhere")=="neederPay"){
@@ -418,7 +418,7 @@ $(document).ready(function(){
 	function clickDetail10Btn(val){
 		//判断从哪个页面跳过来
 		//若从申请仲裁跳过来，则详细信息从本地读取
-		alert("fromWhere="+localStorage.getItem("fromWhere"));
+		//alert("fromWhere="+localStorage.getItem("fromWhere"));
 		if(localStorage.getItem("fromWhere")=="zhongcai"){
 			localStorage.setItem("fromWhere","");
 			$("#provider_name10").text(localStorage.getItem("provider_name"));
@@ -432,7 +432,7 @@ $(document).ready(function(){
 			$("#money10").text(localStorage.getItem("money")+"元");
 			$("#content10").text(localStorage.getItem("content"));
 			$("#contract10").text(localStorage.getItem("contract"));
-			alert("从本地读取＝"+localStorage.getItem("zhongcai"));
+			//alert("从本地读取＝"+localStorage.getItem("zhongcai"));
 			$("#zhongcaiReason10").text(localStorage.getItem("zhongcai"));
 		}
 		
@@ -447,8 +447,8 @@ $(document).ready(function(){
 			$("#money10").text(val.money+"元");
 			$("#content10").text(val.content);
 			$("#contract10").text(val.contract);
-			alert("从服务端读取＝"+val.zhongcai);
-			alert(val);
+			//alert("从服务端读取＝"+val.zhongcai);
+			//alert(val);
 			$("#zhongcaiReason10").text(val.zhongcai);
 			localStorage.setItem("require_id",val.id);
 		}
@@ -684,7 +684,7 @@ $(document).ready(function(){
 		});  
 		
 		//发送请求，获取本单详情
-		alert("post/postAction!chongZhaoProvider?require_id="+localStorage.getItem("require_id")+"&needer_name="+localStorage.getItem("name"));
+		//alert("post/postAction!chongZhaoProvider?require_id="+localStorage.getItem("require_id")+"&needer_name="+localStorage.getItem("name"));
 		$.get("post/postAction!chongZhaoProvider?require_id="+localStorage.getItem("require_id")+"&needer_name="+localStorage.getItem("name"),
 				
 				function(data,status){
@@ -802,7 +802,7 @@ $(document).ready(function(){
 	$("#confirmPayBtn").click(function(){
 				
 		//获取prepay_id
-		alert("prepay_id="+localStorage.getItem("prepay_id"));
+//		//alert("prepay_id="+localStorage.getItem("prepay_id"));
 		//生成sign
 		var appId = "wx1a4c2e86c17d1fc4";
 		var nonceStr = randomString(16);
@@ -812,15 +812,15 @@ $(document).ready(function(){
 		
 		var stringA = "appId="+appId+"&nonceStr="+nonceStr+"&package=prepay_id="+prepay_id+"&signType="+signType+"&timeStamp="+timeStamp;
 		var stringSignTemp = stringA+"&key=chaibozhouzhouxiaobin19930620123";
-		alert("stringSignTemp="+stringSignTemp);
+		//alert("stringSignTemp="+stringSignTemp);
 		var paySign = md5(stringSignTemp);
-		alert("paySign="+paySign);
+		//alert("paySign="+paySign);
 		paySign = paySign.toUpperCase();
-		alert("upcase="+paySign);
+		//alert("upcase="+paySign);
 		
 		//调用支付接口
 		function onBridgeReady(){
-			alert("onBridgeReady");
+			//alert("onBridgeReady");
 			WeixinJSBridge.invoke(
 				'getBrandWCPayRequest', {
 					"appId" : appId,     //公众号名称，由商户传入     
@@ -831,9 +831,9 @@ $(document).ready(function(){
 					"paySign" : paySign //微信签名 
 				},
 			  	function(res){
-			  		alert("err_msg="+res.err_msg);
+			  		//alert("err_msg="+res.err_msg);
 			  		if(res.err_msg == "get_brand_wcpay_request:ok" ) {
-			  			alert("支付成功");
+			  			//alert("支付成功");
 			  			//标识从抢单页面跳转至抢单成功详情
 				    	localStorage.setItem("fromWhere","neederPay");
 				    	//跳转大神开发中页面
@@ -845,15 +845,15 @@ $(document).ready(function(){
 			  	
 		if (typeof WeixinJSBridge == "undefined"){
 			if( document.addEventListener ){
-			  	alert("1");
+			  	//alert("1");
 			  	document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
 			}else if (document.attachEvent){
-			  	alert("2");
+			  	//alert("2");
 			  	document.attachEvent('WeixinJSBridgeReady', onBridgeReady); 
 			  	document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
 			}
 		}else{
-			  alert("3");
+			  //alert("3");
 			  onBridgeReady();
 		}
 		
@@ -881,7 +881,7 @@ $(document).ready(function(){
 			});  
 			
 			//发送请求，获取本单详情
-			alert("post/postAction!confirmOrder?needer_id="+localStorage.getItem("id")+"&password="+$("#password").val()+"&require_id="+localStorage.getItem("require_id"));
+			//alert("post/postAction!confirmOrder?needer_id="+localStorage.getItem("id")+"&password="+$("#password").val()+"&require_id="+localStorage.getItem("require_id"));
 			$.get("post/postAction!confirmOrder?needer_id="+localStorage.getItem("id")+"&password="+$("#password").val()+"&require_id="+localStorage.getItem("require_id"),
 					
 					function(data,status){
@@ -913,7 +913,7 @@ $(document).ready(function(){
 	 * 点击“提交仲裁”按钮
 	 */
 	$("#postZhongcaiBtn").click(function(){
-		alert();
+		//alert();
 		//判断内容是否为空
 		if($("#zhongcaiContent").val()==null || $("#zhongcaiContent").val()==''){
 			$("#zhongcai_reason").text("请填写申请原因！");
@@ -930,7 +930,7 @@ $(document).ready(function(){
 			});  
 			
 			//发送请求，获取本单详情
-			alert("post/postAction!applyArbitration?require_id="+localStorage.getItem("require_id")+"&content="+localStorage.getItem("zhongcai")+"^"+$("#zhongcaiContent").val()+"&role="+localStorage.getItem("role"));
+			//alert("post/postAction!applyArbitration?require_id="+localStorage.getItem("require_id")+"&content="+localStorage.getItem("zhongcai")+"^"+$("#zhongcaiContent").val()+"&role="+localStorage.getItem("role"));
 			$.get("post/postAction!applyArbitration?require_id="+localStorage.getItem("require_id")+"&content="+localStorage.getItem("zhongcai")+"^"+$("#zhongcaiContent").val()+"&role="+localStorage.getItem("role"),
 					
 					function(data,status){
@@ -962,45 +962,45 @@ $(document).ready(function(){
 	 * 点击“选择仲裁原因1”按钮
 	 */
 	$("#ZhongcaiQABtn1").click(function(){
-		alert($("#ZhongcaiQABtn1").text());
+		//alert($("#ZhongcaiQABtn1").text());
 		clickZhongcaiQABtn($("#ZhongcaiQABtn1").text());
 	});
 	$("#ZhongcaiQABtn2").click(function(){
-		alert($("#ZhongcaiQABtn2").text());
+		//alert($("#ZhongcaiQABtn2").text());
 		clickZhongcaiQABtn($("#ZhongcaiQABtn2").text());
 	});
 	$("#ZhongcaiQABtn3").click(function(){
-		alert($("#ZhongcaiQABtn3").text());
+		//alert($("#ZhongcaiQABtn3").text());
 		clickZhongcaiQABtn($("#ZhongcaiQABtn3").text());
 	});
 	$("#ZhongcaiQABtn4").click(function(){
-		alert($("#ZhongcaiQABtn4").text());
+		//alert($("#ZhongcaiQABtn4").text());
 		clickZhongcaiQABtn($("#ZhongcaiQABtn4").text());
 	});
 	$("#ZhongcaiQABtn5").click(function(){
-		alert($("#ZhongcaiQABtn5").text());
+		//alert($("#ZhongcaiQABtn5").text());
 		clickZhongcaiQABtn($("#ZhongcaiQABtn5").text());
 	});
 	$("#ZhongcaiQABtn6").click(function(){
-		alert($("#ZhongcaiQABtn6").text());
+		//alert($("#ZhongcaiQABtn6").text());
 		clickZhongcaiQABtn($("#ZhongcaiQABtn6").text());
 	});
 	$("#ZhongcaiQABtn7").click(function(){
-		alert($("#ZhongcaiQABtn7").text());
+		//alert($("#ZhongcaiQABtn7").text());
 		clickZhongcaiQABtn($("#ZhongcaiQABtn7").text());
 	});
 	$("#ZhongcaiQABtn8").click(function(){
-		alert($("#ZhongcaiQABtn8").text());
+		//alert($("#ZhongcaiQABtn8").text());
 		clickZhongcaiQABtn($("#ZhongcaiQABtn8").text());
 	});
 	$("#ZhongcaiQABtn9").click(function(){
-		alert($("#ZhongcaiQABtn9").text());
+		//alert($("#ZhongcaiQABtn9").text());
 		clickZhongcaiQABtn($("#ZhongcaiQABtn9").text());
 	});
 	
 	
 	function clickZhongcaiQABtn(reason){
-		alert(reason);
+		//alert(reason);
 		//保存到本地
 		localStorage.setItem("zhongcai",reason);
 		//跳转页面
@@ -1014,7 +1014,7 @@ $(document).ready(function(){
 	 * 点击“联系客服的提交”按钮
 	 */
 	$("#postFeedbackBtn").click(function(){
-		alert();
+		//alert();
 		//判断内容是否为空
 		if($("#feedbackContent").val()==null || $("#feedbackContent").val()==''){
 			$("#feedback_reason").text("请填写申请原因！");
@@ -1031,7 +1031,7 @@ $(document).ready(function(){
 			});  
 			
 			//发送请求，获取本单详情
-			alert("post/postAction!postFeedBack?name="+localStorage.getItem("name")+"&user_id="+localStorage.getItem("id")+"&phone="+localStorage.getItem("phone")+"&role="+localStorage.getItem("role")+"&content="+$("#feedbackContent").val());
+			//alert("post/postAction!postFeedBack?name="+localStorage.getItem("name")+"&user_id="+localStorage.getItem("id")+"&phone="+localStorage.getItem("phone")+"&role="+localStorage.getItem("role")+"&content="+$("#feedbackContent").val());
 			$.get("post/postAction!postFeedBack?name="+localStorage.getItem("name")+"&user_id="+localStorage.getItem("id")+"&phone="+localStorage.getItem("phone")+"&role="+localStorage.getItem("role")+"&content="+$("#feedbackContent").val(),
 					
 					function(data,status){
