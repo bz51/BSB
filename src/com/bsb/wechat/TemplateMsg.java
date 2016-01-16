@@ -75,7 +75,7 @@ public class TemplateMsg {
 		//first字段
 		TemplateData first = new TemplateData();
 		first.setColor("red");
-		first.setValue("有求助者发布需求了，赶紧去拟定合同！");
+		first.setValue("有求助者发布需求了，赶紧去制定交易协议！");
 		m.put("first", first);
 		//订单编号字段
 //		TemplateData OrderSn = new TemplateData();
@@ -127,7 +127,7 @@ public class TemplateMsg {
 		//first字段
 		TemplateData first = new TemplateData();
 		first.setColor("red");
-		first.setValue("您的需求合同我们已经为您定制完成，请点击详情查看");
+		first.setValue("交易协议已定制完成，请仔细阅读，并核对功能点是否有误");
 		m.put("first", first);
 		//发送方字段
 		TemplateData keyword1 = new TemplateData();
@@ -137,7 +137,7 @@ public class TemplateMsg {
 		//合同名称字段
 		TemplateData keyword2 = new TemplateData();
 //		keyword2.setColor("#FF6600");
-		keyword2.setValue("毕设帮项目需求合同");
+		keyword2.setValue("毕设帮项目交易协议");
 		m.put("keyword2", keyword2);
 		//到期时间字段
 		TemplateData keyword3 = new TemplateData();
@@ -174,7 +174,7 @@ public class TemplateMsg {
 		//first字段
 		TemplateData first = new TemplateData();
 		first.setColor("red");
-		first.setValue("您已确认需求合同！请等待大神抢单");
+		first.setValue("您已确认交易协议！请等待大神抢单");
 		m.put("first", first);
 		//合同编号字段
 		TemplateData keyword1 = new TemplateData();
@@ -300,7 +300,7 @@ public class TemplateMsg {
 	 */
 	public static boolean sendTemplateMsg_grabSingleSuccessToPro(NeedEntity entity){
 		WxTemplate t = new WxTemplate();
-		t.setUrl(Parameter.URL_NeederAdmin);
+		t.setUrl(Parameter.URL_HelperAdmin);
 		//接受者的open_id
 		t.setTouser(entity.getProvider_weixin());
 		//消息顶端颜色
@@ -558,7 +558,7 @@ public class TemplateMsg {
 		//first字段
 		TemplateData first = new TemplateData();
 		first.setColor("red");
-		first.setValue("大神已准备就绪，是否可以开始服务？");
+		first.setValue("大神已准备就绪，是否开始服务？");
 		m.put("first", first);
 		//订单编号字段
 		TemplateData OrderSn = new TemplateData();
@@ -640,7 +640,7 @@ public class TemplateMsg {
 		//first字段
 		TemplateData first = new TemplateData();
 		first.setColor("red");
-		first.setValue("项目开始验收");
+		first.setValue("项目开始验收，请通过QQ远程协助为对方部署程序！");
 		m.put("first", first);
 		//订单编号字段
 		TemplateData OrderSn = new TemplateData();
@@ -655,7 +655,7 @@ public class TemplateMsg {
 		//remark字段
 		TemplateData remark = new TemplateData();
 		remark.setColor("red");
-		remark.setValue("请通过QQ远程协助为对方部署程序，如有问题随时联系我们");
+		remark.setValue("如有问题随时联系我们");
 		m.put("remark", remark);
 		t.setData(m);
 		
@@ -747,6 +747,56 @@ public class TemplateMsg {
 	
 	
 	/**
+	 * 发送求助者通过验收(管理员)
+	 */
+	public static boolean sendTemplateMsg_finishOrderToAdmin(NeedEntity entity){
+		WxTemplate t = new WxTemplate();
+		t.setUrl(Parameter.URL_Admin);
+		//接受者的open_id
+		t.setTouser(Parameter.OpenId_Chai);
+		//消息顶端颜色
+		t.setTopcolor("#000000");
+		//模板ID
+		t.setTemplate_id(Parameter.TemplateId_DingDanZhuangTaiGengXin);
+		//存储数据的Map
+		Map<String,TemplateData> m = new HashMap<String,TemplateData>();
+		//first字段
+		TemplateData first = new TemplateData();
+		first.setColor("red");
+		first.setValue("【客服】一笔交易已完成！赶紧给大神打钱！！！");
+		m.put("first", first);
+		//订单编号字段
+		TemplateData OrderSn = new TemplateData();
+		OrderSn.setColor("blue");
+		OrderSn.setValue(entity.getId()+"");
+		m.put("OrderSn", OrderSn);
+		//订单状态字段
+		TemplateData OrderStatus = new TemplateData();
+		OrderStatus.setColor("#009900");
+		OrderStatus.setValue("交易成功");
+		m.put("OrderStatus", OrderStatus);
+		//remark字段
+		TemplateData remark = new TemplateData();
+		remark.setColor("red");
+		remark.setValue("交易额:"+entity.getMoney()+"元,须向大神支付"+entity.getMoney()*0.9+"元");
+		m.put("remark", remark);
+		t.setData(m);
+		
+		boolean result = false;
+		//先发给chai
+		t.setTouser(Parameter.OpenId_Chai);
+		result = TemplateMsg.sendTemplateMessage(t);
+		if(!result)
+			return result;
+		
+		//再发给zhou
+		t.setTouser(Parameter.OpenId_Zhou);
+		result = TemplateMsg.sendTemplateMessage(t);
+		return result;
+	}
+	
+	
+	/**
 	 * 发送求助者通过验收(大神)
 	 */
 	public static boolean sendTemplateMsg_finishOrderToPro(NeedEntity entity){
@@ -763,7 +813,7 @@ public class TemplateMsg {
 		//first字段
 		TemplateData first = new TemplateData();
 		first.setColor("red");
-		first.setValue("恭喜您通过验收！资金已转入您微信账户");
+		first.setValue("恭喜您通过验收！资金即将转入您微信账户，请注意查收！");
 		m.put("first", first);
 		//订单编号字段
 		TemplateData OrderSn = new TemplateData();
@@ -778,7 +828,7 @@ public class TemplateMsg {
 		//remark字段
 		TemplateData remark = new TemplateData();
 		remark.setColor("red");
-		remark.setValue("毕设帮感谢有你！欢迎对我们吐槽～");
+		remark.setValue("资金2小时内到账，如有疑问请联系微信客服！");
 		m.put("remark", remark);
 		t.setData(m);
 		

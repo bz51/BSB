@@ -90,7 +90,7 @@ $(document).ready(function(){
 		    		//显示拟定合同的信息
 		    		if(val.state==3){
 		    			var html = '<li><a href="" id="getDetail3Btn'+index+'"><table width="100%">'+
-		    			'<tr><td width="70%"><span style="color:#009933;">需求合同拟定中</span></td><td width="30%"><span style="font-size:13px;">'+timeStamp2String(val.time)+'</span></td></tr>'+
+		    			'<tr><td width="70%"><span style="color:#009933;">交易协议定制中</span></td><td width="30%"><span style="font-size:13px;">'+timeStamp2String(val.time)+'</span></td></tr>'+
 		    			'<tr><td><span style="font-size:13px;">'+subTitle+'</span></td><td><span style="font-size:13px;color:#FF6600;">'+val.money+'元</span></td></tr>'+
 		    			'<tr><td colspan="2"><span style="font-size:12px;color:#999999;">'+skill2String(val.needer_skill)+'</span></td><td><input type="hidden" id="require_id"/></td></tr>'+
 		    			'</table></a></li>';
@@ -103,7 +103,7 @@ $(document).ready(function(){
 		    		//显示合同拟定成功的信息
 		    		if(val.state==4){
 		    			var html = '<li><a href="" id="getDetail4Btn'+index+'"><table width="100%">'+
-		    			'<tr><td width="70%"><span style="color:red;">请确认合同</span></td><td width="30%"><span style="font-size:13px;">'+timeStamp2String(val.time)+'</span></td></tr>'+
+		    			'<tr><td width="70%"><span style="color:red;">请阅读交易协议</span></td><td width="30%"><span style="font-size:13px;">'+timeStamp2String(val.time)+'</span></td></tr>'+
 		    			'<tr><td><span style="font-size:13px;">'+subTitle+'</span></td><td><span style="font-size:13px;color:#FF6600;">'+val.money+'元</span></td></tr>'+
 		    			'<tr><td colspan="2"><span style="font-size:12px;color:#999999;">'+skill2String(val.needer_skill)+'</span></td><td><input type="hidden" id="require_id"/></td></tr>'+
 		    			'</table></a></li>';
@@ -206,21 +206,21 @@ $(document).ready(function(){
 	/**
 	 * 点击“返回”按钮
 	 */
-	$("#fanhui").click(function(){
-		//alert("fromWhere="+localStorage.getItem("fromWhere"));
-		//判断是从哪个页面跳转过来
-		//若是从抢单页面跳过来，那么返回的话需要返回到列表，并且刷新
-		if(localStorage.getItem("fromWhere")=="neederPay"){
-			localStorage.setItem("fromWhere","");
-			window.location.href="adminNeeder.html";
-		}
-		
-		//若是从列表页面跳过来，那么返回的话只需要简单的返回即可
-		else{
-			window.history.go(-1);
-		}
-	});
-    
+//	$("#fanhui").click(function(){
+//		//alert("fromWhere="+localStorage.getItem("fromWhere"));
+//		//判断是从哪个页面跳转过来
+//		//若是从抢单页面跳过来，那么返回的话需要返回到列表，并且刷新
+//		if(localStorage.getItem("fromWhere")=="neederPay"){
+//			localStorage.setItem("fromWhere","");
+//			window.location.href="adminNeeder.html";
+//		}
+//		
+//		//若是从列表页面跳过来，那么返回的话只需要简单的返回即可
+//		else{
+//			window.history.go(-1);
+//		}
+//	});
+	
     
 	/**
 	 * 点击查看已抢单详情
@@ -234,6 +234,9 @@ $(document).ready(function(){
 		$("#needer_skill2").text(skill2String(val.needer_skill));
 		$("#money2").text(val.money+"元");
 		$("#content2").text(val.content);
+		
+		//将合同内容显示到合同页中去
+		AnalysisContract(val.contract);
 		window.location.href="#pageDetail2";
 	}
 	
@@ -249,6 +252,9 @@ $(document).ready(function(){
 		$("#money1").text(val.money+"元");
 		$("#content1").text(val.content);
 		localStorage.setItem("require_id",val.id);
+		
+		//将合同内容显示到合同页中去
+		AnalysisContract(val.contract);
 		window.location.href="#pageDetail1";
 	}
 	
@@ -264,7 +270,7 @@ $(document).ready(function(){
 		$("#money3").text(val.money+"元");
 		$("#content3").text(val.content);
 		localStorage.setItem("require_id",val.id);
-		alert("管理员正在为您定制需求合同，预计30分钟后与您联系");
+		alert("管理员正在为您定制交易协议，预计30分钟后与您联系");
 		window.location.href="#pageDetail3";
 	}
 	
@@ -279,9 +285,61 @@ $(document).ready(function(){
 		$("#needer_skill4").text(skill2String(val.needer_skill));
 		$("#money4").text(val.money+"元");
 		$("#content4").text(val.content);
-		$("#contract4").text(val.contract);
+//		$("#contract4").text(val.contract);
 		localStorage.setItem("require_id",val.id);
+		//解析合同内容，并显示到界面上
+		AnalysisContract(val.contract);
 		window.location.href="#pageDetail4";
+	}
+	
+	/**
+	 * 解析合同内容，并显示到界面上
+	 */
+	function AnalysisContract(contract){
+		var array = contract.split(""); //字符串转化为数组
+		var firstIndex = 0;
+		var html = "";
+		var last = "";
+		$.each(array, function(index, val) {
+			//若遇到^，表示从firstIndex到当前index是模块名
+			if(val=="^"){
+				if(last=="p"){
+					html = html + "</ol></li>";
+					last = "";
+				}
+//				alert(contract.substring(firstIndex, index));
+				html = html + "<li style='color:#666666;font-size:15px;'>"+contract.substring(firstIndex, index)+"</li>";
+				firstIndex = index+1;
+			}
+			//若遇到~，表示从firstIndex到当前index是功能点
+			else if(val=="~"){
+				if(last==""){
+					html = html + "<ol>";
+				}
+//				alert(contract.substring(firstIndex, index));
+				html = html + "<li style='color:#666666;font-size:15px;'>"+contract.substring(firstIndex, index)+"</li>";
+				firstIndex = index+1;
+			}
+			
+			//若遇到*，表示从firstIndex到当前index是功能点的详细说明
+			else if(val=="*"){
+//				alert(contract.substring(firstIndex, index));
+				html = html + "<p style='color:#666666;font-size:15px;'>"+contract.substring(firstIndex, index)+"</p>";
+				last = "p";
+				firstIndex = index+1;
+			}
+			
+			//若遇到$表示终止，最后加上</ol></li>即可
+			else if(val=="$"){
+				html = html + "</ol></li>";
+			}
+		});
+		
+//		alert(html);
+		//将生成的html添加到页面中
+		$("#functionList").append(html);
+		$("#functionList2").append(html);
+//		$("#lalala").text(html);
 	}
 	
 	/**
@@ -308,6 +366,9 @@ $(document).ready(function(){
 		localStorage.setItem("provider_name",val.provider_name);
 		localStorage.setItem("contract",val.contract);
 		localStorage.setItem("require_id",val.id);
+
+		//将合同内容显示到合同页中去
+		AnalysisContract(val.contract);
 		window.location.href="#pageDetail6";
 	}
 	
@@ -329,6 +390,9 @@ $(document).ready(function(){
 			$("#money7").text(localStorage.getItem("money")+"元");
 			$("#content7").text(localStorage.getItem("content"));
 			$("#contract7").text(localStorage.getItem("contract"));
+
+			//将合同内容显示到合同页中去
+			AnalysisContract(localStorage.getItem("contract"));
 		}
 		
 		//若从订单列表跳过来，则详细信息从列表页面上读取，并保存到本地
@@ -343,6 +407,9 @@ $(document).ready(function(){
 			$("#content7").text(val.content);
 			$("#contract7").text(val.contract);
 			localStorage.setItem("require_id",val.id);
+
+			//将合同内容显示到合同页中去
+			AnalysisContract(val.contract);
 		}
 		window.location.href="#pageDetail7";
 	}
@@ -372,6 +439,10 @@ $(document).ready(function(){
 		localStorage.setItem("provider_name",val.provider_name);
 		localStorage.setItem("contract",val.contract);
 		localStorage.setItem("require_id",val.id);
+
+		//将合同内容显示到合同页中去
+		AnalysisContract(val.contract);
+		alert("大神将使用QQ远程协助为您部署程序！");
 		window.location.href="#pageDetail8";
 	}
 	
@@ -394,6 +465,9 @@ $(document).ready(function(){
 			$("#money9").text(localStorage.getItem("money")+"元");
 			$("#content9").text(localStorage.getItem("content"));
 			$("#contract9").text(localStorage.getItem("contract"));
+
+			//将合同内容显示到合同页中去
+			AnalysisContract(localStorage.getItem("contract"));
 		}
 		
 		//若从订单列表跳过来，则详细信息从列表页面上读取，并保存到本地
@@ -408,6 +482,9 @@ $(document).ready(function(){
 			$("#content9").text(val.content);
 			$("#contract9").text(val.contract);
 			localStorage.setItem("require_id",val.id);
+
+			//将合同内容显示到合同页中去
+			AnalysisContract(val.contract);
 		}
 		window.location.href="#pageDetail9";
 	}
@@ -435,6 +512,9 @@ $(document).ready(function(){
 			$("#contract10").text(localStorage.getItem("contract"));
 			//alert("从本地读取＝"+localStorage.getItem("zhongcai"));
 			$("#zhongcaiReason10").text(localStorage.getItem("zhongcai"));
+
+			//将合同内容显示到合同页中去
+			AnalysisContract(localStorage.getItem("contract"));
 		}
 		
 		//若从订单列表跳过来，则详细信息从列表页面上读取，并保存到本地
@@ -452,6 +532,9 @@ $(document).ready(function(){
 			//alert(val);
 			$("#zhongcaiReason10").text(val.zhongcai);
 			localStorage.setItem("require_id",val.id);
+
+			//将合同内容显示到合同页中去
+			AnalysisContract(val.contract);
 		}
 		window.location.href="#pageDetail10";
 	}
@@ -475,6 +558,9 @@ $(document).ready(function(){
 		$("#content12").text(val.content);
 		$("#contract12").text(val.contract);
 		$("#zhongcaiResult12").text(val.zhongcai_result);
+
+		//将合同内容显示到合同页中去
+		AnalysisContract(val.contract);
 		window.location.href="#pageDetail12";
 	}
 	
@@ -571,38 +657,45 @@ $(document).ready(function(){
 			    
 			   //若返回no
 			   if(json.result=="no"){
-				   //若已有大神抢单，则获取该单详情，并跳转到抢单成功页面
-				   if(json.reason=="已有大神抢单!"){
-					   //显示loading
-					   $.mobile.loading('show', {  
-						   text: '刷新中...', //加载器中显示的文字  
-						   textVisible: true, //是否显示文字  
-						   theme: 'a',        //加载器主题样式a-e  
-						   textonly: false,   //是否只显示文字  
-						   html: ""           //要显示的html内容，如图片等  
-					   });  
-
-					   //发送请求，获取本单详情
-					   $.get("post/postAction!getNeedDetail?require_id="+localStorage.getItem("require_id"),
-						  
-						 function(data,status){
-						   var json = eval('(' + data + ')');
-						   //隐藏加载器  
-						   $.mobile.loading('hide');
-						    
-						   //若返回no
-						   if(json.result=="no"){
-							   alert("刷新出错，请重试");
-						    }
-						   
-						    //若返回yes
-						    else{
-						    	alert("已被大神抢单！立即查看");
-						    	clickDetail2Btn(json.needEntity);
-						    }
-						  });
-				   }
-			    }
+				   alert(json.reason);
+				   window.location.href="adminNeeder.html";
+			    
+			   }
+//			   
+//			   //若返回no
+//			   if(json.result=="no"){
+//				   //若已有大神抢单，则获取该单详情，并跳转到抢单成功页面
+//				   if(json.reason=="已有大神抢单!"){
+//					   //显示loading
+//					   $.mobile.loading('show', {  
+//						   text: '刷新中...', //加载器中显示的文字  
+//						   textVisible: true, //是否显示文字  
+//						   theme: 'a',        //加载器主题样式a-e  
+//						   textonly: false,   //是否只显示文字  
+//						   html: ""           //要显示的html内容，如图片等  
+//					   });  
+//					   
+//					   //发送请求，获取本单详情
+//					   $.get("post/postAction!getNeedDetail?require_id="+localStorage.getItem("require_id"),
+//							   
+//							   function(data,status){
+//						   var json = eval('(' + data + ')');
+//						   //隐藏加载器  
+//						   $.mobile.loading('hide');
+//						   
+//						   //若返回no
+//						   if(json.result=="no"){
+//							   alert("刷新出错，请重试");
+//						   }
+//						   
+//						   //若返回yes
+//						   else{
+//							   alert("已被大神抢单！立即查看");
+//							   clickDetail2Btn(json.needEntity);
+//						   }
+//					   });
+//				   }
+//			   }
 			   
 			    //若返回yes，跳转到订单列表
 			    else{
@@ -645,7 +738,8 @@ $(document).ready(function(){
 			    	//若已被抢单，则进入成功抢单详情页
 			    	if(json.needEntity.state==1){
 				    	alert("已被大神抢单！立即查看");
-			    		clickDetail2Btn(json.needEntity);
+//			    		clickDetail2Btn(json.needEntity);
+				    	window.location.href="adminNeeder.html";
 			    	}
 			    	
 			    	//若未被抢单，则可以提高赏金
@@ -701,9 +795,11 @@ $(document).ready(function(){
 			//若返回yes
 			else{
 				//标识从抢单页面跳转至抢单成功详情
-				localStorage.setItem("fromWhere","chongZhaoProvider");
-				//跳转等待抢单页面
-				clickDetail1Btn(json.needEntity);
+//				localStorage.setItem("fromWhere","chongZhaoProvider");
+//				//跳转等待抢单页面
+//				clickDetail1Btn(json.needEntity);
+				alert("已为您重新匹配大神，请等待大神抢单");
+				window.location.href="adminNeeder.html";
 			}
 		});
 		
@@ -738,6 +834,7 @@ $(document).ready(function(){
 				//获取prepay_ID失败
 				if(json.result=="no"){
 					alert(json.reason);
+					window.location.href="adminNeeder.html";
 				}
 				//获取prepay_ID成功
 				else{
@@ -894,6 +991,11 @@ $(document).ready(function(){
 				if(json.result=="no"){
 //					alert(json.reason);
 					$("#reason").text(json.reason);
+					//若错误原因是“当前页面已失效!”，则跳转至个人中心
+					if(json.reason=="当前页面已失效!"){
+						alert("当前页面已失效!即将跳转至个人中心");
+						window.location.href="adminNeeder.html";
+					}
 				}
 				
 				//若返回yes
@@ -1110,7 +1212,19 @@ $(document).ready(function(){
 
 
 
-
+function fanhuiClick(){
+	//判断是从哪个页面跳转过来
+	//若是从抢单页面跳过来，那么返回的话需要返回到列表，并且刷新
+	if(localStorage.getItem("fromWhere")=="neederPay"){
+		localStorage.setItem("fromWhere","");
+		window.location.href="adminNeeder.html";
+	}
+	
+	//若是从列表页面跳过来，那么返回的话只需要简单的返回即可
+	else{
+		window.history.go(-1);
+	}
+}
 
 
 

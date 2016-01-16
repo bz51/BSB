@@ -202,3 +202,57 @@
 	        return false;
 	    }
 	};
+	
+	
+	
+	
+	
+	
+	/**
+	 * 解析合同内容，并显示到界面上
+	 */
+	function AnalysisContract2(contract){
+		var array = contract.split(""); //字符串转化为数组
+		var firstIndex = 0;
+		var html = "";
+		var last = "";
+		$.each(array, function(index, val) {
+			//若遇到^，表示从firstIndex到当前index是模块名
+			if(val=="^"){
+				if(last=="p"){
+					html = html + "</ol></li>";
+					last = "";
+				}
+//				alert(contract.substring(firstIndex, index));
+				html = html + "<li style='color:#666666;font-size:15px;'>"+contract.substring(firstIndex, index)+"</li>";
+				firstIndex = index+1;
+			}
+			//若遇到~，表示从firstIndex到当前index是功能点
+			else if(val=="~"){
+				if(last==""){
+					html = html + "<ol>";
+				}
+//				alert(contract.substring(firstIndex, index));
+				html = html + "<li style='color:#666666;font-size:15px;'>"+contract.substring(firstIndex, index)+"</li>";
+				firstIndex = index+1;
+			}
+			
+			//若遇到*，表示从firstIndex到当前index是功能点的详细说明
+			else if(val=="*"){
+//				alert(contract.substring(firstIndex, index));
+				html = html + "<p style='color:#666666;font-size:15px;'>"+contract.substring(firstIndex, index)+"</p>";
+				last = "p";
+				firstIndex = index+1;
+			}
+			
+			//若遇到$表示终止，最后加上</ol></li>即可
+			else if(val=="$"){
+				html = html + "</ol></li>";
+			}
+		});
+		
+//		alert(html);
+		//将生成的html添加到页面中
+		$("#functionList").append(html);
+//		$("#lalala").text(html);
+	}

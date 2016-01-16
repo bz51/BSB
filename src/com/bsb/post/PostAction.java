@@ -179,9 +179,11 @@ public class PostAction extends ActionSupport implements ApplicationAware{
 		
 		//发布一条信息
 		service.postNeed(needEntity,this.pic_id);
-		this.result = service.getResult()+"";
-		this.reason = service.getReason();
-		
+		if(!service.getResult()){
+			this.result = "no";
+			this.reason = service.getReason();
+		}
+			
 		return "postNeed";
 	}
 	

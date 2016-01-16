@@ -22,6 +22,27 @@ public class PostDaoConfirmOrderImp extends HibernateTemplate {
 	
 	@Override
 	protected Session handle(Session session) {
+		//获取该条记录
+		String hql2 = "from NeedEntity where id=:idString";
+		this.needEntity = (NeedEntity) session.createQuery(hql2)
+			.setString("idString", require_id)
+			.uniqueResult();
+		
+		//判断该记录的状态是否为验收中
+		if(this.needEntity==null){
+			super.result = false;
+			super.reason = "require_id不存在";
+			return session;
+		}
+		
+		
+		// 若已抢单则返回错误提示；
+		if(this.needEntity.getState()!=8){
+			super.result = false;
+			super.reason = "当前页面已失效!";
+			return session;
+		}
+		
 		//验证密码是否正确
 		int size = (int) session.createQuery("select id from UserEntity where id="+this.needer_id+" and password='"+this.password+"'")
 			.list().size();
@@ -39,12 +60,6 @@ public class PostDaoConfirmOrderImp extends HibernateTemplate {
 		session.createQuery(hql)
 			.setString("idString", require_id)
 			.executeUpdate();
-		
-		//获取该条记录
-		String hql2 = "from NeedEntity where id=:idString";
-		this.needEntity = (NeedEntity) session.createQuery(hql2)
-			.setString("idString", require_id)
-			.uniqueResult();
 		
 		return session;
 	}

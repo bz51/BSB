@@ -166,6 +166,9 @@ $(document).ready(function(){
 								//若返回no
 								if(json.result=="no"){
 									$("#reason3").text(json.reason);
+									//若错误信息是“该条信息已经发布过！”，则跳转至个人中心
+									alert("页面已失效！即将跳转至个人中心");
+									window.location.href="adminNeeder.html";
 								}
 									   
 								//若返回yes
@@ -203,6 +206,9 @@ $(document).ready(function(){
 		    			//若返回no
 		    			if(json.result=="no"){
 		    				$("#reason3").text(json.reason);
+		    				//若错误信息是“该条信息已经发布过！”，则跳转至个人中心
+		    				alert("页面已失效！即将跳转至个人中心");
+							window.location.href="adminNeeder.html";
 		    			}
 				   
 		    			//若返回yes

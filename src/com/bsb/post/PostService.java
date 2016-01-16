@@ -69,6 +69,14 @@ public class PostService {
 	 * PS:健壮性判断放到Action层完成，这里不再做判断了！
 	 */
 	public void postNeed(NeedEntity needEntity,String pic_id){
+		//判断该条信息是否发布过了
+		int count = CoreDao.queryListByHql("select id from "+Parameter.NeedEntity+" where title='"+needEntity.getTitle()+"' and money="+needEntity.getMoney()+" and needer_id="+needEntity.getNeeder_id()).size();
+		if(count!=0){
+			this.result = false;
+			this.reason = "该条信息已经发布过！";
+			return;
+		}
+		
 		//从微信服务器下载图片
 		if(pic_id!=null && !"".equals(pic_id) && !"null".equals(pic_id)){
 //			String fileName = HttpRequest.downloadByGet("http://file.api.weixin.qq.com/cgi-bin/media/get", "access_token="+Parameter.AccessToken_Parameters+"&media_id=DxcN7Gno1rDYFAAcQjL0zgyAFusuq7pOS2nYxJelLTjYNEujrcf26FKWZF6BtyCG");
@@ -168,7 +176,7 @@ public class PostService {
 		//当返回结果正确时在发送微信消息，否则就不发（防止entity为空时出现空指针异常）
 		else{
 			//特地更新下need表中state字段
-			result = CoreDao.updateByHql("update NeedEntity set state=1");
+			result = CoreDao.updateByHql("update NeedEntity set state=1 where id="+require_id);
 			if(!result)
 				this.reason = imp.getReason();
 			else{
@@ -732,6 +740,8 @@ public class PostService {
 			TemplateMsg.sendTemplateMsg_finishOrderToPro(imp.getNeedEntity());
 			//向求助者发送开发完成通知
 			TemplateMsg.sendTemplateMsg_finishOrderToNe(imp.getNeedEntity());
+			//通知管理员，赶紧给大神打钱去！！！
+			TemplateMsg.sendTemplateMsg_finishOrderToAdmin(imp.getNeedEntity());
 		}
 	}
 

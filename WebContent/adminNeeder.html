@@ -98,7 +98,7 @@
 <div data-role="page" id="pageDetail3" data-fullscreen="true">
   
   <div data-role="header">
-    <a href="" data-role="button" data-icon="arrow-l" id="fanhui">返回</a>
+    <a href="" data-role="button" data-icon="arrow-l" id="fanhui" onclick="fanhuiClick()">返回</a>
     <h2>本单详情</h2>
     <!-- <a href="getHelp.html" data-role="button" rel="external" class="ui-btn-right">发布需求</a> -->
   </div>
@@ -107,7 +107,7 @@
   	<table>
   		<tr>
   			<td><img src="images/users.png"/></td>
-  			<td><h3 style="color:red;margin-left:10px;">客服正在为您定制需求合同，预计30分钟后与您联系</h3></td>
+  			<td><h3 style="color:red;margin-left:10px;">客服正在为您定制交易协议，预计30分钟后与您联系</h3></td>
   		</tr>
   	</table>
   	
@@ -134,10 +134,10 @@
         <td colspan="2"><span style="font-size:15x;color:#999999;" id="content3">需求详情需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介需求简介</span></td>
         <td></td>
       </tr>
-      <tr>
+      <!-- <tr>
           <td><img src="pic.png" width="150px;"></td>
           <td></td>
-      </tr>
+      </tr> -->
       <tr>
         <td></td>
         <td><a href="#dialog" data-role="button" data-theme="c" data-rel="dialog">放弃此单</a></td>
@@ -158,7 +158,7 @@
 <div data-role="page" id="pageDetail4" data-fullscreen="true">
   
   <div data-role="header">
-    <a href="" data-role="button" data-icon="arrow-l" id="fanhui">返回</a>
+    <a href="" data-role="button" data-icon="arrow-l" id="fanhui" onclick="fanhuiClick()">返回</a>
     <h2>本单详情</h2>
     <!-- <a href="" data-role="button" data-icon="info" rel="external" class="ui-btn-right">联系客服</a> -->
   </div>
@@ -166,42 +166,106 @@
   <div data-role="content">
     <table width="100%">
       <tr>
-        <td><h3 style="color:red;">请确认本合同</h3></td>
-        <td style="text-align:right;width:30%"><a data-role="button" data-rel="dialog" data-theme="b" data-mini="true" href="#pageDetail_feedback">联系客服</a></td>
-        <td style="text-align:right;width:30%"><a data-role="button" data-rel="dialog" data-theme="b" data-mini="true" href="#dialog_confirmContract">确认合同</a></td>
+        <td><h3 style="color:red;">请确认本协议</h3></td>
+        <td style="text-align:right;width:30%"><a data-role="button" data-rel="dialog" data-theme="c" data-mini="true" href="#pageDetail_feedback">联系客服</a></td>
+        <td style="text-align:right;width:30%"><a data-role="button" data-rel="dialog" data-theme="b" data-mini="true" href="#dialog_confirmContract">确认协议</a></td>
       </tr>
     </table>
     <hr>
 
-    <label style="text-align:center;color:#FF6600;text-align:left;font-size:16px;font-weight:bold;">*本合同作为交易保障凭证，请核对功能点是否全面！<br>*如需修改请及时联系微信客服！</label>
+    <label style="text-align:center;color:#FF6600;text-align:left;font-size:16px;font-weight:bold;">*本协议作为交易保障凭证，请核对功能点是否全面！<br>*如需修改请及时联系微信客服！</label>
 
     <!-- 整个合同div｛ -->
-<!--     <div id="contract" style="height:200px;overflow:scroll;"> -->
     <div id="contract">
-    <h4 style="color:#666666;">一、项目综述</h4>
-    <p style="color:#666666;font-size:15px;text-indent:2em;" id="contract4">CAD服务器软件是地铁无线集群通信系统的主要系统之一，为无线集群通信系统的ATS、时钟信息的接收和传输提供了唯一的通道，保障了调度系统的实时调度及整个无线集群通信系统间的时间统一。
-传统的CAD服务器软件是基于tetra体制下实现的，不仅要完成ATS、时钟信息的接收和传输，还要完成短信信息的传输、调度台及CAD服务器软件使用的数据的存储。
-</p>
+    <h3 style="color:#666666;text-align: center;">软件委托开发协议</h3>
 
-    <h4 style="color:#666666;">二、功能详述</h4>
-    <ol>
-      <li style="color:#666666;font-size:15px;">即时通信功能</li>
-      <p style="color:#666666;font-size:15px;text-indent:1.5em;">CAD服务器软件是地铁无线集群通信系统的主要系统之一。</p>
-      <li style="color:#666666;font-size:15px;">数据查询及显示功能</li>
-      <p style="color:#666666;font-size:15px;text-indent:1.5em;">CAD服务器软件是地铁无线集群通信系统的主要系统之一。</p>
-      <li style="color:#666666;font-size:15px;">数据修改功能</li>
-      <p style="color:#666666;font-size:15px;text-indent:1.5em;">CAD服务器软件是地铁无线集群通信系统的主要系统之一。</p>
-      <li style="color:#666666;font-size:15px;">即时通信功能</li>
-      <p style="color:#666666;font-size:15px;text-indent:1.5em;">CAD服务器软件是地铁无线集群通信系统的主要系统之一。</p>
+    <h4 style="color:#666666;">一、功能详述</h4>
+    <ol id="functionList">
+      <!-- <li style="color:#666666;font-size:15px;">模块1</li>
+      	<ol>
+      		<li style="color:#666666;font-size:15px;">即时通信功能</li>
+      		<p style="color:#666666;font-size:15px;">CAD服务器软件是地铁无线集群通信系统的主要系统之一。</p>
+      		<li style="color:#666666;font-size:15px;">数据查询及显示功能</li>
+      		<p style="color:#666666;font-size:15px;">CAD服务器软件是地铁无线集群通信系统的主要系统之一。</p>
+      		<li style="color:#666666;font-size:15px;">数据修改功能</li>
+      		<p style="color:#666666;font-size:15px;">CAD服务器软件是地铁无线集群通信系统的主要系统之一。</p>
+      		<li style="color:#666666;font-size:15px;">即时通信功能</li>
+      		<p style="color:#666666;font-size:15px;">CAD服务器软件是地铁无线集群通信系统的主要系统之一。</p>
+      	</ol>
+      </li>
+      <li style="color:#666666;font-size:15px;">模块1</li>
+      	<ol>
+      		<li style="color:#666666;font-size:15px;">即时通信功能</li>
+      		<p style="color:#666666;font-size:15px;">CAD服务器软件是地铁无线集群通信系统的主要系统之一。</p>
+      		<li style="color:#666666;font-size:15px;">数据查询及显示功能</li>
+      		<p style="color:#666666;font-size:15px;">CAD服务器软件是地铁无线集群通信系统的主要系统之一。</p>
+      		<li style="color:#666666;font-size:15px;">数据修改功能</li>
+      		<p style="color:#666666;font-size:15px;">CAD服务器软件是地铁无线集群通信系统的主要系统之一。</p>
+      		<li style="color:#666666;font-size:15px;">即时通信功能</li>
+      		<p style="color:#666666;font-size:15px;">CAD服务器软件是地铁无线集群通信系统的主要系统之一。</p>
+      	</ol>
+      </li> -->
     </ol>
 
-    <h4 style="color:#666666;">三、项目验收</h4>
+    <h4 style="color:#666666;">二、求助者的权利与义务</h4>
       <ol>
-        <li style="color:#666666;font-size:15px;">项目完成后乙方需通过远程桌面为甲方部署程序，确保程序在甲方机器上稳定运行。</li>
-        <li style="color:#666666;font-size:15px;">项目完成后乙方需通过远程桌面为甲方部署程序，确保程序在甲方机器上稳定运行。</li>
-        <li style="color:#666666;font-size:15px;">项目完成后乙方需通过远程桌面为甲方部署程序，确保程序在甲方机器上稳定运行。</li>
+        <li style="color:#666666;font-size:15px;">求助者负责提供项目需求详细资料以及相关的技术指标。</li>
+        <li style="color:#666666;font-size:15px;">求助者托付大神开发的软件在签订合同之后，如需增加其他功能，必须以书面形式告知大神以及毕设帮平台，大神有权酌情增加费用。</li>
+        <li style="color:#666666;font-size:15px;">求助者需配合大神完成项目的环境配置运行以及相关技术支持。</li>
+        <li style="color:#666666;font-size:15px;">求助者有权在项目期内，要求大神出示项目进度证明，实时监管。</li>
+      </ol>
+
+    <h4 style="color:#666666;">三、大神的权利与义务</h4>
+      <ol>
+        <li style="color:#666666;font-size:15px;">大神只对求助者提出的合同内要求进行开发。</li>
+        <li style="color:#666666;font-size:15px;">大神所开发软件是自行研发的，不侵犯任何第三方的合法权益。</li>
+        <li style="color:#666666;font-size:15px;">大神将严格按照求助者提出的各项技术需求及指标，进行软件的开发设计。</li>
+        <li style="color:#666666;font-size:15px;">大神开发的软件不得含有病毒、反动以及违反国家法律法规规定的内容。</li>
+        <li style="color:#666666;font-size:15px;">大神交付软件后，必须向求助者提供相关技术支持以及售后维护。</li>
+      </ol>
+
+    <h4 style="color:#666666;">四、求助者验收标准</h4>
+      <ol>
+        <li style="color:#666666;font-size:15px;">求助者验收时，必须严格按照合同规定的功能点，不得无故添加功能。</li>
+        <li style="color:#666666;font-size:15px;">大神所开发的软件符合合同要求的所有功能点以及技术指标即为合格。</li>
+        <li style="color:#666666;font-size:15px;">大神提出验收申请之后，求助者应在三日之内进行验收，超过十五日不验收，视为验收合格。</li>
+        <li style="color:#666666;font-size:15px;">求助者验收不合格，可由双方协商解决，如有争议，可向毕设帮客服申请仲裁。</li>
+      </ol>
+
+    <h4 style="color:#666666;">五、费用结算方式</h4>
+      <ol>
+        <li style="color:#666666;font-size:15px;">该项目求助者付给大神人民币   元整。（平台服务费10%）</li>
+        <li style="color:#666666;font-size:15px;">甲乙双方签订合同当日，求助者将项目开发款项交付给毕设帮平台监管。</li>
+        <li style="color:#666666;font-size:15px;">大神交付软件由求助者验收合格之后，毕设帮平台交付大神人民币 元整。</li>
+        <li style="color:#666666;font-size:15px;">大神收取报酬之后，免费为求助者维护软件三个月。</li>
+      </ol>
+
+    <h4 style="color:#666666;">六、违约责任</h4>
+      <ol>
+        <li style="color:#666666;font-size:15px;">由于求助者中途更改软件开发要求而导致大神工作不能按时完成，大神不负任何责任，并有权向求助者提出延期要求，延期时间由双方协商决定。</li>
+        <li style="color:#666666;font-size:15px;">由于大神单方面原因导致项目延期，求助者有权向大神提出索赔，具体额度由双方协商决定，但最高不超过合同中求助者支付费用总金额的10%。</li>
+        <li style="color:#666666;font-size:15px;">大神交付软件由求助者验收合格之后，毕设帮平台交付大神人民币 元整。</li>
+        <li style="color:#666666;font-size:15px;">由于大神单方面原因导致项目未能按合同要求完成，求助者有权向毕设帮申请全额退款。</li>
+      </ol>
+
+    <h4 style="color:#666666;">七、争议解决</h4>
+      <ul>
+        <li style="color:#666666;font-size:15px;">本合同履行过程中，如发生任何争议，双方应本着友好合作的精神协商解决，如若协商未果，可向毕设帮平台申请仲裁。</li>
+      </ul>
+
+    <h4 style="color:#666666;">八、合同更改与终止</h4>
+      <ul>
+        <li style="color:#666666;font-size:15px;">任何一方更改或终止合同，必须以书面形式通知另一方以及毕设帮平台，由毕设帮平台本着公平公正的原则，按照合同说明，妥善处理钱款。</li>
+      </ul>
+      
+      <h4 style="color:#666666;">九、附则</h4>
+      <ol>
+        <li style="color:#666666;font-size:15px;">合同签订之后未尽事宜，由双方协商一致，对本合同有关条款进行更改或者补充时，应以书面形式予以确认。</li>
+        <li style="color:#666666;font-size:15px;">本合同一式两份，双方各持一份，具有同等法律效力。</li>
+        <li style="color:#666666;font-size:15px;">本合同更改或者补充附录，具有同等法律效力。</li>
       </ol>
     </div>
+
     <!-- }整个合同div -->
     <!-- <a href="" id="showAllBtn" style="text-decoration:none;float:right;">展开</a> -->
 
@@ -247,7 +311,8 @@
 <section id="dialog_confirmContract" data-role="page">
      <header data-role="header"><h2>重要</h2></header>
 <div data-role="content" class="content">
-  <h4><span style="color:red;">是否确认合同？</span>确认后合同将生效并<span style="color:red;">无法修改！</<span></h4>
+  <h4><span style="color:red;">是否确认协议？</span></h4>
+  <h4>确认后协议将生效并<span style="color:red;">无法修改！</<span></h4>
   <table width="100%">
     <tr>
       <td><a href="#" data-role="button" data-rel="back">取消</a></td>
@@ -265,9 +330,9 @@
 <div data-role="page" id="pageDetail1" data-fullscreen="true">
   
   <div data-role="header">
-    <a href="" data-role="button" data-icon="arrow-l" id="fanhui">返回</a>
+    <a href="" data-role="button" data-icon="arrow-l" id="fanhui" onclick="fanhuiClick()">返回</a>
     <h2>本单详情</h2>
-    <a href="#contractDetail" data-role="button" rel="external" class="ui-btn-right" id="contractDetailBtn">查看合同</a>
+    <a href="#contractDetail" data-role="button" rel="external" class="ui-btn-right" id="contractDetailBtn">交易协议</a>
   </div>
   
   <div data-role="content">
@@ -277,7 +342,7 @@
         <td></td>
       </tr>
       <tr>
-        <td width="70%"><span style="color:#009933;">合同已生效，等待大神抢单</span></td>
+        <td width="70%"><span style="color:#009933;">等待大神抢单</span></td>
           <td width="30%"><span style="font-size:14px;" id="time1">9月15日 23:15</span></td>
       </tr>
       <tr>
@@ -334,9 +399,9 @@
 <div data-role="page" id="pageDetail2" data-fullscreen="true">
   
   <div data-role="header">
-    <a href="" data-role="button" data-icon="arrow-l" id="fanhui">返回</a>
+    <a href="" data-role="button" data-icon="arrow-l" id="fanhui" onclick="fanhuiClick()">返回</a>
     <h2>本单详情</h2>
-    <a href="#contractDetail" data-role="button" rel="external" class="ui-btn-right" id="contractDetailBtn">查看合同</a>
+    <a href="#contractDetail" data-role="button" rel="external" class="ui-btn-right" id="contractDetailBtn">交易协议</a>
   </div>
   
     <div data-role="content">
@@ -391,13 +456,13 @@
 <div data-role="page" id="pageDetail6" data-fullscreen="true">
   
   <div data-role="header">
-    <a href="" data-role="button" data-icon="arrow-l" id="fanhui">返回</a>
+    <a href="" data-role="button" data-icon="arrow-l" id="fanhui" onclick="fanhuiClick()">返回</a>
     <h2>本单详情</h2>
-    <a href="#" data-role="button" rel="external" class="ui-btn-right" id="contractDetailBtn">查看合同</a>
+    <a href="#contractDetail" data-role="button" rel="external" class="ui-btn-right" id="contractDetailBtn" onclick="">交易协议</a>
   </div>
   
     <div data-role="content">
-      <h3 style="text-align:center;color:red;">大神已准备就绪！请您确认开始服务</h3>
+      <h3 style="text-align:center;color:red;">大神请求开始服务，是否同意？</h3>
       <h3 style="margin-bottom:0px;margin-top:0px;" data-inline="true">大神信息</h3>
       <hr>
       
@@ -437,12 +502,12 @@
         <td></td>
       </tr>
        <tr>
-        <td><a href="#payDialog" data-role="button" data-theme="b" data-rel="dialog" id="increaseBtn">开始服务</a></td>
+        <td><a href="#payDialog" data-role="button" data-theme="b" data-rel="dialog" id="increaseBtn">同意开始服务</a></td>
         <td><a href="#chongZhaoDaShenDialog" data-role="button" data-theme="b" data-rel="dialog">重找大神</a></td>
       </tr>
     </table>
     </div>
-    合同：<p id="contract6"></p>
+    <!-- 合同：<p id="contract6"></p> -->
 </div>
 
 <!-- 是否支付对话框 -->
@@ -478,7 +543,7 @@
 <div data-role="page" id="pageDetail4_该ID已被占用" data-fullscreen="true">
   
   <div data-role="header">
-    <a href="" data-role="button" data-icon="arrow-l" id="fanhui">返回</a>
+    <a href="" data-role="button" data-icon="arrow-l" id="fanhui" onclick="fanhuiClick()">返回</a>
     <h2>本单详情</h2>
     <!-- <a href="getHelp.html" data-role="button" rel="external" class="ui-btn-right">发布需求</a> -->
   </div>
@@ -537,7 +602,7 @@
 <div data-role="page" id="pageDetail_pay" data-fullscreen="true">
   
   <div data-role="header">
-    <a href="" data-role="button" data-icon="arrow-l" id="fanhui">返回</a>
+    <a href="" data-role="button" data-icon="arrow-l" id="fanhui" onclick="fanhuiClick()">返回</a>
     <h2>确认订单</h2>
     <a href="" data-role="button" class="ui-btn-right" data-theme="b" id="confirmPayBtn">确认订单</a>
   </div>
@@ -589,9 +654,9 @@
 <div data-role="page" id="pageDetail7" data-fullscreen="true">
   
   <div data-role="header">
-    <a href="" data-role="button" data-icon="arrow-l" id="fanhui">返回</a>
+    <a href="" data-role="button" data-icon="arrow-l" id="fanhui" onclick="fanhuiClick()">返回</a>
     <h2>本单详情</h2>
-    <a href="#contractDetail" data-role="button" rel="external" class="ui-btn-right" id="contractDetailBtn">查看合同</a>
+    <a href="#contractDetail" data-role="button" rel="external" class="ui-btn-right" id="contractDetailBtn">交易协议</a>
   </div>
   
     <div data-role="content">
@@ -638,7 +703,7 @@
       </tr>
     </table>
     </div>
-合同：<p id="contract7"></p>
+<!-- 合同：<p id="contract7"></p> -->
 
   <!-- 测试用：下一步 -->
 <!--   <a href="#pageDetail5" data-role="button" data-theme="c">大神开发完了</a> -->
@@ -653,9 +718,9 @@
 <div data-role="page" id="pageDetail8" data-fullscreen="true">
   
   <div data-role="header">
-    <a href="#" data-role="button" data-rel="back" data-icon="arrow-l">返回</a>
+    <a href="#" data-role="button" data-rel="back" data-icon="arrow-l" onclick="fanhuiClick()">返回</a>
     <h2>本单详情</h2>
-    <a href="#contractDetail" data-role="button" rel="external" class="ui-btn-right" id="contractDetailBtn">查看合同</a>
+    <a href="#contractDetail" data-role="button" rel="external" class="ui-btn-right" id="contractDetailBtn">交易协议</a>
   </div>
   
     <div data-role="content">
@@ -707,7 +772,7 @@
       </tr>
     </table>
     </div>
-合同：<p id="contract8"></p>
+<!-- 合同：<p id="contract8"></p> -->
 </div>
 
 
@@ -747,9 +812,9 @@
 <div data-role="page" id="pageDetail9" data-fullscreen="true">
   
   <div data-role="header">
-    <a href="" data-role="button" data-icon="arrow-l" id="fanhui">返回</a>
+    <a href="" data-role="button" data-icon="arrow-l" id="fanhui" onclick="window.location.href='adminNeeder.html'">返回</a>
     <h2>本单详情</h2>
-    <a href="#contractDetail" data-role="button" rel="external" class="ui-btn-right" id="contractDetailBtn">查看合同</a>
+    <a href="#contractDetail" data-role="button" rel="external" class="ui-btn-right" id="contractDetailBtn">交易协议</a>
   </div>
   
     <div data-role="content">
@@ -796,7 +861,7 @@
       </tr>
     </table>
     </div>
-合同：<p id="contract9"></p>
+<!-- 合同：<p id="contract9"></p> -->
 </div>
 
 
@@ -806,37 +871,81 @@
 <div data-role="page" id="contractDetail" data-fullscreen="true">
   
   <div data-role="header">
-    <a href="#" data-role="button" data-rel="back" data-icon="arrow-l">返回</a>
-    <h2>需求合同</h2>
+    <a href="#" data-role="button" data-rel="back" data-icon="arrow-l" onclick="fanhuiClick()">返回</a>
+    <h2>交易协议</h2>
   </div>
   
   <div data-role="content">
 
-    <label style="text-align:center;color:#FF6600;text-align:left;font-size:14px;font-weight:bold;">*本合同作为交易保障凭证，具有法律效应</label>
+    <label style="text-align:center;color:#FF6600;text-align:left;font-size:14px;font-weight:bold;">*本协议作为交易保障凭证，具有法律效应</label>
 
-    <h4 style="color:#666666;">一、项目综述</h4>
-    <p style="color:#666666;font-size:14px;text-indent:2em;">CAD服务器软件是地铁无线集群通信系统的主要系统之一，为无线集群通信系统的ATS、时钟信息的接收和传输提供了唯一的通道，保障了调度系统的实时调度及整个无线集群通信系统间的时间统一。
-传统的CAD服务器软件是基于tetra体制下实现的，不仅要完成ATS、时钟信息的接收和传输，还要完成短信信息的传输、调度台及CAD服务器软件使用的数据的存储。
-</p>
+        <!-- 整个合同div｛ -->
+    <div id="contract">
+    <h3 style="color:#666666;text-align: center;">软件委托开发协议</h3>
 
-    <h4 style="color:#666666;">二、功能详述</h4>
-    <ol>
-      <li style="color:#666666;font-size:14px;">即时通信功能</li>
-      <p style="color:#666666;font-size:14px;text-indent:1.5em;">CAD服务器软件是地铁无线集群通信系统的主要系统之一。</p>
-      <li style="color:#666666;font-size:14px;">数据查询及显示功能</li>
-      <p style="color:#666666;font-size:14px;text-indent:1.5em;">CAD服务器软件是地铁无线集群通信系统的主要系统之一。</p>
-      <li style="color:#666666;font-size:14px;">数据修改功能</li>
-      <p style="color:#666666;font-size:14px;text-indent:1.5em;">CAD服务器软件是地铁无线集群通信系统的主要系统之一。</p>
-      <li style="color:#666666;font-size:14px;">即时通信功能</li>
-      <p style="color:#666666;font-size:14px;text-indent:1.5em;">CAD服务器软件是地铁无线集群通信系统的主要系统之一。</p>
-    </ol>
+    <h4 style="color:#666666;">一、功能详述</h4>
+    <ol id="functionList2"></ol>
 
-    <h4 style="color:#666666;">三、项目验收</h4>
+    <h4 style="color:#666666;">二、求助者的权利与义务</h4>
       <ol>
-        <li style="color:#666666;font-size:14px;">项目完成后乙方需通过远程桌面为甲方部署程序，确保程序在甲方机器上稳定运行。</li>
-        <li style="color:#666666;font-size:14px;">项目完成后乙方需通过远程桌面为甲方部署程序，确保程序在甲方机器上稳定运行。</li>
-        <li style="color:#666666;font-size:14px;">项目完成后乙方需通过远程桌面为甲方部署程序，确保程序在甲方机器上稳定运行。</li>
+        <li style="color:#666666;font-size:15px;">求助者负责提供项目需求详细资料以及相关的技术指标。</li>
+        <li style="color:#666666;font-size:15px;">求助者托付大神开发的软件在签订合同之后，如需增加其他功能，必须以书面形式告知大神以及毕设帮平台，大神有权酌情增加费用。</li>
+        <li style="color:#666666;font-size:15px;">求助者需配合大神完成项目的环境配置运行以及相关技术支持。</li>
+        <li style="color:#666666;font-size:15px;">求助者有权在项目期内，要求大神出示项目进度证明，实时监管。</li>
       </ol>
+
+    <h4 style="color:#666666;">三、大神的权利与义务</h4>
+      <ol>
+        <li style="color:#666666;font-size:15px;">大神只对求助者提出的合同内要求进行开发。</li>
+        <li style="color:#666666;font-size:15px;">大神所开发软件是自行研发的，不侵犯任何第三方的合法权益。</li>
+        <li style="color:#666666;font-size:15px;">大神将严格按照求助者提出的各项技术需求及指标，进行软件的开发设计。</li>
+        <li style="color:#666666;font-size:15px;">大神开发的软件不得含有病毒、反动以及违反国家法律法规规定的内容。</li>
+        <li style="color:#666666;font-size:15px;">大神交付软件后，必须向求助者提供相关技术支持以及售后维护。</li>
+      </ol>
+
+    <h4 style="color:#666666;">四、求助者验收标准</h4>
+      <ol>
+        <li style="color:#666666;font-size:15px;">求助者验收时，必须严格按照合同规定的功能点，不得无故添加功能。</li>
+        <li style="color:#666666;font-size:15px;">大神所开发的软件符合合同要求的所有功能点以及技术指标即为合格。</li>
+        <li style="color:#666666;font-size:15px;">大神提出验收申请之后，求助者应在三日之内进行验收，超过十五日不验收，视为验收合格。</li>
+        <li style="color:#666666;font-size:15px;">求助者验收不合格，可由双方协商解决，如有争议，可向毕设帮客服申请仲裁。</li>
+      </ol>
+
+    <h4 style="color:#666666;">五、费用结算方式</h4>
+      <ol>
+        <li style="color:#666666;font-size:15px;">该项目求助者付给大神人民币   元整。（平台服务费10%）</li>
+        <li style="color:#666666;font-size:15px;">甲乙双方签订合同当日，求助者将项目开发款项交付给毕设帮平台监管。</li>
+        <li style="color:#666666;font-size:15px;">大神交付软件由求助者验收合格之后，毕设帮平台交付大神人民币 元整。</li>
+        <li style="color:#666666;font-size:15px;">大神收取报酬之后，免费为求助者维护软件三个月。</li>
+      </ol>
+
+    <h4 style="color:#666666;">六、违约责任</h4>
+      <ol>
+        <li style="color:#666666;font-size:15px;">由于求助者中途更改软件开发要求而导致大神工作不能按时完成，大神不负任何责任，并有权向求助者提出延期要求，延期时间由双方协商决定。</li>
+        <li style="color:#666666;font-size:15px;">由于大神单方面原因导致项目延期，求助者有权向大神提出索赔，具体额度由双方协商决定，但最高不超过合同中求助者支付费用总金额的10%。</li>
+        <li style="color:#666666;font-size:15px;">大神交付软件由求助者验收合格之后，毕设帮平台交付大神人民币 元整。</li>
+        <li style="color:#666666;font-size:15px;">由于大神单方面原因导致项目未能按合同要求完成，求助者有权向毕设帮申请全额退款。</li>
+      </ol>
+
+    <h4 style="color:#666666;">七、争议解决</h4>
+      <ul>
+        <li style="color:#666666;font-size:15px;">本合同履行过程中，如发生任何争议，双方应本着友好合作的精神协商解决，如若协商未果，可向毕设帮平台申请仲裁。</li>
+      </ul>
+
+    <h4 style="color:#666666;">八、合同更改与终止</h4>
+      <ul>
+        <li style="color:#666666;font-size:15px;">任何一方更改或终止合同，必须以书面形式通知另一方以及毕设帮平台，由毕设帮平台本着公平公正的原则，按照合同说明，妥善处理钱款。</li>
+      </ul>
+      
+      <h4 style="color:#666666;">九、附则</h4>
+      <ol>
+        <li style="color:#666666;font-size:15px;">合同签订之后未尽事宜，由双方协商一致，对本合同有关条款进行更改或者补充时，应以书面形式予以确认。</li>
+        <li style="color:#666666;font-size:15px;">本合同一式两份，双方各持一份，具有同等法律效力。</li>
+        <li style="color:#666666;font-size:15px;">本合同更改或者补充附录，具有同等法律效力。</li>
+      </ol>
+    </div>
+
+    <!-- }整个合同div -->
   </div>
   
 </div>
@@ -850,7 +959,7 @@
 <div data-role="page" id="pageDetail10_1" data-fullscreen="true">
   
   <div data-role="header">
-    <a href="#" data-role="button" data-rel="back" data-icon="arrow-l">返回</a>
+    <a href="#" data-role="button" data-icon="arrow-l" onclick="fanhuiClick()">返回</a>
     <h2>申请仲裁-step1</h2> 
     <!-- <a href="" data-role="button" data-theme="b" id="next2Btn">下一步</a> -->
   </div>
@@ -883,7 +992,7 @@
 <div data-role="page" id="pageDetail10_2" data-fullscreen="true">
   
   <div data-role="header">
-    <a href="#" data-role="button" data-rel="back" data-icon="arrow-l">返回</a>
+    <a href="#" data-role="button" data-rel="back" data-icon="arrow-l" onclick="fanhuiClick()">返回</a>
     <h2>申请仲裁-Step2</h2> 
     <!-- <a href="" data-role="button" data-theme="b" id="postZhongcaiBtn">提交申请</a> -->
   </div>
@@ -907,9 +1016,9 @@
 <div data-role="page" id="pageDetail10" data-fullscreen="true">
   
   <div data-role="header">
-    <a href="" data-role="button" data-icon="arrow-l" id="fanhui">返回</a>
+    <a href="" data-role="button" data-icon="arrow-l" id="fanhui" onclick="fanhuiClick()">返回</a>
     <h2>本单详情</h2>
-    <a href="#contractDetail" data-role="button" rel="external" class="ui-btn-right" id="contractDetailBtn">查看合同</a>
+    <a href="#contractDetail" data-role="button" rel="external" class="ui-btn-right" id="contractDetailBtn">交易协议</a>
   </div>
   
     <div data-role="content">
@@ -961,7 +1070,7 @@
       </tr>
     </table>
     </div>
-合同：<p id="contract10"></p>
+<!-- 合同：<p id="contract10"></p> -->
 </div>
 <!-- }仲裁中页面 -->
 
@@ -977,9 +1086,9 @@
 <div data-role="page" id="pageDetail12" data-fullscreen="true">
   
   <div data-role="header">
-    <a href="" data-role="button" data-icon="arrow-l" id="fanhui">返回</a>
+    <a href="" data-role="button" data-icon="arrow-l" id="fanhui" onclick="fanhuiClick()">返回</a>
     <h2>本单详情</h2>
-    <a href="#contractDetail" data-role="button" rel="external" class="ui-btn-right" id="contractDetailBtn">查看合同</a>
+    <a href="#contractDetail" data-role="button" rel="external" class="ui-btn-right" id="contractDetailBtn">交易协议</a>
   </div>
   
     <div data-role="content">
@@ -1031,7 +1140,7 @@
       </tr>
     </table>
     </div>
-合同：<p id="contract12"></p>
+<!-- 合同：<p id="contract12"></p> -->
 </div>
 <!-- }仲裁结束页面 -->
 
