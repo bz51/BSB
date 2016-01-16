@@ -90,7 +90,7 @@ $(document).ready(function(){
 		    		//显示拟定合同的信息
 		    		if(val.state==3){
 		    			var html = '<li><a href="" id="getDetail3Btn'+index+'"><table width="100%">'+
-		    			'<tr><td width="70%"><span style="color:#009933;">拟定合同中</span></td><td width="30%"><span style="font-size:13px;">'+timeStamp2String(val.time)+'</span></td></tr>'+
+		    			'<tr><td width="70%"><span style="color:#009933;">需求合同拟定中</span></td><td width="30%"><span style="font-size:13px;">'+timeStamp2String(val.time)+'</span></td></tr>'+
 		    			'<tr><td><span style="font-size:13px;">'+subTitle+'</span></td><td><span style="font-size:13px;color:#FF6600;">'+val.money+'元</span></td></tr>'+
 		    			'<tr><td colspan="2"><span style="font-size:12px;color:#999999;">'+skill2String(val.needer_skill)+'</span></td><td><input type="hidden" id="require_id"/></td></tr>'+
 		    			'</table></a></li>';
@@ -264,6 +264,7 @@ $(document).ready(function(){
 		$("#money3").text(val.money+"元");
 		$("#content3").text(val.content);
 		localStorage.setItem("require_id",val.id);
+		alert("管理员正在为您定制需求合同，预计30分钟后与您联系");
 		window.location.href="#pageDetail3";
 	}
 	
