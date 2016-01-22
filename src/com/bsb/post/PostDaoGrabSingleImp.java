@@ -1,13 +1,19 @@
 package com.bsb.post;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 
 import com.bsb.core.Parameter;
 import com.bsb.entity.NeedEntity;
+import com.bsb.entity.NeedHelpEntity;
 import com.bsb.entity.UserEntity;
 import com.bsb.tools.HibernateSessionFactory;
 import com.bsb.tools.HibernateTemplate;
+import com.bsb.wechat.TemplateMsg;
 
 /**
  * provider抢单
@@ -65,6 +71,31 @@ public class PostDaoGrabSingleImp extends HibernateTemplate {
 		// 删除need_help表中所有require_id为该id的记录，提示抢单成功
 		String hql = "delete "+Parameter.NeedHelpEntity+" where require_id="+this.require_id;
 		session.createQuery(hql).executeUpdate();
+		
+		// 向抢单失败的大神发送推送信息
+		List<NeedHelpEntity> matchProviderList = Parameter.MatchProviderList_Parameters.get(require_id);
+		// 内存中没有，就要从DB中抽取
+		if(matchProviderList==null || matchProviderList.size()<=0){
+			System.out.println("matchProviderList为空");
+		}
+		else{
+			// 找出抢到单的那个大神
+			NeedHelpEntity hasGrabEntity = null;
+			for(int i=0;i<matchProviderList.size();i++){
+				if(matchProviderList.get(i).getRequire_id()==this.require_id){
+					hasGrabEntity = matchProviderList.get(i);
+				}
+			}
+			// 遍历所有匹配到的大神，给他们发送抢单失败的信息(抢到的大神除外)
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd H:m:s");
+			String time = format.format(new Date());
+			for(NeedHelpEntity e : matchProviderList){
+				if(e.getRequire_id()!=this.require_id && hasGrabEntity!=null){
+					// 发送推送信息
+					TemplateMsg.sendTemplateMsg_hasGrabSingleToPro(e,hasGrabEntity.getProvider_name(),time);
+				}
+			}
+		}
 		
 		super.result = true;
 		super.reason = "抢单成功";

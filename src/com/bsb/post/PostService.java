@@ -535,6 +535,8 @@ public class PostService {
 			// 7.发送模板消息To大神们(xxx想您求助，赶紧抢单)
 			for (NeedHelpEntity e : needHelpList)
 				TemplateMsg.sendTemplateMsg_grabSingle(e);
+			// 8.将目前匹配到的所有大神存入内存(用于抢单后向未抢到的大神发送提示信息)
+			Parameter.MatchProviderList_Parameters.put(require_id, needHelpList);
 		}
 		return providerList.size();
 	}
@@ -612,9 +614,17 @@ public class PostService {
 		//获取求助者skill
 		NeedEntity needEntity = CoreDao.queryUniqueById(Long.parseLong(require_id), Parameter.NeedEntity);
 		
+		//判断当前state是否允许放弃(只有state为1时才可以放弃)
+		if(needEntity.getState()!=1){
+			this.result = false;
+			this.reason = "订单状态已更新，页面即将跳转！";
+			return;
+		}
+		
 		//修改need表中该条记录，把大神信息清空
 		this.result = CoreDao.updateByHql("update NeedEntity set provider_id=0,provider_weixin=null,provider_name=null,provider_phone=null,provider_skill=null where id="+require_id);
 		if(!result){
+			this.result = false;
 			this.reason = "清空旧大神信息时失败";
 			return;
 		}
@@ -639,8 +649,10 @@ public class PostService {
 		//3.将匹配结果存入need_help表中，4.更新need表中的状态0，5.查询need表中该条记录的全部信息
 		PostDaoMatchProviderImp imp = new PostDaoMatchProviderImp(require_id,needHelpList);
 		this.result = imp.hibernateOperation();
-		if(!result)
+		if(!result){
+			this.result = false;
 			this.reason = imp.getReason();
+		}
 		else{
 			//6.发送模板消息To求助者(大神已放弃订单，但系统以为你重新匹配)
 			imp.getNeedEntity().setProvider_name(provider_name);
@@ -659,7 +671,7 @@ public class PostService {
 	 */
 	public void providerConfirm(String require_id) {
 		//更新状态，并获取NeedEntity
-		UpdateStateAndGetEntityImp imp = new UpdateStateAndGetEntityImp(6,Long.parseLong(require_id));
+		UpdateStateAndGetEntityImp imp = new UpdateStateAndGetEntityImp(6,Long.parseLong(require_id),1);
 		imp.hibernateOperation();
 		
 		if(imp.getResult()){
@@ -681,7 +693,7 @@ public class PostService {
 	 */
 	public void neederPay(String require_id) {
 		//更新状态，并获取NeedEntity
-		UpdateStateAndGetEntityImp imp = new UpdateStateAndGetEntityImp(7,Long.parseLong(require_id));
+		UpdateStateAndGetEntityImp imp = new UpdateStateAndGetEntityImp(7,Long.parseLong(require_id),6);
 		imp.hibernateOperation();
 		
 		if(imp.getResult()){
@@ -704,7 +716,7 @@ public class PostService {
 	 */
 	public void finishDevelop(String require_id) {
 		//更新状态，并获取NeedEntity
-		UpdateStateAndGetEntityImp imp = new UpdateStateAndGetEntityImp(8,Long.parseLong(require_id));
+		UpdateStateAndGetEntityImp imp = new UpdateStateAndGetEntityImp(8,Long.parseLong(require_id),7);
 		imp.hibernateOperation();
 		
 		if(imp.getResult()){
@@ -783,6 +795,13 @@ public class PostService {
 		System.out.println("needEntity.");
 		System.out.println("获取need记录＝"+this.result);
 		
+		//判断是否可以重找大神
+		if(needEntity.getState()!=6){
+			this.result = false;
+			this.reason = "订单状态已更新，页面即将刷新！";
+			return null;
+		}
+		
 		//修改need表中该条记录，把大神信息清空
 		this.result = CoreDao.updateByHql("update NeedEntity set provider_id=0,provider_weixin=null,provider_name=null,provider_phone=null,provider_skill=null where id="+require_id);
 		System.out.println("update结果＝"+this.result);
@@ -837,7 +856,7 @@ public class PostService {
 	 * @param role
 	 * @param content
 	 */
-	public void postFeedBack(String name, String user_id, String phone, String role, String content) {
+	public void postFeedBack(String name, String user_id, String phone, String role, String content, String require_id) {
 		//将信息保存至DB
 		FeedBackEntity entity = new FeedBackEntity();
 		entity.setContent(content);
@@ -847,6 +866,7 @@ public class PostService {
 		entity.setState(1);
 		entity.setTime(new Timestamp(new Date().getTime()));
 		entity.setUser_id(Integer.parseInt(user_id));
+		entity.setRequire_id(Integer.parseInt(require_id));
 		
 		int result = CoreDao.save(entity);
 		if(result==-1){

@@ -34,7 +34,7 @@ public class WeChatService {
 		//判断订单当前状态，只有当状态为等待付款才能付款
 		if(entity.getState()!=6){
 			this.result = false;
-			this.reason = "当前订单状态为"+entity.getState()+",仅当状态为6时才能付款！";
+			this.reason = "订单状态已更新，页面即将刷新！";
 			return entity;
 		}
 		

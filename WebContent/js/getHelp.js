@@ -162,12 +162,13 @@ $(document).ready(function(){
 									    
 								//隐藏加载器  
 								$.mobile.loading('hide');
-									    
+								
 								//若返回no
 								if(json.result=="no"){
 									$("#reason3").text(json.reason);
 									//若错误信息是“该条信息已经发布过！”，则跳转至个人中心
-									alert("页面已失效！即将跳转至个人中心");
+//									alert("页面已失效！即将跳转至个人中心");
+									alert(json.reason);
 									window.location.href="adminNeeder.html";
 								}
 									   
@@ -202,12 +203,13 @@ $(document).ready(function(){
 				    
 		    			//隐藏加载器  
 		    			$.mobile.loading('hide');
-				    
+		    			
 		    			//若返回no
 		    			if(json.result=="no"){
 		    				$("#reason3").text(json.reason);
 		    				//若错误信息是“该条信息已经发布过！”，则跳转至个人中心
-		    				alert("页面已失效！即将跳转至个人中心");
+//		    				alert("页面已失效！即将跳转至个人中心");
+		    				alert(json.reason);
 							window.location.href="adminNeeder.html";
 		    			}
 				   

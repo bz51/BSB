@@ -18,6 +18,7 @@ public class FeedBackEntity {
 	private Timestamp time;
 	private String content;
 	private int state;
+	private int require_id;
 
 	@Id
 	@GeneratedValue
@@ -68,6 +69,12 @@ public class FeedBackEntity {
 	}
 	public void setState(int state) {
 		this.state = state;
+	}
+	public int getRequire_id() {
+		return require_id;
+	}
+	public void setRequire_id(int require_id) {
+		this.require_id = require_id;
 	}
 	
 	

@@ -228,12 +228,17 @@ $(document).ready(function(){
 	function clickDetail2Btn(val){
 		$("#provider_name2").text(val.provider_name);
 		$("#provider_phone2").text(val.provider_phone);
+		$("#provider_phone2_btn").attr("href","tel:"+val.provider_phone);
 		$("#provider_skill2").text(skill2String(val.provider_skill));
 		$("#title2").text(val.title);
 		$("#time2").text(timeStamp2String(val.time));
 		$("#needer_skill2").text(skill2String(val.needer_skill));
 		$("#money2").text(val.money+"元");
+		$("#contractMoney3").text(val.money);
+		$("#contractMoney4").text(val.money);
 		$("#content2").text(val.content);
+		
+		localStorage.setItem("require_id",val.id);
 		
 		//将合同内容显示到合同页中去
 		AnalysisContract(val.contract);
@@ -250,6 +255,8 @@ $(document).ready(function(){
 		localStorage.setItem("needer_skill",val.needer_skill);
 		$("#needer_skill1").text(skill2String(val.needer_skill));
 		$("#money1").text(val.money+"元");
+		$("#contractMoney3").text(val.money);
+		$("#contractMoney4").text(val.money);
 		$("#content1").text(val.content);
 		localStorage.setItem("require_id",val.id);
 		
@@ -283,9 +290,12 @@ $(document).ready(function(){
 		//在详情页加载之前，就把needer_skill的代码值存下来；这样当点击“提高赏金”时，从页面获取的needer_skill不是中文
 		localStorage.setItem("needer_skill",val.needer_skill);
 		$("#needer_skill4").text(skill2String(val.needer_skill));
-		$("#money4").text(val.money+"元");
+		$("#contractMoney").text(val.money);
+		$("#contractMoney2").text(val.money);
 		$("#content4").text(val.content);
 //		$("#contract4").text(val.contract);
+		$("#contractMoney3").text(val.money);
+		$("#contractMoney4").text(val.money);
 		localStorage.setItem("require_id",val.id);
 		//解析合同内容，并显示到界面上
 		AnalysisContract(val.contract);
@@ -337,6 +347,8 @@ $(document).ready(function(){
 		
 //		alert(html);
 		//将生成的html添加到页面中
+		$("#functionList").text("");
+		$("#functionList2").text("");
 		$("#functionList").append(html);
 		$("#functionList2").append(html);
 //		$("#lalala").text(html);
@@ -348,11 +360,14 @@ $(document).ready(function(){
 	function clickDetail6Btn(val){
 		$("#provider_name6").text(val.provider_name);
 		$("#provider_phone6").text(val.provider_phone);
+		$("#provider_phone6_btn").attr("href","tel:"+val.provider_phone);
 		$("#provider_skill6").text(skill2String(val.provider_skill));
 		$("#title6").text(val.title);
 		$("#time6").text(timeStamp2String(val.time));
 		$("#needer_skill6").text(skill2String(val.needer_skill));
 		$("#money6").text(val.money+"元");
+		$("#contractMoney3").text(val.money);
+		$("#contractMoney4").text(val.money);
 		$("#content6").text(val.content);
 		$("#contract6").text(val.contract);
 		//将所有信息保存至本地，供查看大神开发中使用
@@ -382,28 +397,36 @@ $(document).ready(function(){
 			$("#provider_name7").text(localStorage.getItem("provider_name"));
 			$("#provider_phone7").text(localStorage.getItem("provider_phone"));
 			$("#provider_skill7").text(localStorage.getItem("provider_skill"));
+			$("#provider_skill7_btn").attr("href","tel:"+localStorage.getItem("provider_skill"));
 			$("#needer_name7").text(localStorage.getItem("needer_name"));
 			$("#needer_phone7").text(localStorage.getItem("needer_phone"));
 			$("#title7").text(localStorage.getItem("title"));
 			$("#time7").text(localStorage.getItem("time"));
 			$("#needer_skill7").text(localStorage.getItem("needer_skill"));
 			$("#money7").text(localStorage.getItem("money")+"元");
+			$("#contractMoney3").text(localStorage.getItem("money"));
+			$("#contractMoney4").text(localStorage.getItem("money"));
 			$("#content7").text(localStorage.getItem("content"));
 			$("#contract7").text(localStorage.getItem("contract"));
 
 			//将合同内容显示到合同页中去
 			AnalysisContract(localStorage.getItem("contract"));
+			//清空fromWhere
+			localStorage.setItem("fromWhere","");
 		}
 		
 		//若从订单列表跳过来，则详细信息从列表页面上读取，并保存到本地
 		else{
 			$("#provider_name7").text(val.provider_name);
 			$("#provider_phone7").text(val.provider_phone);
+			$("#provider_phone7_btn").attr("href","tel:"+val.provider_phone);
 			$("#provider_skill7").text(skill2String(val.provider_skill));
 			$("#title7").text(val.title);
 			$("#time7").text(timeStamp2String(val.time));
 			$("#needer_skill7").text(skill2String(val.needer_skill));
 			$("#money7").text(val.money+"元");
+			$("#contractMoney3").text(val.money);
+			$("#contractMoney4").text(val.money);
 			$("#content7").text(val.content);
 			$("#contract7").text(val.contract);
 			localStorage.setItem("require_id",val.id);
@@ -421,6 +444,7 @@ $(document).ready(function(){
 	function clickDetail8Btn(val){
 		$("#provider_name8").text(val.provider_name);
 		$("#provider_phone8").text(val.provider_phone);
+		$("#provider_phone8_btn").attr("href","tel:"+val.provider_phone);
 		$("#provider_skill8").text(skill2String(val.provider_skill));
 		$("#title8").text(val.title);
 		$("#time8").text(timeStamp2String(val.time));
@@ -456,6 +480,7 @@ $(document).ready(function(){
 		if(localStorage.getItem("fromWhere")=="confirmOrder"){
 			$("#provider_name9").text(localStorage.getItem("provider_name"));
 			$("#provider_phone9").text(localStorage.getItem("provider_phone"));
+			$("#provider_phone9_btn").attr("href","tel:"+localStorage.getItem("provider_phone"));
 			$("#provider_skill9").text(localStorage.getItem("provider_skill"));
 			$("#needer_name9").text(localStorage.getItem("needer_name"));
 			$("#needer_phone9").text(localStorage.getItem("needer_phone"));
@@ -463,22 +488,29 @@ $(document).ready(function(){
 			$("#time9").text(localStorage.getItem("time"));
 			$("#needer_skill9").text(localStorage.getItem("needer_skill"));
 			$("#money9").text(localStorage.getItem("money")+"元");
+			$("#contractMoney3").text(localStorage.getItem("money"));
+			$("#contractMoney4").text(localStorage.getItem("money"));
 			$("#content9").text(localStorage.getItem("content"));
 			$("#contract9").text(localStorage.getItem("contract"));
 
 			//将合同内容显示到合同页中去
 			AnalysisContract(localStorage.getItem("contract"));
+			//清空fromWhere
+			localStorage.setItem("fromWhere","");
 		}
 		
 		//若从订单列表跳过来，则详细信息从列表页面上读取，并保存到本地
 		else{
 			$("#provider_name9").text(val.provider_name);
 			$("#provider_phone9").text(val.provider_phone);
+			$("#provider_phone9_btn").attr("href","tel:"+val.provider_phone);
 			$("#provider_skill9").text(skill2String(val.provider_skill));
 			$("#title9").text(val.title);
 			$("#time9").text(timeStamp2String(val.time));
 			$("#needer_skill9").text(skill2String(val.needer_skill));
 			$("#money9").text(val.money+"元");
+			$("#contractMoney3").text(val.money);
+			$("#contractMoney4").text(val.money);
 			$("#content9").text(val.content);
 			$("#contract9").text(val.contract);
 			localStorage.setItem("require_id",val.id);
@@ -501,6 +533,7 @@ $(document).ready(function(){
 			localStorage.setItem("fromWhere","");
 			$("#provider_name10").text(localStorage.getItem("provider_name"));
 			$("#provider_phone10").text(localStorage.getItem("provider_phone"));
+			$("#provider_phone10_btn").attr("href","tel:"+localStorage.getItem("provider_phone"));
 			$("#provider_skill10").text(localStorage.getItem("provider_skill"));
 			$("#needer_name10").text(localStorage.getItem("needer_name"));
 			$("#needer_phone10").text(localStorage.getItem("needer_phone"));
@@ -508,6 +541,8 @@ $(document).ready(function(){
 			$("#time10").text(localStorage.getItem("time"));
 			$("#needer_skill10").text(localStorage.getItem("needer_skill"));
 			$("#money10").text(localStorage.getItem("money")+"元");
+			$("#contractMoney3").text(localStorage.getItem("money"));
+			$("#contractMoney4").text(localStorage.getItem("money"));
 			$("#content10").text(localStorage.getItem("content"));
 			$("#contract10").text(localStorage.getItem("contract"));
 			//alert("从本地读取＝"+localStorage.getItem("zhongcai"));
@@ -515,17 +550,22 @@ $(document).ready(function(){
 
 			//将合同内容显示到合同页中去
 			AnalysisContract(localStorage.getItem("contract"));
+			//清空fromWhere
+			localStorage.setItem("fromWhere","");
 		}
 		
 		//若从订单列表跳过来，则详细信息从列表页面上读取，并保存到本地
 		else{
 			$("#provider_name10").text(val.provider_name);
 			$("#provider_phone10").text(val.provider_phone);
+			$("#provider_phone10_btn").attr("href","tel:"+val.provider_phone);
 			$("#provider_skill10").text(skill2String(val.provider_skill));
 			$("#title10").text(val.title);
 			$("#time10").text(timeStamp2String(val.time));
 			$("#needer_skill10").text(skill2String(val.needer_skill));
 			$("#money10").text(val.money+"元");
+			$("#contractMoney3").text(val.money);
+			$("#contractMoney4").text(val.money);
 			$("#content10").text(val.content);
 			$("#contract10").text(val.contract);
 			//alert("从服务端读取＝"+val.zhongcai);
@@ -550,11 +590,14 @@ $(document).ready(function(){
 	function clickDetail12Btn(val){
 		$("#provider_name12").text(val.provider_name);
 		$("#provider_phone12").text(val.provider_phone);
+		$("#provider_phone12_btn").attr("href","tel:"+val.provider_phone);
 		$("#provider_skill12").text(skill2String(val.provider_skill));
 		$("#title12").text(val.title);
 		$("#time12").text(timeStamp2String(val.time));
 		$("#needer_skill12").text(skill2String(val.needer_skill));
 		$("#money12").text(val.money+"元");
+		$("#contractMoney3").text(val.money);
+		$("#contractMoney4").text(val.money);
 		$("#content12").text(val.content);
 		$("#contract12").text(val.contract);
 		$("#zhongcaiResult12").text(val.zhongcai_result);
@@ -790,6 +833,7 @@ $(document).ready(function(){
 			//若返回no
 			if(json.result=="no"){
 				alert(json.reason);
+				window.location.href="adminNeeder.html";
 			}
 			
 			//若返回yes
@@ -1135,7 +1179,7 @@ $(document).ready(function(){
 			
 			//发送请求，获取本单详情
 			//alert("post/postAction!postFeedBack?name="+localStorage.getItem("name")+"&user_id="+localStorage.getItem("id")+"&phone="+localStorage.getItem("phone")+"&role="+localStorage.getItem("role")+"&content="+$("#feedbackContent").val());
-			$.get("post/postAction!postFeedBack?name="+localStorage.getItem("name")+"&user_id="+localStorage.getItem("id")+"&phone="+localStorage.getItem("phone")+"&role="+localStorage.getItem("role")+"&content="+$("#feedbackContent").val(),
+			$.get("post/postAction!postFeedBack?name="+localStorage.getItem("name")+"&user_id="+localStorage.getItem("id")+"&phone="+localStorage.getItem("phone")+"&role="+localStorage.getItem("role")+"&content="+$("#feedbackContent").val()+"&require_id="+localStorage.getItem("require_id"),
 					
 					function(data,status){
 				var json = eval('(' + data + ')');

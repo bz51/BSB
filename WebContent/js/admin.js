@@ -217,7 +217,7 @@ function clickFeedbackBtn(){
 				'<tr><td width="70%"><span style="color:#009933;">'+(index+1)+'.'+val.name+'</span></td><td width="30%"><span style="font-size:13px;">'+timeStamp2String(val.time)+'</span></td></tr>'+
 				'<tr><td><span style="font-size:13px;color:#999999;">'+val.phone+'</span></td><td><span style="font-size:13px;color:#FF6600;">'+role+'</span></td></tr>'+
 				'<tr><td colspan="2"><span style="font-size:12px;color:red;">'+val.content+'</span></td><td></td></tr>'+
-				'<tr><td></td><td><a href="" class="doFeedbackBtn" data-role="button" data-theme="c" data-mini="true" onclick="clickHasDoBtn('+val.id+')">已处理</a></td></tr>'+
+				'<tr><td></td><td><a href="" class="doFeedbackBtn" data-role="button" data-theme="c" data-mini="true" onclick="clickHasDoBtn('+val.id+','+val.require_id+')">已处理</a></td></tr>'+
 				'</table></li>';
 				$("#list3").append(html);
 			});
@@ -234,7 +234,7 @@ function clickFeedbackBtn(){
  * 点击反馈信息“已处理”按钮
  * @param id
  */
-function clickHasDoBtn(id){
+function clickHasDoBtn(id,require_id){
 	//显示loading
 	$.mobile.loading('show', {  
 		text: '数据加载中...', //加载器中显示的文字  
@@ -245,7 +245,7 @@ function clickHasDoBtn(id){
 	}); 
 	
 	//发送请求
-	$.get("admin/adminAction!doFeedback?password="+localStorage.getItem("admin_pass")+"&feedback_id="+id,
+	$.get("admin/adminAction!doFeedback?password="+localStorage.getItem("admin_pass")+"&feedback_id="+id+"&require_id="+require_id,
 			
 			function(data,status){
 		var json = eval('(' + data + ')');

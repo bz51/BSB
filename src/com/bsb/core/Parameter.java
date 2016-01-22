@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.bsb.entity.NeedHelpEntity;
 import com.bsb.entity.UserEntity;
 
 public class Parameter {
@@ -65,4 +66,8 @@ public class Parameter {
 	/** 所有新用户的open_id和open_token都存在这里 */
 	public static Map<String,String> OpenTokenId_Parameters = new HashMap<String,String>();
 	public static String uploadPath = "/usr/tomcat/webapps/upload/";
+	
+
+	/** 某一单所有匹配的大神信息都存在这里 */
+	public static Map<String,List<NeedHelpEntity>> MatchProviderList_Parameters = new HashMap<String,List<NeedHelpEntity>>();
 }

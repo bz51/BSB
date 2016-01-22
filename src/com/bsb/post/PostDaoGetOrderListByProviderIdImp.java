@@ -42,7 +42,7 @@ public class PostDaoGetOrderListByProviderIdImp extends HibernateTemplate {
 			entity.setMoney(e.getMoney());
 			entity.setTime(e.getTime());
 			entity.setTitle(e.getTitle());
-			entity.setContract(e.getContent());
+			entity.setContract(e.getContract());
 			list.add(entity);
 		}
 		

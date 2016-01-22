@@ -157,6 +157,51 @@ public class TemplateMsg {
 	}
 	
 	
+	
+	
+	
+	/**
+	 * 发送管理员完成修改合同通知(求助者)
+	 */
+	public static boolean sendTemplateMsg_adminModifyContractToNe(NeedEntity entity){
+		WxTemplate t = new WxTemplate();
+		t.setUrl(Parameter.URL_NeederAdmin);
+		//接受者的open_id
+		t.setTouser(entity.getNeeder_weixin());
+		//消息顶端颜色
+		t.setTopcolor("#000000");
+		//模板ID
+		t.setTemplate_id(Parameter.TemplateId_DingDanZhuangTaiGengXin);
+		//存储数据的Map
+		Map<String,TemplateData> m = new HashMap<String,TemplateData>();
+		//first字段
+		TemplateData first = new TemplateData();
+		first.setColor("red");
+		first.setValue("协议已经修改完毕，请点击查看！");
+		m.put("first", first);
+		//订单编号字段
+		TemplateData OrderSn = new TemplateData();
+//		OrderSn.setColor("blue");
+		OrderSn.setValue("NO:01"+entity.getId());
+		m.put("OrderSn", OrderSn);
+		//订单状态字段
+		TemplateData OrderStatus = new TemplateData();
+		OrderStatus.setColor("#009900");
+		OrderStatus.setValue("协议修改完毕");
+		m.put("OrderStatus", OrderStatus);
+		//remark字段
+		TemplateData remark = new TemplateData();
+		remark.setColor("red");
+		remark.setValue("如有疑问请及时与我们联系");
+		m.put("remark", remark);
+		t.setData(m);
+		
+		//发送模板消息
+		return TemplateMsg.sendTemplateMessage(t);
+	}
+	
+	
+	
 	/**
 	 * 发送合同签署成功提醒
 	 */
@@ -334,6 +379,56 @@ public class TemplateMsg {
 		//发送模板消息
 		return TemplateMsg.sendTemplateMessage(t);
 	}
+	
+	
+	
+	
+	
+	
+	
+	/**
+	 * 发送已经被别人抢单的通知(大神)
+	 * @param username 抢到单的大神名字
+	 * @param time 被抢单的时间
+	 */
+	public static boolean sendTemplateMsg_hasGrabSingleToPro(NeedHelpEntity entity,String username,String time){
+		WxTemplate t = new WxTemplate();
+		t.setUrl(Parameter.URL_HelperAdmin);
+		//接受者的open_id
+		t.setTouser(entity.getProvider_weixin());
+		//消息顶端颜色
+		t.setTopcolor("#000000");
+		//模板ID
+		t.setTemplate_id(Parameter.TemplateId_DingDanZhuangTaiGengXin);
+		//存储数据的Map
+		Map<String,TemplateData> m = new HashMap<String,TemplateData>();
+		//first字段
+		TemplateData first = new TemplateData();
+		first.setColor("red");
+		first.setValue("很抱歉！订单\""+entity.getTitle()+"\"已于"+time+"被大神\""+username+"\"抢单。请收到抢单提醒后立即进入帮帮抢单！");
+		m.put("first", first);
+		//订单编号字段
+		TemplateData OrderSn = new TemplateData();
+//		OrderSn.setColor("blue");
+		OrderSn.setValue("NO:01"+entity.getRequire_id());
+		m.put("OrderSn", OrderSn);
+		//订单状态字段
+		TemplateData OrderStatus = new TemplateData();
+		OrderStatus.setColor("#009900");
+		OrderStatus.setValue("已被大神抢单");
+		m.put("OrderStatus", OrderStatus);
+		//remark字段
+		TemplateData remark = new TemplateData();
+		remark.setColor("red");
+		remark.setValue("如有疑问请及时与我们联系");
+		m.put("remark", remark);
+		t.setData(m);
+		
+		//发送模板消息
+		return TemplateMsg.sendTemplateMessage(t);
+	}
+	
+	
 	
 	
 	/**
@@ -558,7 +653,7 @@ public class TemplateMsg {
 		//first字段
 		TemplateData first = new TemplateData();
 		first.setColor("red");
-		first.setValue("大神已准备就绪，是否开始服务？");
+		first.setValue("大神已准备就绪，是否开始为您服务？");
 		m.put("first", first);
 		//订单编号字段
 		TemplateData OrderSn = new TemplateData();
@@ -573,7 +668,7 @@ public class TemplateMsg {
 		//remark字段
 		TemplateData remark = new TemplateData();
 		remark.setColor("red");
-		remark.setValue("请进入帮帮后点击“开始服务”，如有疑问请随时联系我们~");
+		remark.setValue("如有疑问请随时联系我们");
 		m.put("remark", remark);
 		t.setData(m);
 		

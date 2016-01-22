@@ -39,7 +39,7 @@ public class PostDaoNeederGiveUpImp extends HibernateTemplate {
 		//若已被抢单，则无法放弃该单
 		else{
 			super.result = false;
-			super.reason = "订单状态已更新！即将刷新";
+			super.reason = state+"订单状态已更新！即将刷新";
 		}
 		
 		return session;

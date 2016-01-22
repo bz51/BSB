@@ -564,6 +564,10 @@ public class PostAction extends ActionSupport implements ApplicationAware{
 		
 		//大神放弃此单
 		service.providerGiveupOrderPre(this.require_id,this.provider_name);
+		if(!service.getResult()){
+			this.result = "no";
+			this.reason = service.getReason();
+		}
 		return "providerGiveupOrderPre";
 	}
 	
@@ -711,13 +715,13 @@ public class PostAction extends ActionSupport implements ApplicationAware{
 	 */
 	public String postFeedBack(){
 		//健壮性判断
-		if(this.name==null || "".equals(name) || this.user_id==null || "".equals(user_id) || this.phone==null || "".equals(phone) || this.role==null || "".equals(role) || this.content==null || "".equals(content)){
+		if(this.name==null || "".equals(name) || this.user_id==null || "".equals(user_id) || this.phone==null || "".equals(phone) || this.role==null || "".equals(role) || this.content==null || "".equals(content) || this.require_id==null || "".equals(require_id)){
 			this.result = "no";
-			this.reason = "name、user_id、phone、role、content均不能为空！";
+			this.reason = "name、user_id、phone、role、content、require_id均不能为空！";
 			return "postFeedBack";
 		}
 		
-		service.postFeedBack(this.name,this.user_id,this.phone,this.role,this.content);
+		service.postFeedBack(this.name,this.user_id,this.phone,this.role,this.content,this.require_id);
 		if(!service.getResult()){
 			this.result = "no";
 			this.reason = service.getReason();

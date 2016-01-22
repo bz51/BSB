@@ -11,6 +11,7 @@ public class AdminAction extends ActionSupport{
 	private List<FeedBackEntity> feedbackList;
 	private String password;
 	private String feedback_id;
+	private String require_id;
 	private String result = "yes";
 	private String reason;
 	private AdminService service = new AdminService();
@@ -47,15 +48,15 @@ public class AdminAction extends ActionSupport{
 	 * 处理一条反馈信息
 	 */
 	public String doFeedback(){
-		if(password==null || "".equals(password) || feedback_id==null || "".equals(feedback_id)){
+		if(password==null || "".equals(password) || feedback_id==null || "".equals(feedback_id) || require_id==null || "".equals(require_id)){
 			this.result = "no";
-			this.reason = "password、feedback_id均不能为空！";
+			this.reason = "password、feedback_id、require_id均不能为空！";
 			if(!password.equals("1314"))
 				this.reason = "口令错误";
 			return "doFeedback";
 		}
 		
-		service.doFeedback(this.feedback_id);
+		service.doFeedback(this.feedback_id,this.require_id);
 		if(!service.getResult()){
 			this.result = "no";
 			this.reason = service.getReason();
@@ -111,6 +112,15 @@ public class AdminAction extends ActionSupport{
 	public void setFeedback_id(String feedback_id) {
 		this.feedback_id = feedback_id;
 	}
+
+	public String getRequire_id() {
+		return require_id;
+	}
+
+	public void setRequire_id(String require_id) {
+		this.require_id = require_id;
+	}
+
 
 	
 	
