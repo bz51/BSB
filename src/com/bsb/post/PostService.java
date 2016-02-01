@@ -181,8 +181,10 @@ public class PostService {
 				this.reason = imp.getReason();
 			else{
 				//向求助者发送抢单成功通知
+				System.out.println("向求助者发送抢单成功通知111");
 				TemplateMsg.sendTemplateMsg_grabSingleSuccessToNe(imp.getNeedEntity());
 				//向大神发送抢单成功通知
+				System.out.println("向大神发送抢单成功通知222");
 				TemplateMsg.sendTemplateMsg_grabSingleSuccessToPro(imp.getNeedEntity());
 			}
 		}
@@ -537,6 +539,8 @@ public class PostService {
 				TemplateMsg.sendTemplateMsg_grabSingle(e);
 			// 8.将目前匹配到的所有大神存入内存(用于抢单后向未抢到的大神发送提示信息)
 			Parameter.MatchProviderList_Parameters.put(require_id, needHelpList);
+			System.out.println("已将匹配到的大神存入内存！require_id="+require_id);
+			System.out.println("订单"+require_id+"匹配到的大神有"+Parameter.MatchProviderList_Parameters.get(require_id).size());
 		}
 		return providerList.size();
 	}

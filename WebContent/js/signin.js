@@ -130,6 +130,12 @@ $(document).ready(function(){
 				    else{
 				    	
 				    	//将用户信息保存到本地
+				    	localStorage.setItem("id","");
+				    	localStorage.setItem("name","");
+				    	localStorage.setItem("phone","");
+				    	localStorage.setItem("role","");
+				    	localStorage.setItem("skill","");
+				    	localStorage.setItem("open_id","");//将服务器传回的open_id存入本地
 				    	localStorage.setItem("id",json.id);
 					    localStorage.setItem("name",json.name);
 					    localStorage.setItem("phone",json.phone);

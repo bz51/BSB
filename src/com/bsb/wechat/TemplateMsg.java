@@ -405,7 +405,7 @@ public class TemplateMsg {
 		//first字段
 		TemplateData first = new TemplateData();
 		first.setColor("red");
-		first.setValue("很抱歉！订单\""+entity.getTitle()+"\"已于"+time+"被大神\""+username+"\"抢单。请收到抢单提醒后立即进入帮帮抢单！");
+		first.setValue("很抱歉,订单\""+entity.getTitle()+"\"已于"+time+"被大神\""+username+"\"抢单。");
 		m.put("first", first);
 		//订单编号字段
 		TemplateData OrderSn = new TemplateData();
@@ -420,7 +420,7 @@ public class TemplateMsg {
 		//remark字段
 		TemplateData remark = new TemplateData();
 		remark.setColor("red");
-		remark.setValue("如有疑问请及时与我们联系");
+		remark.setValue("温馨提醒:请收到抢单提醒后立即点击“进入帮帮”抢单！");
 		m.put("remark", remark);
 		t.setData(m);
 		

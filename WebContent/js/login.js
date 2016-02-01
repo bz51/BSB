@@ -47,6 +47,11 @@ $(document).ready(function(){
 				    //若返回yes，将用户信息保存到cookie
 				    else{
 				    	//将用户信息保存到本地
+				    	localStorage.setItem("id","");
+				    	localStorage.setItem("name","");
+				    	localStorage.setItem("phone","");
+				    	localStorage.setItem("skill","");
+				    	localStorage.setItem("open_id","");//将服务器传回的open_id存入本地
 				    	localStorage.setItem("id",json.id);
 					    localStorage.setItem("name",json.name);
 					    localStorage.setItem("phone",json.phone);
@@ -60,11 +65,13 @@ $(document).ready(function(){
 					    if(fromWhere=="providerHelp"){
 					    	//若是，则进入个人中心
 					    	if(json.role==localStorage.getItem("role")){
+					    		localStorage.setItem("role","");
 							    localStorage.setItem("role",json.role);
 					    		window.location.href="adminHelper.html";
 					    	}
 					    	//若不是，则提示用户“你的身份是大神，无法修改身份”
 					    	else{
+					    		localStorage.setItem("role","");
 							    localStorage.setItem("role",json.role);
 					    		$("#title").text("你是求助者，还不能帮助别人哦～");
 					    		$("#confirmBtn").attr("href","adminNeeder.html");
@@ -113,6 +120,7 @@ $(document).ready(function(){
 					    	}
 					    	//若身份不吻合，则跳转至大神个人中心
 					    	else{
+					    		localStorage.setItem("role","");
 							    localStorage.setItem("role",json.role);
 					    		$("#title").text("你的身份是大神，无法发布求助信息哦～");
 					    		$("#confirmBtn").attr("href","adminHelper.html");
@@ -123,6 +131,7 @@ $(document).ready(function(){
 					    //从首页跳来，直接进入个人中心
 					    else{
 					    	//先将json中的role存到本地
+				    		localStorage.setItem("role","");
 					    	localStorage.setItem("role",json.role);
 					    	
 					    	//然后跳转至指定个人中心

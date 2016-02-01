@@ -418,7 +418,7 @@ public class PostAction extends ActionSupport implements ApplicationAware{
 	 * 获取指定provider的个人信息
 	 */
 	public String getUserEntityByProviderId(){
-		if(provider_id==null || provider_id.equals("")){
+		if(provider_id==null || "".equals(provider_id)){
 			this.result = "no";
 			this.reason = "provider_id不能为空";
 			

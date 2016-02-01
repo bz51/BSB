@@ -20,6 +20,8 @@ $(document).ready(function(){
 	}
 	*/
 	
+//	alert("open_id="+localStorage.getItem("open_id")+",id="+localStorage.getItem("id")+",role="+localStorage.getItem("role"));
+	
 	//情况1:本地无id、无openid：本地生成open_token，服务器生成open_token＋open_id键值对，state＝1，返回首页，发现有open_token，继而判断id是否存在，若存在则跳转到个人中心，若不存在则停留在首页
 	if((localStorage.getItem("open_id")==null || localStorage.getItem("open_id")=='') 
 		&& (localStorage.getItem("id")==null || localStorage.getItem("id")=='')){
