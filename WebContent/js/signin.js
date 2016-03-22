@@ -166,7 +166,8 @@ $(document).ready(function(){
 						    });  
 						    
 					    	//发送请求
-					    	$.get("post/postAction!postNeed?needEntity.title="+localStorage.getItem("title")+"&needEntity.content="+localStorage.getItem("content")+"&needEntity.money="+localStorage.getItem("money")+"&needEntity.needer_id="+localStorage.getItem("id")+"&needEntity.needer_name="+localStorage.getItem("name")+"&needEntity.needer_phone="+localStorage.getItem("phone")+"&needEntity.needer_skill="+localStorage.getItem("skill"),
+						    alert("serverId_sign="+localStorage.getItem("serverId"));
+					    	$.get("post/postAction!postNeed?needEntity.title="+localStorage.getItem("title")+"&needEntity.content="+localStorage.getItem("content")+"&needEntity.money="+localStorage.getItem("money")+"&needEntity.needer_id="+localStorage.getItem("id")+"&needEntity.needer_name="+localStorage.getItem("name")+"&needEntity.needer_phone="+localStorage.getItem("phone")+"&needEntity.needer_skill="+localStorage.getItem("skill")+"&needEntity.needer_weixin="+localStorage.getItem("open_id")+"&pic_id="+localStorage.getItem("serverId"),
 							  
 							  function(data,status){
 							    var json = eval('(' + data + ')');
@@ -182,6 +183,8 @@ $(document).ready(function(){
 							   
 							    //若返回yes，需求发布成功
 							    else{
+							    	//将本地的图片信息删掉
+							    	localStorage.setItem("serverId","");
 							    	//将匹配到的大神人数保存至本地
 							    	localStorage.setItem("count",json.count)
 							    	//跳转至getHelp.html#page4

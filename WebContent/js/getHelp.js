@@ -232,6 +232,7 @@ $(document).ready(function(){
 		    
 		    //若没有登录，则先将信息存下来，跳转至注册
 		    else{
+		    	/**未登录发布信息不上传图片{--------------------------------------------------------
 		    	//若从“提高赏金”页面调过来，则本地已经有各个参数，无需再存了
 		    	if(localStorage.getItem("fromWhere")!="increaseMoney"){
 		    		localStorage.setItem("title",$("#title").val());
@@ -242,6 +243,38 @@ $(document).ready(function(){
 		    	localStorage.setItem("role","0");
 		    	localStorage.setItem("fromWhere","getHelp");
 		    	window.location.href="signin.html";
+		    	//}--------------------------------------------------------*/
+		    	
+		    	//若用户选择了图片，则需要先上传图片，将serverId存至本地，再跳转到登录页面
+		    	var serverId = "";
+//		    	alert("localIds="+localIds);
+		    	if(localIds!=null && localIds!=''){
+//		    		alert("进入if:localIds!=null && localIds!=''");
+		    		wx.uploadImage({
+					localId: localIds+"", // 需要上传的图片的本地ID，由chooseImage接口获得
+					isShowProgressTips: 1, // 默认为1，显示进度提示
+					success: function (res) {
+						serverId = res.serverId;
+						//将serverId存至本地
+						localStorage.setItem("serverId",serverId);
+						//若从“提高赏金”页面调过来，则本地已经有各个参数，无需再存了
+				    	if(localStorage.getItem("fromWhere")!="increaseMoney"){
+				    		localStorage.setItem("title",$("#title").val());
+				    		localStorage.setItem("content",$("#content").val());
+				    		localStorage.setItem("money",$("#money").val());
+				    		localStorage.setItem("needer_skill",localStorage.getItem("skill"));
+				    	}
+				    	localStorage.setItem("role","0");
+				    	localStorage.setItem("fromWhere","getHelp");
+				    	window.location.href="signin.html";
+					},
+					fail: function (res) {
+						alert(JSON.stringify(res));
+					}
+					});
+		    	}
+//		    	alert("serverId="+serverId);
+		    	
 		    }
 		}
 	});
